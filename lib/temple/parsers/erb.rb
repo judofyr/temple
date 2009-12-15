@@ -6,7 +6,7 @@ module Temple
       def compile(src)
         result = [:multi]
         while src =~ /<%(.*?)%>/
-          result << [:static, $`]
+          result << [:static, $`]  unless $`.to_s.empty?
           text = $1[1..-1].strip
           case $1[0]
           when ?#
@@ -20,7 +20,7 @@ module Temple
           result << [head, text]
           src = $'
         end
-        result << [:static, src]
+        result << [:static, src] unless src.to_s.empty?
         result
       end
     end                      
