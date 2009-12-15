@@ -17,6 +17,7 @@ Gem::Specification.new do |s|
   s.files = [
     "README",
      "Rakefile",
+     "VERSION",
      "lib/temple.rb",
      "lib/temple/core.rb",
      "lib/temple/engine.rb",
@@ -30,7 +31,9 @@ Gem::Specification.new do |s|
      "spec/dynamic_inliner_spec.rb",
      "spec/escapable_spec.rb",
      "spec/spec_helper.rb",
-     "spec/static_merger_spec.rb"
+     "spec/static_merger_spec.rb",
+     "spec/temple_spec.rb",
+     "temple.gemspec"
   ]
   s.homepage = %q{http://github.com/judofyr/temple}
   s.rdoc_options = ["--charset=UTF-8"]
@@ -41,7 +44,8 @@ Gem::Specification.new do |s|
     "spec/spec_helper.rb",
      "spec/static_merger_spec.rb",
      "spec/escapable_spec.rb",
-     "spec/dynamic_inliner_spec.rb"
+     "spec/dynamic_inliner_spec.rb",
+     "spec/temple_spec.rb"
   ]
 
   if s.respond_to? :specification_version then
