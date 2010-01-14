@@ -31,7 +31,13 @@ module Temple
     
     def initialize(options = {})
       @chain = self.class.filters.map do |filter, args, blk|
-        filter.new(*args, &blk)
+        opt = args.last.is_a?(Hash) ? args.pop : {}
+        opt = args.inject(opt) do |memo, ele|
+          memo[ele] = options[ele]
+          memo
+        end
+        
+        filter.new(opt, &blk)
       end
     end
     
