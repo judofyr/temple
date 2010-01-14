@@ -44,41 +44,5 @@ module Temple
         buffer " << (#{code}).to_s\n"
       end
     end
-    
-    # Compiles into a single double-quoted string.
-    #
-    # This doesn't make so much sense when you have blocks, so it's
-    # kinda funky.  You probably want to use Filters::DynamicInliner instead.
-    # For now, check out the source for #on_multi.
-    class Interpolation < Generator
-      def preamble;  '"' end
-      def postamble; '"' end
-      
-      def on_static(text)
-        text.inspect[1..-2]
-      end
-      
-      def on_dynamic(code)
-        '#{%s}' % code
-      end
-      
-      def on_multi(*exps)
-        if exps.detect { |exp| exp[0] == :block }
-          '#{%s}' % exps.map do |exp|
-            if exp[0] == :block
-              exp[1]
-            else
-              compile(exp)
-            end
-          end.join
-        else
-          super
-        end  
-      end
-      
-      def on_block(code)
-        '#{%s;nil}' % code
-      end
-    end
   end
 end

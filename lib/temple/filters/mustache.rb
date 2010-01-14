@@ -38,32 +38,31 @@ module Temple
         code = compile(content)
         ctxtmp = "ctx#{tmpid}"
         
-        block = <<-EOF
-        if v = ctx[#{name.inspect}]
-          v = [v] if v.is_a?(Hash) # shortcut when passed a single hash
-          if v.respond_to?(:each)
-            #{ctxtmp} = ctx.dup
-            begin
-              r = v.map { |h| ctx.update(h); CODE }.join
-            rescue TypeError => e
-              raise TypeError,
-                "All elements in {{#{name.to_s}}} are not hashes!"
+        src = <<-EOF
+          if v = ctx[#{name.inspect}]
+            v = [v] if v.is_a?(Hash)
+            if v.respond_to?(:each)
+              #{ctxtmp} = ctx.dup
+              begin
+                r = v.each do |h|
+                  ctx.update(h)
+                  CODE
+                end
+              rescue TypeError => e
+                raise TypeError, "All elements in {{#{name.to_s}}} are not hashes!"
+              end
+              ctx.replace(#{ctxtmp})
+            else
+              CODE
             end
-            ctx.replace(#{ctxtmp})
-            r
-          else
-            CODE
           end
-        end
         EOF
         
-        block.split("CODE").each do |str|
-          res << [:block, str]
-          res << code
+        res = src.split("\n").map do |line|
+          line =~ /CODE/ ? code : [:block, line.strip]
         end
         
-        res.pop
-        res
+        [:multi, *res]
       end
     end
   end
