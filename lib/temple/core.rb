@@ -8,19 +8,19 @@ module Temple
     #   end
     #   _buf.join
     class ArrayBuffer < Generator
-      def preamble;  buffer " = []\n" end
+      def preamble;  buffer " = []" end
       def postamble; buffer ".join"   end
       
       def on_static(text)
-        buffer " << #{text.inspect}\n"
+        buffer " << #{text.inspect}"
       end
       
       def on_dynamic(code)
-        buffer " << (#{code})\n"
+        buffer " << (#{code})"
       end
       
       def on_block(code)
-        code + "\n"
+        code
       end
     end
     
@@ -37,11 +37,11 @@ module Temple
     #   end
     #   _buf
     class StringBuffer < ArrayBuffer
-      def preamble;  buffer " = ''\n" end
+      def preamble;  buffer " = ''" end
       def postamble; buffer end
       
       def on_dynamic(code)
-        buffer " << (#{code}).to_s\n"
+        buffer " << (#{code}).to_s"
       end
     end
   end
