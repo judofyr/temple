@@ -30,7 +30,7 @@ module Temple
             end
           else
             res << compile(exp)
-            state = :looking
+            state = :looking unless exp.first == :newline
           end
         end
         

@@ -24,4 +24,16 @@ describe_filter :StaticMerger do
       [:static, "Good night, everybody"]
     ]
   end
+  
+  it "should merge across newlines" do
+    @filter.compile([:multi,
+      [:static, "Hello "],
+      [:static, "World, "],
+      [:newline],
+      [:static, "Good night"]
+    ]).should == [:multi,
+      [:static, "Hello World, Good night"],
+      [:newline]
+    ]
+  end
 end
