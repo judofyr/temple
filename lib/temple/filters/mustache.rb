@@ -1,8 +1,6 @@
 module Temple
   module Filters
     # A Mustache filter which compiles Mustache-nodes into Core and Escapable.
-    # It's currently built for the Interpolation generator, but works with the
-    # others too.
     class Mustache
       def initialize
         @tmpid = 0
