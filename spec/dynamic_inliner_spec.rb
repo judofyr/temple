@@ -76,4 +76,15 @@ describe_filter :DynamicInliner do
       [:dynamic, '"Hello #{@world}"']
     ]
   end
+  
+  it "should merge across newlines" do
+    @filter.compile([:multi,
+      [:static, "Hello \n"],
+      [:newline],
+      [:dynamic, "@world"],
+      [:newline]
+    ]).should == [:multi,
+      [:dynamic, ['"Hello \n"', '"#{@world}"', '""'].join("\\\n")],
+    ]
+  end
 end

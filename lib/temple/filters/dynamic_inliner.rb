@@ -15,8 +15,23 @@ module Temple
         # We add a noop because we need to do some cleanup at the end too.
         (exps + [:noop]).each do |exp| 
           head, arg = exp
-
-          if head == :dynamic || head == :static
+          
+          case head
+          when :newline
+            case state
+            when :looking
+              # We haven't found any static/dynamic, so let's just add it
+              res << exp
+            when :single, :several
+              # We've found something, so let's make sure the generated
+              # dynamic contains a newline by escaping a newline and
+              # starting a new string:
+              # 
+              # "Hello "\
+              # "#{@world}"
+              curr[1] << "\"\\\n\""
+            end
+          when :dynamic, :static
             case state
             when :looking
               # Found a single static/dynamic.  We don't want to turn this
