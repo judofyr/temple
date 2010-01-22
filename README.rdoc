@@ -1,9 +1,0 @@
-= Temple, a template compilation framework for Ruby
-
-  sudo gem install temple
-
-I just wrote a {7521px long blog post about Temple}[http://judofyr.net/posts/temple.html], and I'm way too tired to
-write anything sensible here.
-
-
-* Join http://groups.google.com/group/guardians-of-the-temple
