@@ -1,5 +1,5 @@
 module Temple
-  VERSION = File.read( File.join(File.dirname(__FILE__),'..','VERSION') ).strip.split('.').map{|i|i.to_i}
+  VERSION = "0.0.1"
   
   autoload :Core,       'temple/core'
   autoload :Engine,     'temple/engine'
