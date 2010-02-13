@@ -87,4 +87,16 @@ describe_filter :DynamicInliner do
       [:dynamic, ['"Hello \n"', '"#{@world}"', '""'].join("\\\n")],
     ]
   end
+  
+  it "should handle static followed by a newline" do
+    @filter.compile([:multi,
+      [:static, "Hello \n"],
+      [:newline],
+      [:block, "world"]
+    ]).should == [:multi,
+      [:static, "Hello \n"],
+      [:newline],
+      [:block, "world"]
+    ]
+  end
 end

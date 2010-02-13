@@ -9,7 +9,7 @@ module Temple
       def on_multi(*exps)
         res = [:multi]
         curr = nil
-        prev = nil
+        prev = []
         state = :looking
         
         # We add a noop because we need to do some cleanup at the end too.
@@ -29,6 +29,7 @@ module Temple
               # 
               # "Hello "\
               # "#{@world}"
+              prev << exp
               curr[1] << "\"\\\n\""
             end
           when :dynamic, :static
@@ -38,7 +39,7 @@ module Temple
               # into a dynamic yet.  Instead we store it, and if we find
               # another one, we add both then.
               state = :single
-              prev = exp
+              prev = [exp]
               curr = [:dynamic, '"' + send(head, arg)]
             when :single
               # Yes! We found another one.  Append the content to the current
@@ -54,7 +55,7 @@ module Temple
             # We need to add the closing quote.
             curr[1] << '"' unless state == :looking
             # If we found a single exp last time, let's add it.
-            res << prev if state == :single
+            res.concat(prev) if state == :single
             # Compile the current exp (unless it's the noop)
             res << compile(exp) unless head == :noop
             # Now we're looking for more!
