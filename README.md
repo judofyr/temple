@@ -12,6 +12,15 @@ we'll try to do our best. In fact, it doesn't have to be related to Temple at
 all. As long as it has something to do with template languages, we're
 interested: <http://groups.google.com/group/guardians-of-the-temple>.
 
+Meta
+----
+
+* Home: <http://github.com/judofyr/temple>
+* Bugs: <http://github.com/judofyr/temple/issues>
+* List: <http://groups.google.com/group/guardians-of-the-temple>
+* Core abstraction: {Temple::Core}
+
+
 Overview
 --------
 
@@ -234,12 +243,3 @@ how I started experimenting with template engines in the first place.
 I also owe [Ryan Davis](http://zenspider.com/) a lot for his excellent
 projects ParserTree, RubyParser, Ruby2Ruby and SexpProcessor. Temple is
 heavily inspired by how this tools work.
-
-
-Meta
-----
-
-* Home: <http://github.com/judofyr/temple>
-* Bugs: <http://github.com/judofyr/temple/issues>
-* List: <http://groups.google.com/group/guardians-of-the-temple>
-   
