@@ -45,13 +45,13 @@ module Temple
               when '<%'
                 if content[-1] == ?\n
                   content.chop!
-                  result << [:block, content.strip]
+                  result << [:block, content]
                   result << [:newline]
                 else
-                  result << [:block, content.strip]
+                  result << [:block, content]
                 end
               when '<%='
-                result << [:dynamic, content.strip]
+                result << [:dynamic, content]
               when '<%#'
                 # nothing
               end
