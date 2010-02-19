@@ -52,9 +52,10 @@ module Temple
         Object.send(:const_set, :ERB, OriginalERB)
       end
       
-      def initialize(str, safe_level = nil, trim_mode = nil, eoutvar = '_erbout')
+      def initialize(str, safe_level = nil, trim_mode = nil, eoutvar = '_erbout', options = {})
+        @generator = options[:generator] || Core::ArrayBuffer
         @parser = Parsers::ERB.new(:trim_mode => trim_mode)
-        @compiler = Core::ArrayBuffer.new(:buffer => eoutvar)
+        @compiler = @generator.new(:buffer => eoutvar)
         @safe_level = safe_level
         
         @sexp = @parser.compile(str)
