@@ -20,6 +20,10 @@ module Temple
       @options[:buffer] + str
     end
     
+    def string_to_ruby(str)
+      str.inspect.gsub('\n', "\n")
+    end
+    
     # Sensible defaults
     
     def preamble;  '' end

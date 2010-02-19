@@ -35,7 +35,7 @@ module Temple
       def postamble; buffer ".join"   end
       
       def on_static(text)
-        buffer " << #{text.inspect}"
+        buffer " << #{string_to_ruby text}"
       end
       
       def on_dynamic(code)

@@ -7,7 +7,7 @@ describe_filter :DynamicInliner do
       [:static, "World\n "],
       [:static, "Have a nice day"]
     ]).should == [:multi,
-      [:dynamic, '"Hello World\n Have a nice day"']
+      [:dynamic, "\"Hello World\n Have a nice day\""]
     ]
   end
   
@@ -84,7 +84,7 @@ describe_filter :DynamicInliner do
       [:dynamic, "@world"],
       [:newline]
     ]).should == [:multi,
-      [:dynamic, ['"Hello \n"', '"#{@world}"', '""'].join("\\\n")],
+      [:dynamic, ["\"Hello \n\"", '"#{@world}"', '""'].join("\\\n")],
     ]
   end
   

@@ -32,13 +32,11 @@ module Temple
             when "\n"
               content << "\n"
               result << [:static, content]
-              result << [:newline]
               content = ''
             when '<%%'
               result << [:static, '<%']
             else
               result << [:static, token]
-              token.count("\n").times { result << [:newline] }
             end
           else
             case token

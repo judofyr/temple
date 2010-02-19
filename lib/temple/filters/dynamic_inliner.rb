@@ -67,7 +67,7 @@ module Temple
       end
     
       def static(str)
-        str.inspect[1..-2]
+        str.inspect[1..-2].gsub('\n', "\n")
       end
       
       def dynamic(str)
