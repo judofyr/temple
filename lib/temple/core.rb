@@ -1,4 +1,27 @@
 module Temple
+  # == The Core Abstraction
+  # 
+  # The core abstraction is what every template evetually should be compiled 
+  # to. Currently it consists of four essential and two convenient types:
+  # multi, static, dynamic, block, newline and capture.
+  # 
+  # === [:multi, *exp]
+  # 
+  # Multi is what glues everything together. It's simply a sexp which combines
+  # several others sexps:
+  # 
+  #   [:multi,
+  #     [:static, "Hello "],
+  #     [:dynamic, "@world"]]
+  # 
+  # === [:static, string]
+  # 
+  # Static denotes that the given string should be appended to the result.
+  # 
+  # === [:dynamic, rby]
+  # === [:block, rby]
+  # === [:newline]
+  # === [:capture, name, exp]
   module Core
     #   _buf = []
     #   _buf << "static"
