@@ -9,6 +9,8 @@ module Temple
   #     generator :ArrayBuffer  #              use Temple::Core::ArrayBuffer
   #  end
   class Engine
+    autoload :ERB, 'temple/engine/erb'
+    
     def self.filters
       @filters ||= []
     end
