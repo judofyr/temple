@@ -4,6 +4,7 @@ module Temple
   autoload :Core,       'temple/core'
   autoload :Engine,     'temple/engine'
   autoload :Generator,  'temple/generator'
+  autoload :Utils,      'temple/utils'
   
   module Parsers
     autoload :ERB,      'temple/parsers/erb'

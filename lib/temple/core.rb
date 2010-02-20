@@ -64,7 +64,11 @@ module Temple
       def postamble; buffer end
       
       def on_dynamic(code)
-        buffer " << (#{code}).to_s"
+        if Utils.literal_string?(code)
+          buffer " << (#{code})"
+        else
+          buffer " << (#{code}).to_s"
+        end
       end
     end
   end
