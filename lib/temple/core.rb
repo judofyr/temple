@@ -64,7 +64,7 @@ module Temple
       def postamble; buffer end
       
       def on_dynamic(code)
-        if Utils.literal_string?(code)
+        if @options[:check_literal] && Utils.literal_string?(code)
           buffer " << (#{code})"
         else
           buffer " << (#{code}).to_s"
