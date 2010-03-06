@@ -6,6 +6,10 @@ module Temple
   autoload :Generator,  'temple/generator'
   autoload :Utils,      'temple/utils'
   
+  module Engines
+    autoload :ERB,      'temple/engines/erb'
+  end
+  
   module Parsers
     autoload :ERB,      'temple/parsers/erb'
     autoload :Mustache, 'temple/parsers/mustache'

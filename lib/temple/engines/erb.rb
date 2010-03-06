@@ -1,7 +1,7 @@
 require 'erb'
 
 module Temple
-  class Engine
+  module Engines
     # An engine which works in-place for ERB:
     # 
     #   require 'temple'
