@@ -21,7 +21,13 @@ module Temple
     end
     
     def string_to_ruby(str)
-      str.inspect.gsub('\n', "\n")
+      str.inspect.gsub(/(\A|[^\\])(\\r)?\\n/) do
+        if $2
+          "#{$1}\\n"
+        else
+          "#{$1}\n"
+        end
+      end
     end
     
     # Sensible defaults
