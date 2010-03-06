@@ -45,7 +45,7 @@ module Temple
     
     def on_capture(name, block)
       prev, @options[:buffer] = @options[:buffer], name
-      [preamble, compile_part(block), "#{name} = #{postamble}"].join(" ; ")
+      [preamble, compile_part(block), "#{name} = (#{postamble})"].join(" ; ")
     ensure
       @options[:buffer] = prev
     end
