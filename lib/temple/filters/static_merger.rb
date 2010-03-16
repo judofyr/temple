@@ -11,6 +11,10 @@ module Temple
     #   [:multi,
     #     [:static, "Hello World!"]]
     class StaticMerger
+      def initialize(options = {})
+        @options = {}
+      end
+      
       def compile(exp)
         exp.first == :multi ? on_multi(*exp[1..-1]) : exp
       end

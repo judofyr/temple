@@ -2,6 +2,10 @@ module Temple
   module Filters
     # Inlines several static/dynamic into a single dynamic.
     class DynamicInliner
+      def initialize(options = {})
+        @options = {}
+      end
+      
       def compile(exp)
         exp.first == :multi ? on_multi(*exp[1..-1]) : exp
       end
