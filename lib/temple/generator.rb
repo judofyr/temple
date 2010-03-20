@@ -25,7 +25,7 @@ module Temple
       @options[:buffer] + str
     end
     
-    def to_ruby(str)
+    def self.to_ruby(str)
       str.inspect.gsub(/(\\r)?\\n/m) do |str|
         if $`[-1] == ?\\
           str
@@ -35,6 +35,10 @@ module Temple
           "\n"
         end
       end
+    end
+    
+    def to_ruby(str)
+      Generator.to_ruby(str)
     end
     
     # Sensible defaults

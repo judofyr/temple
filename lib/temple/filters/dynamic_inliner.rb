@@ -71,7 +71,7 @@ module Temple
       end
     
       def static(str)
-        str.inspect[1..-2].gsub('\n', "\n")
+        Generator.to_ruby(str)[1..-2]
       end
       
       def dynamic(str)
