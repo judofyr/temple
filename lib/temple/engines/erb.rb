@@ -53,6 +53,7 @@ module Temple
       end
       
       def initialize(str, safe_level = nil, trim_mode = nil, eoutvar = '_erbout', options = {})
+        @trim_mode = trim_mode
         @generator = options[:generator] || Core::ArrayBuffer
         @parser = Parsers::ERB.new(:trim_mode => trim_mode)
         @compiler = @generator.new(:buffer => eoutvar)
@@ -61,6 +62,27 @@ module Temple
         @sexp = @parser.compile(str)
         @optimized_sexp = Optimizers.inject(@sexp) { |m, e| e.new.compile(m) }
         @src = @compiler.compile(@optimized_sexp)
+        
+        if str.respond_to?(:encoding)
+          @enc = detect_magic_comment(str) || str.encoding
+          @src.insert(0, "#coding:#{@enc}\n")
+          @src << ".force_encoding(__ENCODING__)"
+        end
+      end
+      
+      def percent?
+        @trim_mode.is_a?(String) and @trim_mode.include?("%")
+      end
+      
+      def detect_magic_comment(s)
+        if /\A<%#(.*)%>/ =~ s or (percent? and /\A%#(.*)/ =~ s)
+  	      comment = $1
+  	      comment = $1 if comment[/-\*-\s*(.*?)\s*-*-$/]
+  	      if %r"coding\s*[=:]\s*([[:alnum:]\-_]+)" =~ comment
+  	        enc = $1.sub(/-(?:mac|dos|unix)/i, '')
+  	        enc = Encoding.find(enc)
+  	      end
+        end
       end
     end
   end

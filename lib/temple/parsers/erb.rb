@@ -11,6 +11,10 @@ module Temple
       end
       
       def compile(src)
+        if src.respond_to?(:encoding) && src.encoding.dummy?
+          raise ArgumentError, "#{src.encoding} is not ASCII compatible"
+        end
+        
         result = [:multi]
         
         content = ''
