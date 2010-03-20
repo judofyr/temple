@@ -33,7 +33,7 @@ module Temple
       @chain = self.class.filters.map do |filter, args, blk|
         opt = args.last.is_a?(Hash) ? args.pop : {}
         opt = args.inject(opt) do |memo, ele|
-          memo[ele] = options[ele]
+          memo[ele] = options[ele] if options.has_key?(ele)
           memo
         end
         
