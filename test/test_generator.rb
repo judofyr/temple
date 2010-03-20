@@ -49,22 +49,29 @@ class TestTempleGenerator < Test::Unit::TestCase
     simple = Simple.new(:buffer => "VAR")
     str = simple.compile([:capture, "foo", [:static, "test"]])
     
-    assert_match(/foo = \(S:test\).to_s/, str)
+    assert_match(/foo = S:test/, str)
     assert_match(/VAR\Z/, str)
   end
   
   def test_capture_with_multi
     simple = Simple.new(:buffer => "VAR")
-    str = simple.compile([:capture, "foo", [:multi,
-      [:static, "static"],
-      [:dynamic, "dynamic"],
-      [:block, "block"]
-    ]])
+    str = simple.compile([:multi,
+      [:static, "before"],
+      
+      [:capture, "foo", [:multi,
+        [:static, "static"],
+        [:dynamic, "dynamic"],
+        [:block, "block"]]],
+        
+      [:static, "after"]
+    ])
     
+    assert_match(/VAR << \(S:before\)/, str)
     assert_match(/foo = BUFFER/, str)
     assert_match(/foo << \(S:static\)/, str)
     assert_match(/foo << \(D:dynamic\)/, str)
     assert_match(/ B:block /, str)
+    assert_match(/VAR << \(S:after\)/, str)
     assert_match(/VAR\Z/, str)
   end
   

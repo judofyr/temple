@@ -72,9 +72,10 @@ module Temple
       @in_multi = false
       prev_buffer, @options[:buffer] = @options[:buffer], name.to_s
       content = compile(block)
+      @in_multi = true
       
       if CONCATABLE.include?(block.first)
-        "#{name} = (#{content}).to_s"
+        "#{name} = #{content}"
       else
         content
       end
