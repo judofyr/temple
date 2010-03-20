@@ -180,62 +180,29 @@ And then?
 You've ran the template through the parser, some filters and in the end a
 generator. What happens next?
 
-Temple's mission ends here, so it's all up to you, but here are at least three
-different approaches you could take (in pseudo-Ruby). It's just an overview,
-so if you want more details just ask on the mailing list.
+Temple's mission ends here, so it's all up to you, but we recommend using
+[Tilt](http://github.com/rtomayko/tilt), the generic interface to Ruby
+template engines. This gives you a wide range of features and your engine can
+be used right away in many projects.
 
-### Eval
+    require 'tilt'
+    
+    class MyTemplate < Tilt::Template
+      def prepare
+        @src = MyEngine.new(options).compile(data)
+      end
 
-    def initialize(template)
-      @compiled = compile(template)
+      def template_source
+        @src
+      end
     end
     
-    def render(b = nil)
-      eval(@compiled, b)
-    end
+    # Register your file extension:
+    Tilt.register 'ext', MyTemplate
     
-This is the slowest approach since Ruby has to parse the string every time, 
-but gives you one big advantage: You can pass in a binding. More specifically, 
-this means that you can control what `self` is (and thus instance variables) 
-*and* all local variables can be accessed.
-
-That said, it's not so common to use bindings and you often want to keep your 
-local variables local, so most of the time you won't use this approach.
-
-### Proc
-
-    def initialize(template)
-      @compiled = compile(template)
-      @proc = eval("proc { #{@compiled} }")
-    end
+    Tilt.new('example.ext').render     # => Render a file
+    MyTemplate.new { "String" }.render # => Render a string
     
-    def render(this = self)
-      this.instance_eval(&@proc)
-    end
-
-This is faster than using `eval`, but now you can't access any local 
-variables. It's still flexible in the way that you can evaluate it under many 
-different `selfs`.
-
-If you want to pass in explicit locals (as in `render(:post => Post.all)`), 
-it's possible, but might be a little tricky - especially on 1.8.
-
-### Method
-
-    def initialize(template)
-      instance_eval "def render() #{compile(template)} end"
-    end
-    
-    def render
-      # This method is re-defined by initialize.
-    end
-
-This is definitely the fastest one, but now you're also limited to evaluate it 
-under a single class. Alternately you could define the method on a module and 
-rather include/extend it where you need it.
-
-It's also fairy easy to pass in explicit locals.
-
 
 Installation
 ------------
