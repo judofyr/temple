@@ -31,7 +31,7 @@ Temple is built on a theory that every template consists of three elements:
 * Blocks (pieces of Ruby which are evaluated and *not* sent to the client, but 
   might change the control flow).
 
-The goal to a template engine is to take the template and eventually compile
+The goal of a template engine is to take the template and eventually compile
 it into *the core abstraction*:
 
     [:multi,
@@ -116,10 +116,23 @@ mind working across processes, it's not a problem at all.
 Compilers
 ---------
 
-A compiler is simply a class which has a method called #compile which takes
-one argument and returns a value. It’s illegal for a compiler to mutate the
-argument, and it should be possible to use the same instance several times
-(although not by several threads).
+A *compiler* is simply an object which responds a method called #compile which
+takes one argument and returns a value. It's illegal for a compiler to mutate
+the argument, and it should be possible to use the same instance several times
+(although not by several threads at the same time).
+
+While a compiler can be any object, you very often want to structure it as a
+class. Temple then assumes the initializer takes an optional option hash:
+
+    class MyCompiler
+      def initialize(options = {})
+        @options = options
+      end
+      
+      def compile(exp)
+        # do stuff
+      end
+    end
 
 ### Parsers
 
@@ -127,7 +140,7 @@ In Temple, a parser is also a compiler, because a compiler is just something
 that takes some input and produces some output. A parser is then something
 that takes a string and returns an Sexp.
 
-It’s important to remember that the parser *should be dumb*. No optimization,
+It's important to remember that the parser *should be dumb*. No optimization,
 no guesses. It should produce an Sexp that is as close to the source as
 possible. You should invent your own abstraction. Maybe you even want to
 separate the parsers into several parts and introduce several abstractions on
@@ -138,7 +151,7 @@ the way?
 A filter is a compiler which take an Sexp and returns an Sexp. It might turn
 convert it one step closer to the core-abstraction, it might create a new
 abstraction, or it might just optimize in the current abstraction. Ultimately,
-it’s still just a compiler which takes an Sexp and returns an Sexp.
+it's still just a compiler which takes an Sexp and returns an Sexp.
 
 For instance, Temple ships with {Temple::Filters::DynamicInliner} and
 {Temple::Filters::StaticMerger} which are general optimization filters which
@@ -210,14 +223,11 @@ it's possible, but might be a little tricky - especially on 1.8.
 ### Method
 
     def initialize(template)
-      @compiled = compile(template)
+      instance_eval "def render() #{compile(template)} end"
     end
     
     def render
-      # Re-define the same method.
-      # It's also possible to rather define a new method.
-      instance_eval "def render() #{@compiled} end"
-      render
+      # This method is re-defined by initialize.
     end
 
 This is definitely the fastest one, but now you're also limited to evaluate it 
@@ -242,4 +252,4 @@ how I started experimenting with template engines in the first place.
 
 I also owe [Ryan Davis](http://zenspider.com/) a lot for his excellent
 projects ParserTree, RubyParser, Ruby2Ruby and SexpProcessor. Temple is
-heavily inspired by how this tools work.
+heavily inspired by how these tools work.
