@@ -17,6 +17,7 @@ module Temple
   
   module Filters
     autoload :Mustache,       'temple/filters/mustache'
+    autoload :MultiFlattener, 'temple/filters/multi_flattener'
     autoload :StaticMerger,   'temple/filters/static_merger'
     autoload :DynamicInliner, 'temple/filters/dynamic_inliner'
     autoload :Escapable,      'temple/filters/escapable'
