@@ -14,6 +14,30 @@ class TestTempleEnginesERB < Test::Unit::TestCase
     TempleERB.suck!
     assert_equal(NormalERB, ::ERB)
   end
+  
+  def test_change_generator
+    gen = Temple::Core::StringBuffer
+    erb = TempleERB.new("Hello", nil, nil, 'foo', :generator => gen)
+    assert_match(/foo = ''/, erb.src)
+    
+    erb = TempleERB.new("Hello", nil, nil, 'foo', :generator => gen.new(:buffer => "bar"))
+    assert_match(/bar = ''/, erb.src)
+    assert_no_match(/foo/, erb.src)
+  end
+  
+  def test_optimizers
+    obj = Object.new
+    def obj.compile(exp)
+      [:static, "Hello World!"]
+    end
+    
+    TempleERB::Optimizers << obj
+    
+    erb = TempleERB.new("Hello")
+    assert_equal("Hello World!", erb.result)
+  ensure
+    TempleERB::Optimizers.delete(obj)
+  end
 
   def test_without_filename
     erb = TempleERB.new("<% raise ::TestTempleEnginesERB::MyError %>")

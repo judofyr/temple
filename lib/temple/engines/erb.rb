@@ -10,7 +10,7 @@ module Temple
     #   template.result # => "2"
     class ERB < ::ERB
       OriginalERB = ::ERB
-      Optimizers = [Filters::StaticMerger, Filters::DynamicInliner]
+      Optimizers = [Filters::StaticMerger.new, Filters::DynamicInliner.new]
       
       # The optional _filename_ argument passed to Kernel#eval when the ERB code
       # is run
@@ -53,15 +53,16 @@ module Temple
       end
       
       def initialize(str, safe_level = nil, trim_mode = nil, eoutvar = '_erbout', options = {})
-        @trim_mode = trim_mode
-        @generator = options[:generator] || Core::ArrayBuffer
-        @parser = Parsers::ERB.new(:trim_mode => trim_mode)
-        @compiler = @generator.new(:buffer => eoutvar)
         @safe_level = safe_level
+        @trim_mode = trim_mode
+        @parser = Parsers::ERB.new(:trim_mode => @trim_mode)
+        
+        @generator = options[:generator] || Core::ArrayBuffer
+        @generator = @generator.new(:buffer => eoutvar) if @generator.is_a?(Class)
         
         @sexp = @parser.compile(str)
-        @optimized_sexp = Optimizers.inject(@sexp) { |m, e| e.new.compile(m) }
-        @src = @compiler.compile(@optimized_sexp)
+        @optimized_sexp = Optimizers.inject(@sexp) { |m, e| e.compile(m) }
+        @src = @generator.compile(@optimized_sexp)
         
         if str.respond_to?(:encoding)
           @enc = detect_magic_comment(str) || str.encoding
