@@ -174,6 +174,30 @@ generator which turns out to be a lot faster then the others, it's going to
 make *every single engine* based on Temple faster! So if you have any ideas,
 please share them - it's highly appreciated.
 
+Engines
+-------
+
+When you have a chain of a parsers, some filters and a generator you can finally create your *engine*. Temple provides {Temple::Engine} which makes this very easy:
+
+    class MyEngine < Temple::Engine
+      # First run MyParser, passing the :strict option
+      use MyParser, :strict
+      
+      # Then a custom filter
+      use MyFilter
+      
+      # Then some general optimizations filters
+      filter :MultiFlattener
+      filter :StaticMerger
+      filter :DynamicInliner
+      
+      # Finally the generator
+      generator :ArrayBuffer, :buffer
+    end
+    
+    engine = MyEngine.new(:strict => "For MyParser")
+    engine.compile(something)
+
 And then?
 ---------
 

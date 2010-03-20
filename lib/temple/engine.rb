@@ -1,13 +1,26 @@
 module Temple
-  # An engine is simply a chain of compilers (that includes both parsers,
-  # filters and generators).
+  # An engine is simply a chain of compilers (that often includes a parser,
+  # some filters and a generator).
   #
-  #   class ERB < Temple::Engine
-  #     parser :ERB            # shortcut for use Temple::Parsers::ERB
-  #     filter :Escapable      #              use Temple::Filters::Escapable
-  #     filter :DynamicInliner #              use Temple::Filters::DynamicInliner
-  #     generator :ArrayBuffer  #              use Temple::Core::ArrayBuffer
-  #  end
+  #   class MyEngine < Temple::Engine
+  #     # First run MyParser, passing the :strict option
+  #     use MyParser, :strict
+  # 
+  #     # Then a custom filter
+  #     use MyFilter
+  #      
+  #     # Then some general optimizations filters
+  #     filter :MultiFlattener
+  #     filter :StaticMerger
+  #     filter :DynamicInliner
+  #       
+  #     # Finally the generator
+  #     generator :ArrayBuffer, :buffer
+  #   end
+  #   
+  #   engine = MyEngine.new(:strict => "For MyParser")
+  #   engine.compile(something)
+  # 
   class Engine
     def self.filters
       @filters ||= []
@@ -17,14 +30,17 @@ module Temple
       filters << [filter, args, blk]
     end
     
+    # Shortcut for <tt>use Temple::Parsers::parser</tt>
     def self.parser(parser, *args, &blk)
       use(Temple::Parsers.const_get(parser), *args, &blk)
     end
     
+    # Shortcut for <tt>use Temple::Filters::parser</tt>
     def self.filter(filter, *args, &blk)
       use(Temple::Filters.const_get(filter), *args, &blk)
     end
     
+    # Shortcut for <tt>use Temple::Generator::parser</tt>
     def self.generator(compiler, *args, &blk)
       use(Temple::Core.const_get(compiler), *args, &blk)
     end
