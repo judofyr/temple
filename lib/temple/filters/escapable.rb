@@ -14,10 +14,10 @@ module Temple
           case exp[1][0]
           when :static
             [:static, eval(@escaper % exp[1][1].inspect)]
-          when :dynamic
-            [:dynamic, @escaper % exp[1][1]]
+          when :dynamic, :block
+            [exp[1][0], @escaper % exp[1][1]]
           else
-            raise "Escapable can only handle :static and :dynamic for the moment."
+            raise "Escapable can only handle :static, :dynamic and :block for the moment."
           end
         else
           exp.map { |e| compile(e) }
