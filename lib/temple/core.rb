@@ -35,11 +35,11 @@ module Temple
       def postamble; buffer ".join"   end
       
       def on_static(text)
-        buffer " << #{string_to_ruby text}"
+        to_ruby(text)
       end
       
       def on_dynamic(code)
-        buffer " << (#{code})"
+        code
       end
       
       def on_block(code)
@@ -65,9 +65,9 @@ module Temple
       
       def on_dynamic(code)
         if @options[:check_literal] && Utils.literal_string?(code)
-          buffer " << (#{code})"
+          code
         else
-          buffer " << (#{code}).to_s"
+          "(#{code}).to_s"
         end
       end
     end

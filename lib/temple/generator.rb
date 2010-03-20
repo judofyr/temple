@@ -4,23 +4,28 @@ module Temple
       :buffer => "_buf"
     }
     
+    CONCATABLE = [:static, :dynamic]
+    
     def initialize(options = {})
       @options = DEFAULT_OPTIONS.merge(options)
+      @in_multi = false
     end
     
     def compile(exp)
-      [preamble, compile_part(exp), postamble].join(" ; ")
-    end
-    
-    def compile_part(exp)
-      send("on_#{exp.first}", *exp[1..-1])
+      res = send("on_#{exp.first}", *exp[1..-1])
+      
+      if @in_multi && CONCATABLE.include?(exp.first)
+        concat(res)
+      else
+        res
+      end
     end
     
     def buffer(str = '')
       @options[:buffer] + str
     end
     
-    def string_to_ruby(str)
+    def to_ruby(str)
       str.inspect.gsub(/(\\r)?\\n/m) do |str|
         if $`[-1] == ?\\
           str
@@ -36,9 +41,18 @@ module Temple
     
     def preamble;  '' end
     def postamble; '' end
+    def concat(s)  buffer " << (#{s})" end
     
     def on_multi(*exp)
-      exp.map { |e| compile_part(e) }.join(" ; ")
+      if @in_multi
+        exp.map { |e| compile(e) }
+      else
+        @in_multi = true
+        content = exp.map { |e| compile(e) }
+        content = [preamble, content, postamble].flatten
+        @in_multi = false
+        content
+      end.join(" ; ")
     end
     
     def on_newline
@@ -46,10 +60,22 @@ module Temple
     end
     
     def on_capture(name, block)
-      prev, @options[:buffer] = @options[:buffer], name
-      [preamble, compile_part(block), "#{name} = (#{postamble})"].join(" ; ")
+      unless @in_multi
+        # We always need the preamble/postamble in capture.
+        return compile([:multi, [:capture, name, block]])
+      end
+      
+      @in_multi = false
+      prev_buffer, @options[:buffer] = @options[:buffer], name.to_s
+      content = compile(block)
+      
+      if CONCATABLE.include?(block.first)
+        "#{name} = (#{content}).to_s"
+      else
+        content
+      end
     ensure
-      @options[:buffer] = prev
+      @options[:buffer] = prev_buffer
     end
   end
 end
