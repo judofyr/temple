@@ -8,10 +8,10 @@ Gem::Specification.new do |s|
   s.authors = ["Magnus Holm"]
   s.date = %q{2010-01-23}
   s.email = %q{judofyr@gmail.com}
-  s.files = ["LICENSE", "README.md", "Rakefile", "VERSION", "lib/temple.rb", "lib/temple/core.rb", "lib/temple/engine.rb", "lib/temple/filters/dynamic_inliner.rb", "lib/temple/filters/escapable.rb", "lib/temple/filters/mustache.rb", "lib/temple/filters/static_merger.rb", "lib/temple/generator.rb", "lib/temple/parsers/erb.rb", "lib/temple/parsers/mustache.rb", "spec/dynamic_inliner_spec.rb", "spec/escapable_spec.rb", "spec/spec_helper.rb", "spec/static_merger_spec.rb", "spec/temple/parsers/erb_spec.rb", "spec/temple_spec.rb", "temple.gemspec"]
+  s.files = [".yardopts", "LICENSE", "README.md", "Rakefile", "lib/temple.rb", "lib/temple/core.rb", "lib/temple/engine.rb", "lib/temple/engines/erb.rb", "lib/temple/filters/dynamic_inliner.rb", "lib/temple/filters/escapable.rb", "lib/temple/filters/multi_flattener.rb", "lib/temple/filters/static_merger.rb", "lib/temple/generator.rb", "lib/temple/parsers/erb.rb", "lib/temple/utils.rb", "temple.gemspec", "test/engines/hello.erb", "test/engines/test_erb.rb", "test/engines/test_erb_m17n.rb", "test/filters/test_dynamic_inliner.rb", "test/filters/test_escapable.rb", "test/filters/test_static_merger.rb", "test/helper.rb", "test/test_generator.rb"]
   s.homepage = %q{http://github.com/judofyr/temple}
   s.require_paths = ["lib"]
-  s.rubygems_version = %q{1.3.5}
+  s.rubygems_version = %q{1.3.6}
   s.summary = %q{Template compilation framework in RUby}
 
   if s.respond_to? :specification_version then
