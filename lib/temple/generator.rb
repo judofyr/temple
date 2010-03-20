@@ -21,11 +21,13 @@ module Temple
     end
     
     def string_to_ruby(str)
-      str.inspect.gsub(/(\A|[^\\])(\\r)?\\n/) do
-        if $2
-          "#{$1}\\n"
+      str.inspect.gsub(/(\\r)?\\n/m) do |str|
+        if $`[-1] == ?\\
+          str
+        elsif $1
+          "\\n"
         else
-          "#{$1}\n"
+          "\n"
         end
       end
     end
