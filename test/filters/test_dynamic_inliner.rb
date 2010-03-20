@@ -1,68 +1,76 @@
-require File.dirname(__FILE__) + '/spec_helper.rb'
+require File.dirname(__FILE__) + '/../helper'
 
-describe_filter :DynamicInliner do
-  it "should merge several statics into dynamic" do
-    @filter.compile([:multi,
+class TestTempleFiltersDynamicInliner < TestFilter(:DynamicInliner)
+  def test_several_statics_into_dynamic
+    exp = @filter.compile([:multi,
       [:static, "Hello "],
       [:static, "World\n "],
       [:static, "Have a nice day"]
-    ]).should == [:multi,
+    ])
+    
+    assert_equal([:multi,
       [:dynamic, "\"Hello World\n Have a nice day\""]
-    ]
+    ], exp)
   end
-  
-  it "should merge several dynamics into a single dynamic" do
-    @filter.compile([:multi,
+
+  def test_several_dynamics_into_dynamic
+    exp = @filter.compile([:multi,
       [:dynamic, "@hello"],
       [:dynamic, "@world"],
       [:dynamic, "@yeah"]
-    ]).should == [:multi,
+    ])
+    
+    assert_equal([:multi,
       [:dynamic, '"#{@hello}#{@world}#{@yeah}"']
-    ]
+    ], exp)
   end
   
-  it "should merge static+dynamic into dynamic" do
-    @filter.compile([:multi,
+  def test_static_and_dynamic_into_dynamic
+    exp = @filter.compile([:multi,
       [:static, "Hello"],
       [:dynamic, "@world"],
       [:dynamic, "@yeah"],
       [:static, "Nice"]
-    ]).should == [:multi,
+    ])
+    
+    assert_equal([:multi,
       [:dynamic, '"Hello#{@world}#{@yeah}Nice"']
-    ]
+    ], exp)
   end
   
-  it "should merge static+dynamic around blocks" do
-    @filter.compile([:multi,
+  def test_static_and_dynamic_around_blocks
+    exp = @filter.compile([:multi,
       [:static, "Hello "],
       [:dynamic, "@world"],
       [:block, "Oh yeah"],
       [:dynamic, "@yeah"],
       [:static, "Once more"]
-    ]).should == [:multi,
+    ])
+    
+    assert_equal([:multi,
       [:dynamic, '"Hello #{@world}"'],
       [:block, "Oh yeah"],
       [:dynamic, '"#{@yeah}Once more"']
-    ]
+    ], exp)
   end
   
-  it "should keep blocks intact" do
+  def test_keep_blocks_intact
     exp = [:multi, [:block, 'foo']]
-    @filter.compile(exp).should == exp
+    assert_equal(exp, @filter.compile(exp))
   end
   
-  it "should keep single static intact" do
+  def test_keep_single_static_intact
     exp = [:multi, [:static, 'foo']]
-    @filter.compile(exp).should == exp
+    assert_equal(exp, @filter.compile(exp))
   end
 
-  it "should keep single dynamic intact" do
+  def test_keep_single_dynamic_intact
     exp = [:multi, [:dynamic, 'foo']]
-    @filter.compile(exp).should == exp
+    assert_equal(exp, @filter.compile(exp))
   end
   
-  it "should inline inside multi" do
-    @filter.compile([:multi,
+  def test_inline_inside_multi
+    exp = @filter.compile([:multi,
       [:static, "Hello "],
       [:dynamic, "@world"],
       [:multi,
@@ -70,33 +78,39 @@ describe_filter :DynamicInliner do
         [:dynamic, "@world"]],
       [:static, "Hello "],
       [:dynamic, "@world"]
-    ]).should == [:multi,
+    ])
+    
+    assert_equal([:multi,
       [:dynamic, '"Hello #{@world}"'],
       [:multi, [:dynamic, '"Hello #{@world}"']],
       [:dynamic, '"Hello #{@world}"']
-    ]
+    ], exp)
   end
   
-  it "should merge across newlines" do
-    @filter.compile([:multi,
+  def test_merge_across_newlines
+    exp = @filter.compile([:multi,
       [:static, "Hello \n"],
       [:newline],
       [:dynamic, "@world"],
       [:newline]
-    ]).should == [:multi,
+    ])
+    
+    assert_equal([:multi,
       [:dynamic, ["\"Hello \n\"", '"#{@world}"', '""'].join("\\\n")],
-    ]
+    ], exp)
   end
   
-  it "should handle static followed by a newline" do
-    @filter.compile([:multi,
+  def test_static_followed_by_newline
+    exp = @filter.compile([:multi,
       [:static, "Hello \n"],
       [:newline],
       [:block, "world"]
-    ]).should == [:multi,
+    ])
+    
+    assert_equal([:multi,
       [:static, "Hello \n"],
       [:newline],
       [:block, "world"]
-    ]
+    ], exp)
   end
 end
