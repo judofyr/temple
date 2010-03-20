@@ -1,28 +1,83 @@
 module Temple
   # == The Core Abstraction
-  # 
-  # The core abstraction is what every template evetually should be compiled 
+  #            
+  # The core abstraction is what every template evetually should be compiled
   # to. Currently it consists of four essential and two convenient types:
   # multi, static, dynamic, block, newline and capture.
-  # 
-  # === [:multi, *exp]
-  # 
+  #          
+  # When compiling, there's two different strings we'll have to think about.
+  # First we have the generated code. This is what your engine (from Temple's
+  # point of view) spits out. If you construct this carefully enough, you can
+  # make exceptions report correct line numbers, which is very convenient.
+  #        
+  # Then there's the result. This is what your engine (from the user's point
+  # of view) spits out. It's what happens if you evaluate the generated code.
+  #            
+  # === [:multi, *sexp]
+  #            
   # Multi is what glues everything together. It's simply a sexp which combines
   # several others sexps:
-  # 
+  #            
   #   [:multi,
   #     [:static, "Hello "],
   #     [:dynamic, "@world"]]
-  # 
+  #            
   # === [:static, string]
-  # 
-  # Static denotes that the given string should be appended to the result.
-  # 
-  # === [:dynamic, rby]
-  # === [:block, rby]
+  #            
+  # Static indicates that the given string should be appended to the result.
+  # Every \n will be also cause a newline in the generated code. \r\n on the
+  # other hand, only causes a newline in the result.
+  #       
+  # Example:
+  #       
+  #   [:static, "Hello World"]
+  #   # is the same as:
+  #   _buf << "Hello World"
+  #         
+  #   [:static, "Hello \n World"]
+  #   # is the same as:
+  #   _buf << "Hello
+  #   World"
+  #         
+  #   [:static, "Hello \r\n World"]
+  #   # is the same as
+  #   _buf << "Hello\nWorld"
+  #       
+  # === [:dynamic, ruby]
+  #      
+  # Dynamic indicates that the given Ruby code should be evaluated and then
+  # appended to the result. Any \n causes a newline in the generated code.
+  #     
+  # The Ruby code must be a complete expression in the sense that you can pass
+  # it to eval() and it would not raise SyntaxError.
+  #      
+  # === [:block, ruby]
+  #     
+  # Block indicates that the given Ruby code should be evaluated, and may
+  # change the control flow. Any \n causes a newline in the generated code.
+  #     
   # === [:newline]
-  # === [:capture, name, exp]
+  #   
+  # Newline causes a newline in the generated code, but not in the result.
+  #   
+  # === [:capture, variable_name, sexp]
+  #  
+  # Evaluates the Sexp using the rules above, but instead of appending to the
+  # result, it sets the content to the variable given.
+  # 
+  # Example:
+  # 
+  #   [:multi,
+  #     [:static, "Some content"],
+  #     [:capture, "foo", [:static, "More content"]],
+  #     [:dynamic, "foo.downcase"]]
+  #   # is the same as:
+  #   _buf << "Some content"
+  #   foo = "More content"
+  #   _buf << foo.downcase
   module Core
+    # Implements an array buffer.
+    # 
     #   _buf = []
     #   _buf << "static"
     #   _buf << dynamic
@@ -52,6 +107,8 @@ module Temple
       def postamble; buffer; end
     end
     
+    # Implements a string buffer.
+    # 
     #   _buf = ''
     #   _buf << "static"
     #   _buf << dynamic.to_s
