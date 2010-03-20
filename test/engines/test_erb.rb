@@ -1,18 +1,22 @@
 require File.dirname(__FILE__) + '/../helper'
+require 'erb'
 
 class TestTempleEnginesERB < Test::Unit::TestCase
   class MyError < RuntimeError ; end
   
-  def setup
-    Temple::Engines::ERB.rock!
-  end
+  NormalERB = ::ERB
+  TempleERB = Temple::Engines::ERB
   
-  def teardown
+  def test_rock_suck
+    assert_equal(NormalERB, ::ERB)
+    Temple::Engines::ERB.rock!
+    assert_equal(TempleERB, ::ERB)
     Temple::Engines::ERB.suck!
+    assert_equal(NormalERB, ::ERB)
   end
 
   def test_without_filename
-    erb = ERB.new("<% raise ::TestTempleEnginesERB::MyError %>")
+    erb = Temple::Engines::ERB.new("<% raise ::TestTempleEnginesERB::MyError %>")
     e = assert_raise(MyError) {
       erb.result
     }
@@ -20,7 +24,7 @@ class TestTempleEnginesERB < Test::Unit::TestCase
   end
 
   def test_with_filename
-    erb = ERB.new("<% raise ::TestTempleEnginesERB::MyError %>")
+    erb = Temple::Engines::ERB.new("<% raise ::TestTempleEnginesERB::MyError %>")
     erb.filename = "test filename"
     e = assert_raise(MyError) {
       erb.result
@@ -29,7 +33,7 @@ class TestTempleEnginesERB < Test::Unit::TestCase
   end
 
   def test_without_filename_with_safe_level
-    erb = ERB.new("<% raise ::TestTempleEnginesERB::MyError %>", 1)
+    erb = Temple::Engines::ERB.new("<% raise ::TestTempleEnginesERB::MyError %>", 1)
     e = assert_raise(MyError) {
       erb.result
     }
@@ -37,7 +41,7 @@ class TestTempleEnginesERB < Test::Unit::TestCase
   end
 
   def test_with_filename_and_safe_level
-    erb = ERB.new("<% raise ::TestTempleEnginesERB::MyError %>", 1)
+    erb = Temple::Engines::ERB.new("<% raise ::TestTempleEnginesERB::MyError %>", 1)
     erb.filename = "test filename"
     e = assert_raise(MyError) {
       erb.result
@@ -48,7 +52,7 @@ end
 
 class TestTempleEnginesERBCore < Test::Unit::TestCase
   def setup
-    @erb = ERB
+    @erb = Temple::Engines::ERB
   end
 
   def test_core
@@ -189,26 +193,26 @@ EOS
 %n = 1
 <%= n%>
 EOS
-    assert_equal("1\n", ERB.new(src, nil, '%').result)
+    assert_equal("1\n", Temple::Engines::ERB.new(src, nil, '%').result)
 
     src = <<EOS
 <%
 %>
 EOS
     ans = "\n"
-    assert_equal(ans, ERB.new(src, nil, '%').result)
+    assert_equal(ans, Temple::Engines::ERB.new(src, nil, '%').result)
 
     src = "<%\n%>"
     # ans = "\n"
     ans = ""
-    assert_equal(ans, ERB.new(src, nil, '%').result)
+    assert_equal(ans, Temple::Engines::ERB.new(src, nil, '%').result)
 
     src = <<EOS
 <%
 n = 1
 %><%= n%>
 EOS
-    assert_equal("1\n", ERB.new(src, nil, '%').result)
+    assert_equal("1\n", Temple::Engines::ERB.new(src, nil, '%').result)
 
     src = <<EOS
 %n = 1
@@ -224,7 +228,7 @@ EOS
 % %%><%1
 %%
 EOS
-    assert_equal(ans, ERB.new(src, nil, '%').result)
+    assert_equal(ans, Temple::Engines::ERB.new(src, nil, '%').result)
   end
 
   def test_def_erb_method
@@ -246,7 +250,7 @@ EOS
 
   def test_def_method_without_filename
     klass = Class.new
-    erb = ERB.new("<% raise ::TestTempleEnginesERB::MyError %>")
+    erb = Temple::Engines::ERB.new("<% raise ::TestTempleEnginesERB::MyError %>")
     erb.filename = "test filename"
     assert(! klass.new.respond_to?('my_error'))
     erb.def_method(klass, 'my_error')
@@ -258,7 +262,7 @@ EOS
 
   def test_def_method_with_fname
     klass = Class.new
-    erb = ERB.new("<% raise ::TestTempleEnginesERB::MyError %>")
+    erb = Temple::Engines::ERB.new("<% raise ::TestTempleEnginesERB::MyError %>")
     erb.filename = "test filename"
     assert(! klass.new.respond_to?('my_error'))
     erb.def_method(klass, 'my_error', 'test fname')
@@ -302,7 +306,7 @@ foo
 %% print 'foo'
 
 EOS
-    assert_equal(ans, ERB.new(src, nil, '%').result)
+    assert_equal(ans, Temple::Engines::ERB.new(src, nil, '%').result)
   end
 
   def test_keep_lineno
@@ -313,7 +317,7 @@ Hello,
 % raise("lineno")
 EOS
 
-    erb = ERB.new(src, nil, '%')
+    erb = Temple::Engines::ERB.new(src, nil, '%')
     begin
       erb.result
       assert(false)
@@ -333,7 +337,7 @@ EOS
 %>Hello, 
 World%>
 EOS
-    assert_equal(ans, ERB.new(src, nil, '>').result)
+    assert_equal(ans, Temple::Engines::ERB.new(src, nil, '>').result)
 
     ans = <<EOS
 %>
@@ -341,7 +345,7 @@ Hello,
 
 World%>
 EOS
-    assert_equal(ans, ERB.new(src, nil, '<>').result)
+    assert_equal(ans, Temple::Engines::ERB.new(src, nil, '<>').result)
 
     ans = <<EOS
 %>
@@ -350,7 +354,7 @@ Hello,
 World%>
 
 EOS
-    assert_equal(ans, ERB.new(src).result)
+    assert_equal(ans, Temple::Engines::ERB.new(src).result)
 
     src = <<EOS
 Hello, 
@@ -360,7 +364,7 @@ Hello,
 <% raise("lineno") %>
 EOS
 
-    erb = ERB.new(src)
+    erb = Temple::Engines::ERB.new(src)
     begin
       erb.result
       assert(false)
@@ -368,7 +372,7 @@ EOS
       assert_match(/\A\(erb\):5\b/, $@[0].to_s)
     end
 
-    erb = ERB.new(src, nil, '>')
+    erb = Temple::Engines::ERB.new(src, nil, '>')
     begin
       erb.result
       assert(false)
@@ -376,7 +380,7 @@ EOS
       assert_match(/\A\(erb\):5\b/, $@[0].to_s)
     end
 
-    erb = ERB.new(src, nil, '<>')
+    erb = Temple::Engines::ERB.new(src, nil, '<>')
     begin
       erb.result
       assert(false)
@@ -392,7 +396,7 @@ EOS
 <% raise("lineno") %>
 EOS
 
-    erb = ERB.new(src, nil, '-')
+    erb = Temple::Engines::ERB.new(src, nil, '-')
     begin
       erb.result
       assert(false)
@@ -400,7 +404,7 @@ EOS
       assert_match(/\A\(erb\):5\b/, $@[0].to_s)
     end
 
-    erb = ERB.new(src, nil, '%-')
+    erb = Temple::Engines::ERB.new(src, nil, '%-')
     begin
       erb.result
       assert(false)
@@ -438,8 +442,8 @@ NotSkip  NotSkip
    * WORLD
 KeepNewLine  
 EOS
-   assert_equal(ans, ERB.new(src, nil, '-').result)
-   assert_equal(ans, ERB.new(src, nil, '-%').result)
+   assert_equal(ans, Temple::Engines::ERB.new(src, nil, '-').result)
+   assert_equal(ans, Temple::Engines::ERB.new(src, nil, '-%').result)
   end
 
   def test_url_encode
