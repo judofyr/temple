@@ -1,5 +1,5 @@
 module Temple
-  VERSION = "0.0.1"
+  VERSION = "0.1.0"
   
   autoload :Core,       'temple/core'
   autoload :Engine,     'temple/engine'
@@ -12,11 +12,9 @@ module Temple
   
   module Parsers
     autoload :ERB,      'temple/parsers/erb'
-    autoload :Mustache, 'temple/parsers/mustache'
   end
   
   module Filters
-    autoload :Mustache,       'temple/filters/mustache'
     autoload :MultiFlattener, 'temple/filters/multi_flattener'
     autoload :StaticMerger,   'temple/filters/static_merger'
     autoload :DynamicInliner, 'temple/filters/dynamic_inliner'
