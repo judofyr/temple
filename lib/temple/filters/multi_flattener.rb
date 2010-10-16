@@ -4,19 +4,22 @@ module Temple
       def initialize(options = {})
         @options = {}
       end
-      
+
       def compile(exp)
-        return exp unless exp.first == :multi
+        exp.first == :multi ? on_multi(*exp[1..-1]) : exp
+      end
+      
+      def on_multi(*exps)
         # If the multi contains a single element, just return the element
-        return compile(exp[1]) if exp.length == 2
+        return compile(exps.first) if exps.length == 1
         result = [:multi]
         
-        exp[1..-1].each do |e|
-          e = compile(e)
-          if e.first == :multi
-            result.concat(e[1..-1])
+        exps.each do |exp|
+          exp = compile(exp)
+          if exp.first == :multi
+            result.concat(exp[1..-1])
           else
-            result << e
+            result << exp
           end
         end
         
