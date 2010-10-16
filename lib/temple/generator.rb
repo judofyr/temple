@@ -26,15 +26,7 @@ module Temple
     end
     
     def self.to_ruby(str)
-      str.inspect.gsub(/(\\r)?\\n/m) do |str|
-        if $`[-1] == ?\\
-          str
-        elsif $1
-          "\\n"
-        else
-          "\n"
-        end
-      end
+      str.inspect
     end
     
     def to_ruby(str)

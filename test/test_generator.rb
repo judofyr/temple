@@ -93,30 +93,8 @@ class TestTempleGenerator < Test::Unit::TestCase
   
   def test_to_ruby
     simple = Simple.new
-    
-    {
-      "Hello"              =>   'Hello',
-      "Hello\r\nWorld"     =>   'Hello\nWorld',
-      "Hello\nWorld"       => %w|Hello World|,
-      "Hello\n\r\n\nWorld" => %w|Hello \n World|,
-      "\r\n\nHelloWorld\n" => %w|\n HelloWorld .|,
-      "\nHelloWorld\r\n"   => %w|. HelloWorld\n|,
-    }.
-    each do |actual, expected|
-      if expected.is_a?(Array)
-        expected = expected.map do |x|
-          if x == "."
-            # Use the dot so we can easily match a newline
-            # at the end or the beginning.
-            ""
-          else
-            x
-          end
-        end.join("\n") 
-      end
-      
-      expected = '"' + expected + '"'
-      assert_equal(expected, simple.to_ruby(actual))
-    end
+
+    assert_equal('"Hello"', simple.to_ruby("Hello"))
+    assert_equal('"Hello\nWorld"', simple.to_ruby("Hello\nWorld"))
   end
 end

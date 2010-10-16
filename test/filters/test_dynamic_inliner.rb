@@ -9,7 +9,7 @@ class TestTempleFiltersDynamicInliner < TestFilter(:DynamicInliner)
     ])
     
     assert_equal([:multi,
-      [:dynamic, "\"Hello World\n Have a nice day\""]
+      [:dynamic, '"Hello World\n Have a nice day"']
     ], exp)
   end
 
@@ -96,7 +96,7 @@ class TestTempleFiltersDynamicInliner < TestFilter(:DynamicInliner)
     ])
     
     assert_equal([:multi,
-      [:dynamic, ["\"Hello \n\"", '"#{@world}"', '""'].join("\\\n")],
+      [:dynamic, ['"Hello \n"', '"#{@world}"', '""'].join("\\\n")]
     ], exp)
   end
   

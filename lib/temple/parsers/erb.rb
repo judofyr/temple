@@ -25,7 +25,7 @@ module Temple
           if scanner.stag.nil?
             case token
             when Compiler::PercentLine
-              result << [:static, content] if content.size > 0
+              append_static(result, content) if content.size > 0
               content = ''
               result << [:block, token.to_s.strip]
               result << [:newline]
@@ -35,12 +35,12 @@ module Temple
               scanner.stag = token
             when "\n"
               content << "\n"
-              result << [:static, content]
+              append_static(result, content)
               content = ''
             when '<%%'
               result << [:static, '<%']
             else
-              result << [:static, token]
+              append_static(result, token)
             end
           else
             case token
@@ -70,6 +70,13 @@ module Temple
         end
         
         result
+      end
+
+      def append_static(result, content)
+        result << [:static, content]
+        content.count("\n").times do
+          result << [:newline]
+        end
       end
     end                      
   end

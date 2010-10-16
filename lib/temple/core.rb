@@ -25,8 +25,6 @@ module Temple
   # === [:static, string]
   #            
   # Static indicates that the given string should be appended to the result.
-  # Every \n will be also cause a newline in the generated code. \r\n on the
-  # other hand, only causes a newline in the result.
   #       
   # Example:
   #       
@@ -35,18 +33,13 @@ module Temple
   #   _buf << "Hello World"
   #         
   #   [:static, "Hello \n World"]
-  #   # is the same as:
-  #   _buf << "Hello
-  #   World"
-  #         
-  #   [:static, "Hello \r\n World"]
   #   # is the same as
   #   _buf << "Hello\nWorld"
   #       
   # === [:dynamic, ruby]
   #      
   # Dynamic indicates that the given Ruby code should be evaluated and then
-  # appended to the result. Any \n causes a newline in the generated code.
+  # appended to the result.
   #     
   # The Ruby code must be a complete expression in the sense that you can pass
   # it to eval() and it would not raise SyntaxError.
