@@ -16,5 +16,14 @@ module Temple
       # That has to be the only token.
       lexer.token.nil?
     end
+
+    def empty_exp?(exp)
+      case exp[0]
+      when :multi
+        exp[1..-1].all? { |e| e[0] == :newline }
+      else
+        false
+      end
+    end
   end
 end
