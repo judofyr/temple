@@ -19,4 +19,8 @@ module Temple
     autoload :StaticMerger,   'temple/filters/static_merger'
     autoload :DynamicInliner, 'temple/filters/dynamic_inliner'
   end
+
+  module HTML
+    autoload :Fast,           'temple/html/fast'
+  end
 end
