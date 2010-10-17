@@ -1,5 +1,5 @@
 module Temple
-  VERSION = "0.1.1"
+  VERSION = "0.1.2"
   
   autoload :Core,       'temple/core'
   autoload :Engine,     'temple/engine'
