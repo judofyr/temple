@@ -83,11 +83,11 @@ module Temple
       def postamble; buffer ".join"   end
       
       def on_static(text)
-        to_ruby(text)
+        concat(to_ruby(text))
       end
       
       def on_dynamic(code)
-        code
+        concat(code)
       end
       
       def on_block(code)
@@ -98,6 +98,7 @@ module Temple
     # Just like ArrayBuffer, but doesn't call #join on the array.
     class Array < ArrayBuffer
       def postamble; buffer; end
+      def capture_postamble; end
     end
     
     # Implements a string buffer.
@@ -110,15 +111,14 @@ module Temple
     #   end
     #   _buf
     class StringBuffer < ArrayBuffer
+      Generator::DEFAULT_OPTIONS[:capture_generator] = self
+
       def preamble;  buffer " = ''" end
       def postamble; buffer end
+      def capture_postamble; end
       
       def on_dynamic(code)
-        if @options[:check_literal] && Utils.literal_string?(code)
-          code
-        else
-          "(#{code}).to_s"
-        end
+        concat(code) + '.to_s'
       end
     end
   end

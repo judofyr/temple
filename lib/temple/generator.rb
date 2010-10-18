@@ -1,30 +1,35 @@
 module Temple
   class Generator
     DEFAULT_OPTIONS = {
-      :buffer => "_buf"
+      :buffer => "_buf",
+      # :capture_generator => Temple::Core::StringBuffer
+      #
+      # The capture generator is set in the definition of StringBuffer
+      # in order to avoid circular dependencies.
     }
-    
-    CONCATABLE = [:static, :dynamic]
     
     def initialize(options = {})
       @options = DEFAULT_OPTIONS.merge(options)
-      @in_multi = false
+    end
+
+    def compile(exp)
+      [preamble, compile_part(exp), postamble].join(' ; ')
     end
     
-    def compile(exp)
-      res = send("on_#{exp.first}", *exp[1..-1])
-      
-      if @in_multi && CONCATABLE.include?(exp.first)
-        concat(res)
-      else
-        res
-      end
+    def compile_part(exp)
+      type, *args = exp
+      recv = @in_capture || self
+      recv.send("on_#{type}", *args)
     end
     
     def buffer(str = '')
       @options[:buffer] + str
     end
-    
+
+    def concat(str)
+      buffer " << (#{str})"
+    end
+
     def self.to_ruby(str)
       str.inspect
     end
@@ -37,18 +42,10 @@ module Temple
     
     def preamble;  '' end
     def postamble; '' end
-    def concat(s)  buffer " << (#{s})" end
+    def capture_postamble; buffer " = #{postamble}"; end
     
     def on_multi(*exp)
-      if @in_multi
-        exp.map { |e| compile(e) }
-      else
-        @in_multi = true
-        content = exp.map { |e| compile(e) }
-        content = [preamble, content, postamble].flatten
-        @in_multi = false
-        content
-      end.join(" ; ")
+      exp.map { |e| compile_part(e) }.join(" ; ")
     end
     
     def on_newline
@@ -56,23 +53,17 @@ module Temple
     end
     
     def on_capture(name, block)
-      unless @in_multi
-        # We always need the preamble/postamble in capture.
-        return compile([:multi, [:capture, name, block]])
-      end
-      
-      @in_multi = false
-      prev_buffer, @options[:buffer] = @options[:buffer], name.to_s
-      content = compile(block)
-      @in_multi = true
-      
-      if CONCATABLE.include?(block.first)
-        "#{name} = #{content}"
-      else
-        content
-      end
+      before = @capture
+      @capture = @options[:capture_generator].new(:buffer => name)
+
+      [
+        @capture.preamble,
+        @capture.compile_part(block),
+        @capture.capture_postamble
+      ].join(' ; ')
     ensure
-      @options[:buffer] = prev_buffer
+      @capture = before
     end
   end
 end
+
