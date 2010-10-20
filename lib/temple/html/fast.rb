@@ -46,6 +46,10 @@ module Temple
       def on_multi(*exp)
         [:multi, *exp.map { |e| compile(e) }]
       end
+
+      def on_capture(name, exp)
+        [:capture, name, compile(exp)]
+      end
       
       def on_doctype(type)
         trailing_newlines = type[/(\A|[^\r])(\n+)\Z/, 2].to_s
