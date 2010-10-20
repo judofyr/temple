@@ -98,7 +98,6 @@ module Temple
     # Just like ArrayBuffer, but doesn't call #join on the array.
     class Array < ArrayBuffer
       def postamble; buffer; end
-      def capture_postamble; end
     end
     
     # Implements a string buffer.
@@ -111,11 +110,8 @@ module Temple
     #   end
     #   _buf
     class StringBuffer < ArrayBuffer
-      Generator::DEFAULT_OPTIONS[:capture_generator] = self
-
       def preamble;  buffer " = ''" end
       def postamble; buffer end
-      def capture_postamble; end
       
       def on_dynamic(code)
         concat(code) + '.to_s'

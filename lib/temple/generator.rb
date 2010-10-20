@@ -2,24 +2,32 @@ module Temple
   class Generator
     DEFAULT_OPTIONS = {
       :buffer => "_buf",
-      # :capture_generator => Temple::Core::StringBuffer
-      #
-      # The capture generator is set in the definition of StringBuffer
-      # in order to avoid circular dependencies.
     }
     
     def initialize(options = {})
       @options = DEFAULT_OPTIONS.merge(options)
+      @compiling = false
+      @in_capture = nil
     end
 
-    def compile(exp)
-      [preamble, compile_part(exp), postamble].join(' ; ')
+    def capture_generator
+      @capture_generator ||=
+        @options[:capture_generator] || Temple::Core::StringBuffer
     end
-    
-    def compile_part(exp)
-      type, *args = exp
-      recv = @in_capture || self
-      recv.send("on_#{type}", *args)
+
+    def compile(exp, single = false)
+      if @compiling || single
+        type, *args = exp
+        recv = @in_capture || self
+        recv.send("on_#{type}", *args)
+      else
+        begin
+          @compiling = true
+          [preamble, compile(exp), postamble].join(' ; ')
+        ensure
+          @compiling = false
+        end
+      end
     end
     
     def buffer(str = '')
@@ -42,10 +50,9 @@ module Temple
     
     def preamble;  '' end
     def postamble; '' end
-    def capture_postamble; buffer " = #{postamble}"; end
     
     def on_multi(*exp)
-      exp.map { |e| compile_part(e) }.join(" ; ")
+      exp.map { |e| compile(e) }.join(" ; ")
     end
     
     def on_newline
@@ -54,12 +61,12 @@ module Temple
     
     def on_capture(name, block)
       before = @capture
-      @capture = @options[:capture_generator].new(:buffer => name)
+      @capture = capture_generator.new(:buffer => name)
 
       [
         @capture.preamble,
-        @capture.compile_part(block),
-        @capture.capture_postamble
+        @capture.compile(block, true),
+        "#{name} = (#{@capture.postamble})"
       ].join(' ; ')
     ensure
       @capture = before

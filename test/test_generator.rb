@@ -11,11 +11,11 @@ class TestTempleGenerator < Test::Unit::TestCase
     end
     
     def on_static(s)
-      "S:#{s}"
+      concat "S:#{s}"
     end
     
     def on_dynamic(s)
-      "D:#{s}"
+      concat "D:#{s}"
     end
     
     def on_block(s)
@@ -26,9 +26,9 @@ class TestTempleGenerator < Test::Unit::TestCase
   def test_simple_exp
     simple = Simple.new
     
-    assert_equal("S:test", simple.compile([:static, "test"]))
-    assert_equal("D:test", simple.compile([:dynamic, "test"]))
-    assert_equal("B:test", simple.compile([:block, "test"]))
+    assert_match(/ << \(S:test\)/, simple.compile([:static, "test"]))
+    assert_match(/ << \(D:test\)/, simple.compile([:dynamic, "test"]))
+    assert_match(/B:test/, simple.compile([:block, "test"]))
   end
   
   def test_multi
@@ -46,15 +46,16 @@ class TestTempleGenerator < Test::Unit::TestCase
   end
   
   def test_capture
-    simple = Simple.new(:buffer => "VAR")
+    simple = Simple.new(:buffer => "VAR", :capture_generator => Simple)
     str = simple.compile([:capture, "foo", [:static, "test"]])
     
-    assert_match(/foo = S:test/, str)
+    assert_match(/foo = BUFFER/, str)
+    assert_match(/foo << \(S:test\)/, str)
     assert_match(/VAR\Z/, str)
   end
   
   def test_capture_with_multi
-    simple = Simple.new(:buffer => "VAR")
+    simple = Simple.new(:buffer => "VAR", :capture_generator => Simple)
     str = simple.compile([:multi,
       [:static, "before"],
       
