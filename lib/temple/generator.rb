@@ -3,7 +3,7 @@ module Temple
     DEFAULT_OPTIONS = {
       :buffer => "_buf",
     }
-    
+
     def initialize(options = {})
       @options = DEFAULT_OPTIONS.merge(options)
       @compiling = false
@@ -27,7 +27,7 @@ module Temple
         end
       end
     end
-    
+
     def buffer(str = '')
       @options[:buffer] + str
     end
@@ -39,24 +39,24 @@ module Temple
     def self.to_ruby(str)
       str.inspect
     end
-    
+
     def to_ruby(str)
       Generator.to_ruby(str)
     end
-    
+
     # Sensible defaults
-    
+
     def preamble;  '' end
     def postamble; '' end
-    
+
     def on_multi(*exp)
       exp.map { |e| compile(e) }.join(" ; ")
     end
-    
+
     def on_newline
       "\n"
     end
-    
+
     def on_capture(name, block)
       capture_generator.new(:buffer => name).compile(block)
     end

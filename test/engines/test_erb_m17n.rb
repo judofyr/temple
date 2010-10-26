@@ -6,11 +6,11 @@ if "".respond_to?(:encoding)
     def setup
       Temple::Engines::ERB.rock!
     end
-  
+
     def teardown
       Temple::Engines::ERB.rock!
     end
-  
+
     def test_result_encoding
       erb = ERB.new("hello")
       assert_equal __ENCODING__, erb.result.encoding

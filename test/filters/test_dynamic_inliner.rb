@@ -7,7 +7,7 @@ class TestTempleFiltersDynamicInliner < TestFilter(:DynamicInliner)
       [:static, "World\n "],
       [:static, "Have a nice day"]
     ])
-    
+
     assert_equal([:multi,
       [:dynamic, '"Hello World\n Have a nice day"']
     ], exp)
@@ -19,12 +19,12 @@ class TestTempleFiltersDynamicInliner < TestFilter(:DynamicInliner)
       [:dynamic, "@world"],
       [:dynamic, "@yeah"]
     ])
-    
+
     assert_equal([:multi,
       [:dynamic, '"#{@hello}#{@world}#{@yeah}"']
     ], exp)
   end
-  
+
   def test_static_and_dynamic_into_dynamic
     exp = @filter.compile([:multi,
       [:static, "Hello"],
@@ -32,12 +32,12 @@ class TestTempleFiltersDynamicInliner < TestFilter(:DynamicInliner)
       [:dynamic, "@yeah"],
       [:static, "Nice"]
     ])
-    
+
     assert_equal([:multi,
       [:dynamic, '"Hello#{@world}#{@yeah}Nice"']
     ], exp)
   end
-  
+
   def test_static_and_dynamic_around_blocks
     exp = @filter.compile([:multi,
       [:static, "Hello "],
@@ -46,19 +46,19 @@ class TestTempleFiltersDynamicInliner < TestFilter(:DynamicInliner)
       [:dynamic, "@yeah"],
       [:static, "Once more"]
     ])
-    
+
     assert_equal([:multi,
       [:dynamic, '"Hello #{@world}"'],
       [:block, "Oh yeah"],
       [:dynamic, '"#{@yeah}Once more"']
     ], exp)
   end
-  
+
   def test_keep_blocks_intact
     exp = [:multi, [:block, 'foo']]
     assert_equal(exp, @filter.compile(exp))
   end
-  
+
   def test_keep_single_static_intact
     exp = [:multi, [:static, 'foo']]
     assert_equal(exp, @filter.compile(exp))
@@ -68,7 +68,7 @@ class TestTempleFiltersDynamicInliner < TestFilter(:DynamicInliner)
     exp = [:multi, [:dynamic, 'foo']]
     assert_equal(exp, @filter.compile(exp))
   end
-  
+
   def test_inline_inside_multi
     exp = @filter.compile([:multi,
       [:static, "Hello "],
@@ -79,14 +79,14 @@ class TestTempleFiltersDynamicInliner < TestFilter(:DynamicInliner)
       [:static, "Hello "],
       [:dynamic, "@world"]
     ])
-    
+
     assert_equal([:multi,
       [:dynamic, '"Hello #{@world}"'],
       [:multi, [:dynamic, '"Hello #{@world}"']],
       [:dynamic, '"Hello #{@world}"']
     ], exp)
   end
-  
+
   def test_merge_across_newlines
     exp = @filter.compile([:multi,
       [:static, "Hello \n"],
@@ -94,19 +94,19 @@ class TestTempleFiltersDynamicInliner < TestFilter(:DynamicInliner)
       [:dynamic, "@world"],
       [:newline]
     ])
-    
+
     assert_equal([:multi,
       [:dynamic, ['"Hello \n"', '"#{@world}"', '""'].join("\\\n")]
     ], exp)
   end
-  
+
   def test_static_followed_by_newline
     exp = @filter.compile([:multi,
       [:static, "Hello \n"],
       [:newline],
       [:block, "world"]
     ])
-    
+
     assert_equal([:multi,
       [:static, "Hello \n"],
       [:newline],

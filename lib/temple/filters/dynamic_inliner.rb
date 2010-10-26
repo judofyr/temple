@@ -5,21 +5,21 @@ module Temple
       def initialize(options = {})
         @options = {}
       end
-      
+
       def compile(exp)
         exp.first == :multi ? on_multi(*exp[1..-1]) : exp
       end
-      
+
       def on_multi(*exps)
         res = [:multi]
         curr = nil
         prev = []
         state = :looking
-        
+
         # We add a noop because we need to do some cleanup at the end too.
-        (exps + [:noop]).each do |exp| 
+        (exps + [:noop]).each do |exp|
           head, arg = exp
-          
+
           case head
           when :newline
             case state
@@ -30,7 +30,7 @@ module Temple
               # We've found something, so let's make sure the generated
               # dynamic contains a newline by escaping a newline and
               # starting a new string:
-              # 
+              #
               # "Hello "\
               # "#{@world}"
               prev << exp
@@ -66,14 +66,14 @@ module Temple
             state = :looking
           end
         end
-        
+
         res
       end
-    
+
       def static(str)
         Generator.to_ruby(str)[1..-2]
       end
-      
+
       def dynamic(str)
         '#{%s}' % str
       end

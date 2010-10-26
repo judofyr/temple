@@ -7,14 +7,14 @@ module Temple
     #     [:static, "World!"]]
     #
     # Compiles to:
-    # 
+    #
     #   [:multi,
     #     [:static, "Hello World!"]]
     class StaticMerger
       def initialize(options = {})
         @options = {}
       end
-      
+
       def compile(exp)
         exp.first == :multi ? on_multi(*exp[1..-1]) : exp
       end
@@ -23,7 +23,7 @@ module Temple
         res = [:multi]
         curr = nil
         state = :looking
-        
+
         exps.each do |exp|
           if exp.first == :static
             if state == :looking
@@ -37,7 +37,7 @@ module Temple
             state = :looking unless exp.first == :newline
           end
         end
-        
+
         res
       end
     end

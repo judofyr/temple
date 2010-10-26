@@ -8,12 +8,12 @@ module Temple
       def compile(exp)
         exp.first == :multi ? on_multi(*exp[1..-1]) : exp
       end
-      
+
       def on_multi(*exps)
         # If the multi contains a single element, just return the element
         return compile(exps.first) if exps.length == 1
         result = [:multi]
-        
+
         exps.each do |exp|
           exp = compile(exp)
           if exp.first == :multi
@@ -22,7 +22,7 @@ module Temple
             result << exp
           end
         end
-        
+
         result
       end
     end

@@ -6,7 +6,7 @@ TempleERB = Temple::Engines::ERB
 
 class TestTempleEnginesERB < Test::Unit::TestCase
   class MyError < RuntimeError ; end
-  
+
   def test_rock_suck
     assert_equal(NormalERB, ::ERB)
     TempleERB.rock!
@@ -14,25 +14,25 @@ class TestTempleEnginesERB < Test::Unit::TestCase
     TempleERB.suck!
     assert_equal(NormalERB, ::ERB)
   end
-  
+
   def test_change_generator
     gen = Temple::Core::StringBuffer
     erb = TempleERB.new("Hello", nil, nil, 'foo', :generator => gen)
     assert_match(/foo = ''/, erb.src)
-    
+
     erb = TempleERB.new("Hello", nil, nil, 'foo', :generator => gen.new(:buffer => "bar"))
     assert_match(/bar = ''/, erb.src)
     assert_no_match(/foo/, erb.src)
   end
-  
+
   def test_optimizers
     obj = Object.new
     def obj.compile(exp)
       [:static, "Hello World!"]
     end
-    
+
     TempleERB::Optimizers << obj
-    
+
     erb = TempleERB.new("Hello")
     assert_equal("Hello World!", erb.result)
   ensure
@@ -473,7 +473,7 @@ EOS
   def test_url_encode
     assert_equal("Programming%20Ruby%3A%20%20The%20Pragmatic%20Programmer%27s%20Guide",
                  ERB::Util.url_encode("Programming Ruby:  The Pragmatic Programmer's Guide"))
-    
+
     if "".respond_to?(:force_encoding)
       assert_equal("%A5%B5%A5%F3%A5%D7%A5%EB",
                   ERB::Util.url_encode("\xA5\xB5\xA5\xF3\xA5\xD7\xA5\xEB".force_encoding("EUC-JP")))

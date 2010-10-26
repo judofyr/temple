@@ -5,22 +5,22 @@ module Temple
     # Parses ERB exactly the same way as erb.rb.
     class ERB
       Compiler = ::ERB::Compiler
-      
+
       def initialize(options = {})
         @compiler = Compiler.new(options[:trim_mode])
       end
-      
+
       def compile(src)
         if src.respond_to?(:encoding) && src.encoding.dummy?
           raise ArgumentError, "#{src.encoding} is not ASCII compatible"
         end
-        
+
         result = [:multi]
-        
+
         content = ''
         scanner = @compiler.make_scanner(src)
         scanner.scan do |token|
-          next if token.nil? 
+          next if token.nil?
           next if token == ''
           if scanner.stag.nil?
             case token
@@ -68,7 +68,7 @@ module Temple
             end
           end
         end
-        
+
         result
       end
 
@@ -78,6 +78,6 @@ module Temple
           result << [:newline]
         end
       end
-    end                      
+    end
   end
 end
