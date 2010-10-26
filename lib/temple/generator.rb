@@ -7,7 +7,6 @@ module Temple
     def initialize(options = {})
       @options = DEFAULT_OPTIONS.merge(options)
       @compiling = false
-      @in_capture = nil
     end
 
     def capture_generator
@@ -15,11 +14,10 @@ module Temple
         @options[:capture_generator] || Temple::Core::StringBuffer
     end
 
-    def compile(exp, single = false)
-      if @compiling || single
+    def compile(exp)
+      if @compiling
         type, *args = exp
-        recv = @in_capture || self
-        recv.send("on_#{type}", *args)
+        send("on_#{type}", *args)
       else
         begin
           @compiling = true
@@ -60,17 +58,7 @@ module Temple
     end
     
     def on_capture(name, block)
-      before = @capture
-      @capture = capture_generator.new(:buffer => name)
-
-      [
-        @capture.preamble,
-        @capture.compile(block, true),
-        "#{name} = (#{@capture.postamble})"
-      ].join(' ; ')
-    ensure
-      @capture = before
+      capture_generator.new(:buffer => name).compile(block)
     end
   end
 end
-
