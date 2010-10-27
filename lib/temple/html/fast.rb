@@ -107,23 +107,14 @@ module Temple
       end
 
       def on_attrs(*exp)
-        if exp.all? { |e| attr_easily_compilable?(e) }
-          [:multi, *merge_basicattrs(exp).map { |e| compile(e) }]
-        else
-          raise "[:html, :attrs] currently only support basicattrs"
-        end
+        [:multi, *merge_attrs(exp).map { |e| compile(e) }]
       end
 
-      def attr_easily_compilable?(exp)
-        exp[1] == :basicattr and
-        exp[2][0] == :static
-      end
-
-      def merge_basicattrs(attrs)
+      def merge_attrs(attrs)
         result = []
         position = {}
 
-        attrs.each do |(html, type, (name_type, name), value)|
+        attrs.each do |(html, type, name, value)|
           if pos = position[name]
             case name
             when 'class', 'id'
@@ -140,17 +131,15 @@ module Temple
           end
         end
 
-        final = []
-        result.each_with_index do |(name, value), index|
-          final << [:html, :basicattr, [:static, name], value]
+        result.map do |name, value|
+          [:html, :attr, name, value]
         end
-        final
       end
 
-      def on_basicattr(name, value)
+      def on_attr(name, value)
         [:multi,
           [:static, " "],
-          name,
+          [:static, name],
           [:static, "="],
           [:static, @options[:attr_wrapper]],
           value,
