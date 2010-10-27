@@ -13,7 +13,6 @@ module Temple
         unless [:xhtml, :html4, :html5].include?(@options[:format])
           raise "Invalid format #{@options[:format].inspect}"
         end
-
       end
 
       def xhtml?
