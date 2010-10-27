@@ -19,6 +19,7 @@ module Temple
     autoload :MultiFlattener, 'temple/filters/multi_flattener'
     autoload :StaticMerger,   'temple/filters/static_merger'
     autoload :DynamicInliner, 'temple/filters/dynamic_inliner'
+    autoload :EscapeHTML,     'temple/filters/escape_html'
   end
 
   module HTML
