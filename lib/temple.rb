@@ -20,6 +20,7 @@ module Temple
     autoload :StaticMerger,   'temple/filters/static_merger'
     autoload :DynamicInliner, 'temple/filters/dynamic_inliner'
     autoload :EscapeHTML,     'temple/filters/escape_html'
+    autoload :Debugger,       'temple/filters/debugger'
   end
 
   module HTML
