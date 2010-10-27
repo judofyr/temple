@@ -1,14 +1,6 @@
 module Temple
   module Filters
-    class MultiFlattener
-      def initialize(options = {})
-        @options = options
-      end
-
-      def compile(exp)
-        exp.first == :multi ? on_multi(*exp[1..-1]) : exp
-      end
-
+    class MultiFlattener < BasicFilter
       def on_multi(*exps)
         # If the multi contains a single element, just return the element
         return compile(exps.first) if exps.length == 1
