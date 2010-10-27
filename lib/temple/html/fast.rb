@@ -1,6 +1,6 @@
 module Temple
   module HTML
-    class Fast
+    class Fast < Filters::BasicFilter
       DEFAULT_OPTIONS = {
         :format => :xhtml,
         :attr_wrapper => "'",
@@ -31,26 +31,15 @@ module Temple
         @options[:format] == :html4
       end
 
-      def compile(exp)
-        case exp[0]
-        when :multi, :capture
-          send("on_#{exp[0]}", *exp[1..-1])
-        when :html
-          send("on_#{exp[1]}", *exp[2..-1])
+      def on_html(type, *args)
+        if respond_to?("on_html_#{type}")
+          send("on_html_#{type}", *args)
         else
-          exp
+          [:html, type, *args]
         end
       end
 
-      def on_multi(*exp)
-        [:multi, *exp.map { |e| compile(e) }]
-      end
-
-      def on_capture(name, exp)
-        [:capture, name, compile(exp)]
-      end
-
-      def on_doctype(type)
+      def on_html_doctype(type)
         trailing_newlines = type[/(\A|[^\r])(\n+)\Z/, 2].to_s
 
         text = type.to_s.downcase.strip
@@ -87,14 +76,14 @@ module Temple
         [:static, str]
       end
 
-      def on_comment(content)
+      def on_html_comment(content)
         [:multi,
           [:static, "<!--"],
           compile(content),
           [:static, "-->"]]
       end
 
-      def on_tag(name, attrs, content)
+      def on_html_tag(name, attrs, content)
         ac = @options[:autoclose].include?(name)
         result = [:multi]
         result << [:static, "<#{name}"]
@@ -106,7 +95,7 @@ module Temple
         result
       end
 
-      def on_attrs(*exp)
+      def on_html_attrs(*exp)
         [:multi, *merge_attrs(exp).map { |e| compile(e) }]
       end
 
@@ -136,7 +125,7 @@ module Temple
         end
       end
 
-      def on_attr(name, value)
+      def on_html_attr(name, value)
         [:multi,
           [:static, " "],
           [:static, name],
