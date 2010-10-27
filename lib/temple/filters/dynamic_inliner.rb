@@ -3,7 +3,7 @@ module Temple
     # Inlines several static/dynamic into a single dynamic.
     class DynamicInliner
       def initialize(options = {})
-        @options = {}
+        @options = options
       end
 
       def compile(exp)

@@ -12,7 +12,7 @@ module Temple
     #     [:static, "Hello World!"]]
     class StaticMerger
       def initialize(options = {})
-        @options = {}
+        @options = options
       end
 
       def compile(exp)

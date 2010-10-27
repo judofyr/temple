@@ -2,7 +2,7 @@ module Temple
   module Filters
     class MultiFlattener
       def initialize(options = {})
-        @options = {}
+        @options = options
       end
 
       def compile(exp)
