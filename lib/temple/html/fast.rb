@@ -21,7 +21,8 @@ module Temple
 
       set_default_options :format => :xhtml,
                           :attr_wrapper => "'",
-                          :autoclose => %w[meta img link br hr input area param col base]
+                          :autoclose => %w[meta img link br hr input area param col base],
+                          :id_delimiter => '_'
 
       def initialize(options = {})
         super
@@ -92,7 +93,7 @@ module Temple
           if result[name] && %w(class id).include?(name)
             result[name] = [:multi,
                             result[name],
-                            [:static, (name == 'class' ? ' ' : '_')],
+                            [:static, (name == 'class' ? ' ' : @options[:id_delimiter])],
                             value]
           else
             result[name] = value
