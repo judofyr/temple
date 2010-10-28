@@ -87,31 +87,25 @@ module Temple
       end
 
       def on_html_attrs(*exp)
-        [:multi, *merge_attrs(exp).map { |e| compile(e) }]
+        [:multi, *merge_and_sort_attrs(exp).map {|e| compile(e) }]
       end
 
-      def merge_attrs(attrs)
-        result = []
-        position = {}
+      def merge_and_sort_attrs(attrs)
+        result = {}
+        attrs.each do |html, type, name, value|
+          raise "Invalid html attribute with type [:#{html}, :#{type}]" if html != :html || type != :attr
 
-        attrs.each do |(html, type, name, value)|
-          if pos = position[name]
-            case name
-            when 'class', 'id'
-              value = [:multi,
-                result[pos].last,  # previous value
-                [:static, (name == 'class' ? ' ' : '_')], # delimiter
-                value]             # new value
-            end
-
-            result[pos] = [name, value]
+          if result[name] && %w(class id).include?(name)
+            result[name] = [:multi,
+                            result[name],
+                            [:static, (name == 'class' ? ' ' : '_')],
+                            value]
           else
-            position[name] = result.size
-            result << [name, value]
+            result[name] = value
           end
         end
 
-        result.map do |name, value|
+        result.sort.map do |name, value|
           [:html, :attr, name, value]
         end
       end
