@@ -1,12 +1,6 @@
 module Temple
   module Filters
     class EscapeHTML < BasicFilter
-      DEFAULT_OPTIONS = {}
-
-      def initialize(options = {})
-        @options = DEFAULT_OPTIONS.merge(options)
-      end
-
       def compile(exp)
         type, *args = exp
         if respond_to?("on_#{type}")

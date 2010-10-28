@@ -5,6 +5,7 @@ module Temple
   autoload :Engine,     'temple/engine'
   autoload :Generator,  'temple/generator'
   autoload :Utils,      'temple/utils'
+  autoload :Mixins,     'temple/mixins'
 
   module Engines
     autoload :ERB,      'temple/engines/erb'

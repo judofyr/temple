@@ -1,11 +1,11 @@
 module Temple
   class Generator
-    DEFAULT_OPTIONS = {
-      :buffer => "_buf",
-    }
+    include Mixins::Options
+
+    default_options[:buffer] = '_buf'
 
     def initialize(options = {})
-      @options = DEFAULT_OPTIONS.merge(options)
+      super
       @compiling = false
     end
 

@@ -1,15 +1,14 @@
 module Temple
   module HTML
     class Fast < Filters::BasicFilter
-      DEFAULT_OPTIONS = {
+      default_options.merge!({
         :format => :xhtml,
         :attr_wrapper => "'",
         :autoclose => %w[meta img link br hr input area param col base]
-      }
+      })
 
       def initialize(options = {})
-        @options = DEFAULT_OPTIONS.merge(options)
-
+        super
         unless [:xhtml, :html4, :html5].include?(@options[:format])
           raise "Invalid format #{@options[:format].inspect}"
         end
