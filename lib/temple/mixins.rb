@@ -1,6 +1,20 @@
 module Temple
   module Mixins
     module Dispatcher
+      def self.included(base)
+        base.class_eval do
+          def self.temple_dispatch(base)
+            class_eval %{def on_#{base}(type, *args)
+              if respond_to?("on_" #{base.to_s.inspect} "_\#{type}")
+                send("on_" #{base.to_s.inspect} "_\#{type}", *args)
+              else
+                [:#{base}, type, *args]
+              end
+            end}
+          end
+        end
+      end
+
       def compile(exp)
         type, *args = exp
         if respond_to?("on_#{type}")

@@ -1,6 +1,8 @@
 module Temple
   module HTML
     class Fast < Filters::BasicFilter
+      temple_dispatch :html
+
       default_options.merge!({
         :format => :xhtml,
         :attr_wrapper => "'",
@@ -28,14 +30,6 @@ module Temple
 
       def html4?
         @options[:format] == :html4
-      end
-
-      def on_html(type, *args)
-        if respond_to?("on_html_#{type}")
-          send("on_html_#{type}", *args)
-        else
-          [:html, type, *args]
-        end
       end
 
       def on_html_doctype(type)
