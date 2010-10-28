@@ -91,6 +91,7 @@ module Temple
         result = {}
         attrs.each do |name, value|
           if result[name] && %w(class id).include?(name)
+            raise 'Multiple id attributes specified, but id concatenation disabled' if name == 'id' && !@options[:id_delimiter]
             result[name] = [:multi,
                             result[name],
                             [:static, (name == 'class' ? ' ' : @options[:id_delimiter])],
