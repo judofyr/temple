@@ -45,11 +45,14 @@ module Temple
       end
 
       module ClassMethods
-        def default_options
+        def set_default_options(opts)
+          default_options.merge!(opts)
+        end
+
+        def default_options(opts = nil)
           @default_options ||= superclass.respond_to?(:default_options) ? superclass.default_options.dup : {}
         end
       end
     end
   end
 end
-
