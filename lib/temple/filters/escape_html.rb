@@ -1,27 +1,6 @@
 module Temple
   module Filters
     class EscapeHTML < BasicFilter
-      def compile(exp)
-        type, *args = exp
-        if respond_to?("on_#{type}")
-          send("on_#{type}", *args)
-        else
-          exp
-        end
-      end
-
-      def on_multi(*exps)
-        [:multi, *exps.map {|exp| compile(exp) }]
-      end
-
-      def on_escape(*exps)
-        [:multi, *exps.map {|exp| compile(exp) }]
-      end
-
-      def on_capture(name, exp)
-        [:capture, name, compile(exp)]
-      end
-
       def on_escape(type, value)
         case type
         when :static
