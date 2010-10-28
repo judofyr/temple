@@ -79,22 +79,16 @@ module Temple
       def on_html_tag(name, attrs, content, closed)
         closed ||= @options[:autoclose].include?(name)
         raise "Closed tag #{name} has content" if closed && !empty_exp?(content)
-        result = [:multi, [:static, "<#{name}"], compile(attrs)]
+        result = [:multi, [:static, "<#{name}"], compile_attrs(attrs)]
         result << [:static, " /"] if closed && xhtml?
         result << [:static, ">"] << compile(content)
         result << [:static, "</#{name}>"] if !closed
         result
       end
 
-      def on_html_attrs(*exp)
-        [:multi, *merge_and_sort_attrs(exp).map {|e| compile(e) }]
-      end
-
-      def merge_and_sort_attrs(attrs)
+      def compile_attrs(attrs)
         result = {}
-        attrs.each do |html, type, name, value|
-          raise "Invalid html attribute with type [:#{html}, :#{type}]" if html != :html || type != :attr
-
+        attrs.each do |name, value|
           if result[name] && %w(class id).include?(name)
             result[name] = [:multi,
                             result[name],
@@ -105,19 +99,15 @@ module Temple
           end
         end
 
-        result.sort.map do |name, value|
-          [:html, :attr, name, value]
+        result.sort.inject([:multi]) do |list, (name, value)|
+          list << [:multi,
+                    [:static, ' '],
+                    [:static, name],
+                    [:static, '='],
+                    [:static, @options[:attr_wrapper]],
+                    value,
+                    [:static, @options[:attr_wrapper]]]
         end
-      end
-
-      def on_html_attr(name, value)
-        [:multi,
-          [:static, ' '],
-          [:static, name],
-          [:static, '='],
-          [:static, @options[:attr_wrapper]],
-          value,
-          [:static, @options[:attr_wrapper]]]
       end
     end
   end
