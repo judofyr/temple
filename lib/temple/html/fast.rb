@@ -77,32 +77,19 @@ module Temple
           [:static, "-->"]]
       end
 
-      def on_html_tag(name, attrs, content, closed)
+      def on_html_tag(name, attrs, closed, content)
         closed ||= @options[:autoclose].include?(name)
         raise "Closed tag #{name} has content" if closed && !empty_exp?(content)
-        result = [:multi, [:static, "<#{name}"], compile_attrs(attrs)]
+        result = [:multi, [:static, "<#{name}"], compile(attrs)]
         result << [:static, " /"] if closed && xhtml?
         result << [:static, ">"] << compile(content)
         result << [:static, "</#{name}>"] if !closed
         result
       end
 
-      def compile_attrs(attrs)
-        if attrs.all? {|a| static_attr_name?(a) }
-          compile_static_attrs(attrs)
-        else
-          raise 'Only html attributes with static name are supported currently'
-        end
-      end
-
-      def static_attr_name?(a)
-        a[0][0] == :static
-      end
-
-      def compile_static_attrs(attrs)
+      def on_html_staticattrs(attrs)
         result = {}
         attrs.each do |name, value|
-          name = name[1]
           if result[name] && %w(class id).include?(name)
             raise 'Multiple id attributes specified, but id concatenation disabled' if name == 'id' && !@options[:id_delimiter]
             result[name] = [:multi,
