@@ -1,15 +1,31 @@
 module Temple
   module HTML
-    class Fast
-      DEFAULT_OPTIONS = {
-        :format => :xhtml,
-        :attr_wrapper => "'",
-        :autoclose => %w[meta img link br hr input area param col base]
-      }
+    class Fast < Filters::BasicFilter
+      temple_dispatch :html
+
+      XHTML_DOCTYPES = {
+        '1.1'          => '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">',
+        '5'            => '<!DOCTYPE html>',
+        'strict'       => '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">',
+        'frameset'     => '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Frameset//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd">',
+        'mobile'       => '<!DOCTYPE html PUBLIC "-//WAPFORUM//DTD XHTML Mobile 1.2//EN" "http://www.openmobilealliance.org/tech/DTD/xhtml-mobile12.dtd">',
+        'basic'        => '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML Basic 1.1//EN" "http://www.w3.org/TR/xhtml-basic/xhtml-basic11.dtd">',
+        'transitional' => '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">',
+      }.freeze
+
+      HTML4_DOCTYPES = {
+        'strict'       => '<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">',
+        'frameset'     => '<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN" "http://www.w3.org/TR/html4/frameset.dtd">',
+        'transitional' => '<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">',
+      }.freeze
+
+      set_default_options :format => :xhtml,
+                          :attr_wrapper => "'",
+                          :autoclose => %w[meta img link br hr input area param col base],
+                          :id_delimiter => '_'
 
       def initialize(options = {})
-        @options = DEFAULT_OPTIONS.merge(options)
-
+        super
         unless [:xhtml, :html4, :html5].include?(@options[:format])
           raise "Invalid format #{@options[:format].inspect}"
         end
@@ -31,55 +47,22 @@ module Temple
         @options[:format] == :html4
       end
 
-      def compile(exp)
-        case exp[0]
-        when :multi, :capture
-          send("on_#{exp[0]}", *exp[1..-1])
-        when :html
-          send("on_#{exp[1]}", *exp[2..-1])
-        else
-          exp
-        end
-      end
-
-      def on_multi(*exp)
-        [:multi, *exp.map { |e| compile(e) }]
-      end
-
-      def on_capture(name, exp)
-        [:capture, name, compile(exp)]
-      end
-
-      def on_doctype(type)
+      def on_html_doctype(type)
         trailing_newlines = type[/(\A|[^\r])(\n+)\Z/, 2].to_s
 
         text = type.to_s.downcase.strip
-        if text.index("xml") == 0
-          if html?
-            return [:multi].concat([[:newline]] * trailing_newlines.size)
-          end
-
+        if text =~ /^xml/
+          raise 'Invalid xml directive in html mode' if html?
           wrapper = @options[:attr_wrapper]
           str = "<?xml version=#{wrapper}1.0#{wrapper} encoding=#{wrapper}#{text.split(' ')[1] || "utf-8"}#{wrapper} ?>"
-        end
-
-        str = "<!DOCTYPE html>" if html5?
-
-        str ||= if xhtml?
-          case text
-          when /^1\.1/;     '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">'
-          when /^5/;        '<!DOCTYPE html>'
-          when "strict";    '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">'
-          when "frameset";  '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Frameset//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd">'
-          when "mobile";    '<!DOCTYPE html PUBLIC "-//WAPFORUM//DTD XHTML Mobile 1.2//EN" "http://www.openmobilealliance.org/tech/DTD/xhtml-mobile12.dtd">'
-          when "basic";     '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML Basic 1.1//EN" "http://www.w3.org/TR/xhtml-basic/xhtml-basic11.dtd">'
-          else              '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">'
-          end
-        elsif html4?
-          case text
-            when "strict";    '<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">'
-            when "frameset";  '<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN" "http://www.w3.org/TR/html4/frameset.dtd">'
-            else              '<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">'
+        else
+          case @options[:format]
+          when :html5
+            str = '<!DOCTYPE html>'
+          when :html4
+            str = HTML4_DOCTYPES[text] || HTML4_DOCTYPES['transitional']
+          when :xhtml
+            str = XHTML_DOCTYPES[text] || XHTML_DOCTYPES['transitional']
           end
         end
 
@@ -87,74 +70,58 @@ module Temple
         [:static, str]
       end
 
-      def on_comment(content)
+      def on_html_comment(content)
         [:multi,
           [:static, "<!--"],
           compile(content),
           [:static, "-->"]]
       end
 
-      def on_tag(name, attrs, content)
-        ac = @options[:autoclose].include?(name)
-        result = [:multi]
-        result << [:static, "<#{name}"]
-        result << compile(attrs)
-        result << [:static, " /"] if ac && xhtml?
-        result << [:static, ">"]
-        result << compile(content)
-        result << [:static, "</#{name}>"] if !ac
+      def on_html_tag(name, attrs, content, closed)
+        closed ||= @options[:autoclose].include?(name)
+        raise "Closed tag #{name} has content" if closed && !empty_exp?(content)
+        result = [:multi, [:static, "<#{name}"], compile_attrs(attrs)]
+        result << [:static, " /"] if closed && xhtml?
+        result << [:static, ">"] << compile(content)
+        result << [:static, "</#{name}>"] if !closed
         result
       end
 
-      def on_attrs(*exp)
-        if exp.all? { |e| attr_easily_compilable?(e) }
-          [:multi, *merge_basicattrs(exp).map { |e| compile(e) }]
+      def compile_attrs(attrs)
+        if attrs.all? {|a| static_attr_name?(a) }
+          compile_static_attrs(attrs)
         else
-          raise "[:html, :attrs] currently only support basicattrs"
+          raise 'Only html attributes with static name are supported currently'
         end
       end
 
-      def attr_easily_compilable?(exp)
-        exp[1] == :basicattr and
-        exp[2][0] == :static
+      def static_attr_name?(a)
+        a[0][0] == :static
       end
 
-      def merge_basicattrs(attrs)
-        result = []
-        position = {}
-
-        attrs.each do |(html, type, (name_type, name), value)|
-          if pos = position[name]
-            case name
-            when 'class', 'id'
-              value = [:multi,
-                result[pos].last,  # previous value
-                [:static, (name == 'class' ? ' ' : '_')], # delimiter
-                value]             # new value
-            end
-
-            result[pos] = [name, value]
+      def compile_static_attrs(attrs)
+        result = {}
+        attrs.each do |name, value|
+          name = name[1]
+          if result[name] && %w(class id).include?(name)
+            raise 'Multiple id attributes specified, but id concatenation disabled' if name == 'id' && !@options[:id_delimiter]
+            result[name] = [:multi,
+                            result[name],
+                            [:static, (name == 'class' ? ' ' : @options[:id_delimiter])],
+                            value]
           else
-            position[name] = result.size
-            result << [name, value]
+            result[name] = value
           end
         end
-
-        final = []
-        result.each_with_index do |(name, value), index|
-          final << [:html, :basicattr, [:static, name], value]
+        result.sort.inject([:multi]) do |list, (name, value)|
+          list << [:multi,
+                   [:static, ' '],
+                   [:static, name],
+                   [:static, '='],
+                   [:static, @options[:attr_wrapper]],
+                   value,
+                   [:static, @options[:attr_wrapper]]]
         end
-        final
-      end
-
-      def on_basicattr(name, value)
-        [:multi,
-          [:static, " "],
-          name,
-          [:static, "="],
-          [:static, @options[:attr_wrapper]],
-          value,
-          [:static, @options[:attr_wrapper]]]
       end
     end
   end
