@@ -1,7 +1,7 @@
 module Temple
   module Filters
     # Inlines several static/dynamic into a single dynamic.
-    class DynamicInliner < BasicFilter
+    class DynamicInliner < Filter
       def on_multi(*exps)
         res = [:multi]
         curr = nil

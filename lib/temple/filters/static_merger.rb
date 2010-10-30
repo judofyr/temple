@@ -10,7 +10,7 @@ module Temple
     #
     #   [:multi,
     #     [:static, "Hello World!"]]
-    class StaticMerger < BasicFilter
+    class StaticMerger < Filter
       def on_multi(*exps)
         res = [:multi]
         curr = nil

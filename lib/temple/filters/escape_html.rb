@@ -1,6 +1,6 @@
 module Temple
   module Filters
-    class EscapeHTML < BasicFilter
+    class EscapeHTML < Filter
       def on_escape(type, value)
         case type
         when :static

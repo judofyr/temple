@@ -1,6 +1,6 @@
 module Temple
   module Filters
-    class MultiFlattener < BasicFilter
+    class MultiFlattener < Filter
       def on_multi(*exps)
         # If the multi contains a single element, just return the element
         return compile(exps.first) if exps.length == 1

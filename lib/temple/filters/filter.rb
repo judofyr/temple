@@ -1,6 +1,6 @@
 module Temple
   module Filters
-    class BasicFilter
+    class Filter
       include Utils
       include Mixins::Dispatcher
       include Mixins::Options

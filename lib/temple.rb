@@ -15,7 +15,7 @@ module Temple
   end
 
   module Filters
-    autoload :BasicFilter,    'temple/filters/basic_filter'
+    autoload :Filter,         'temple/filters/filter'
     autoload :MultiFlattener, 'temple/filters/multi_flattener'
     autoload :StaticMerger,   'temple/filters/static_merger'
     autoload :DynamicInliner, 'temple/filters/dynamic_inliner'
