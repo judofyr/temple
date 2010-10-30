@@ -107,14 +107,6 @@ module Temple
         buffer " << (#{str})"
       end
 
-      def self.to_ruby(str)
-        str.inspect
-      end
-
-      def to_ruby(str)
-        Generator.to_ruby(str)
-      end
-
       # Sensible defaults
 
       def preamble;  '' end
@@ -147,7 +139,7 @@ module Temple
       def postamble; "#{buffer} =  #{buffer}.join"   end
 
       def on_static(text)
-        concat(to_ruby(text))
+        concat(text.inspect)
       end
 
       def on_dynamic(code)

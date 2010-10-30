@@ -1,7 +1,7 @@
 require File.dirname(__FILE__) + '/helper'
 
 class TestTempleGenerator < Test::Unit::TestCase
-  class Simple < Temple::Generator
+  class Simple < Temple::Generators::Generator
     def preamble
       buffer " = BUFFER"
     end
@@ -90,12 +90,5 @@ class TestTempleGenerator < Test::Unit::TestCase
     assert_match(/VAR << \(S:static\)/, lines[0])
     assert_match(/VAR << \(D:dynamic\)/, lines[1])
     assert_match(/ B:block /, lines[2])
-  end
-
-  def test_to_ruby
-    simple = Simple.new
-
-    assert_equal('"Hello"', simple.to_ruby("Hello"))
-    assert_equal('"Hello\nWorld"', simple.to_ruby("Hello\nWorld"))
   end
 end
