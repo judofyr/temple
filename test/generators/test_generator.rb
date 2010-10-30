@@ -1,62 +1,62 @@
 require 'helper'
 
-class TestTempleGeneratorsGenerator < Test::Unit::TestCase
-  class Simple < Temple::Generators::Generator
-    def preamble
-      "#{buffer} = BUFFER"
-    end
-
-    def postamble
-      buffer
-    end
-
-    def on_static(s)
-      concat "S:#{s}"
-    end
-
-    def on_dynamic(s)
-      concat "D:#{s}"
-    end
-
-    def on_block(s)
-      "B:#{s}"
-    end
+class SimpleGenerator < Temple::Generators::Generator
+  def preamble
+    "#{buffer} = BUFFER"
   end
 
-  def test_simple_exp
-    simple = Simple.new
-
-    assert_match(/ << \(S:test\)/, simple.compile([:static, "test"]))
-    assert_match(/ << \(D:test\)/, simple.compile([:dynamic, "test"]))
-    assert_match(/B:test/, simple.compile([:block, "test"]))
+  def postamble
+    buffer
   end
 
-  def test_multi
-    simple = Simple.new(:buffer => "VAR")
-    str = simple.compile([:multi,
+  def on_static(s)
+    concat "S:#{s}"
+  end
+
+  def on_dynamic(s)
+    concat "D:#{s}"
+  end
+
+  def on_block(s)
+    "B:#{s}"
+  end
+end
+
+describe Temple::Generators::Generator do
+  it 'should compile simple expressions' do
+    gen = SimpleGenerator.new
+
+    gen.compile([:static, "test"]).should.match(/ << \(S:test\)/)
+    gen.compile([:dynamic, "test"]).should.match(/ << \(D:test\)/)
+    gen.compile([:block, "test"]).should.match(/B:test/)
+  end
+
+  it 'should compile multi expression' do
+    gen = SimpleGenerator.new(:buffer => "VAR")
+    str = gen.compile([:multi,
       [:static, "static"],
       [:dynamic, "dynamic"],
       [:block, "block"]
     ])
 
-    assert_match(/VAR = BUFFER/, str)
-    assert_match(/VAR << \(S:static\)/, str)
-    assert_match(/VAR << \(D:dynamic\)/, str)
-    assert_match(/ B:block /, str)
+    str.should.match(/VAR = BUFFER/)
+    str.should.match(/VAR << \(S:static\)/)
+    str.should.match(/VAR << \(D:dynamic\)/)
+    str.should.match(/ B:block /)
   end
 
-  def test_capture
-    simple = Simple.new(:buffer => "VAR", :capture_generator => Simple)
-    str = simple.compile([:capture, "foo", [:static, "test"]])
+  it 'should compile capture' do
+    gen = SimpleGenerator.new(:buffer => "VAR", :capture_generator => SimpleGenerator)
+    str = gen.compile([:capture, "foo", [:static, "test"]])
 
-    assert_match(/foo = BUFFER/, str)
-    assert_match(/foo << \(S:test\)/, str)
-    assert_match(/VAR\Z/, str)
+    str.should.match(/foo = BUFFER/)
+    str.should.match(/foo << \(S:test\)/)
+    str.should.match(/VAR\Z/)
   end
 
-  def test_capture_with_multi
-    simple = Simple.new(:buffer => "VAR", :capture_generator => Simple)
-    str = simple.compile([:multi,
+  it 'should compile capture with multi' do
+    gen = SimpleGenerator.new(:buffer => "VAR", :capture_generator => SimpleGenerator)
+    str = gen.compile([:multi,
       [:static, "before"],
 
       [:capture, "foo", [:multi,
@@ -67,18 +67,18 @@ class TestTempleGeneratorsGenerator < Test::Unit::TestCase
       [:static, "after"]
     ])
 
-    assert_match(/VAR << \(S:before\)/, str)
-    assert_match(/foo = BUFFER/, str)
-    assert_match(/foo << \(S:static\)/, str)
-    assert_match(/foo << \(D:dynamic\)/, str)
-    assert_match(/ B:block /, str)
-    assert_match(/VAR << \(S:after\)/, str)
-    assert_match(/VAR\Z/, str)
+    str.should.match(/VAR << \(S:before\)/)
+    str.should.match(     /foo = BUFFER/)
+    str.should.match(     /foo << \(S:static\)/)
+    str.should.match(     /foo << \(D:dynamic\)/)
+    str.should.match(     / B:block /)
+    str.should.match(/VAR << \(S:after\)/)
+    str.should.match(/VAR\Z/)
   end
 
-  def test_newlines
-    simple = Simple.new(:buffer => "VAR")
-    str = simple.compile([:multi,
+  it 'should compile newlines' do
+    gen = SimpleGenerator.new(:buffer => "VAR")
+    str = gen.compile([:multi,
       [:static, "static"],
       [:newline],
       [:dynamic, "dynamic"],
@@ -87,8 +87,8 @@ class TestTempleGeneratorsGenerator < Test::Unit::TestCase
     ])
 
     lines = str.split("\n")
-    assert_match(/VAR << \(S:static\)/, lines[0])
-    assert_match(/VAR << \(D:dynamic\)/, lines[1])
-    assert_match(/ B:block /, lines[2])
+    lines[0].should.match(/VAR << \(S:static\)/)
+    lines[1].should.match(/VAR << \(D:dynamic\)/)
+    lines[2].should.match(/ B:block /)
   end
 end

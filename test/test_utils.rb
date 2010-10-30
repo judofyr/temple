@@ -1,30 +1,28 @@
 require 'helper'
 
-class TestTempleUtils < Test::Unit::TestCase
-  def test_empty_exp
-    assert_equal true, Temple::Utils.empty_exp?([:multi])
-    assert_equal true, Temple::Utils.empty_exp?([:multi, [:multi]])
-    assert_equal true, Temple::Utils.empty_exp?([:multi, [:multi, [:newline]], [:newline]])
-    assert_equal true, Temple::Utils.empty_exp?([:multi])
-    assert_equal false, Temple::Utils.empty_exp?([:multi, [:multi, [:static, "text"]]])
-    assert_equal false, Temple::Utils.empty_exp?([:multi, [:newline], [:multi, [:dynamic, "text"]]])
+describe Temple::Utils do
+  it 'has empty_exp?' do
+    Temple::Utils.empty_exp?([:multi]).should.be.true
+    Temple::Utils.empty_exp?([:multi, [:multi]]).should.be.true
+    Temple::Utils.empty_exp?([:multi, [:multi, [:newline]], [:newline]]).should.be.true
+    Temple::Utils.empty_exp?([:multi]).should.be.true
+    Temple::Utils.empty_exp?([:multi, [:multi, [:static, 'text']]]).should.be.false
+    Temple::Utils.empty_exp?([:multi, [:newline], [:multi, [:dynamic, 'text']]]).should.be.false
   end
 
-  def test_escape_html
-    assert_equal "&lt;", Temple::Utils.escape_html("<")
+  it 'has escape_html' do
+    Temple::Utils.escape_html('<').should.equal '&lt;'
   end
 
-  def test_escape_html_safe_with_unsafe
-    String.send(:define_method, :html_safe?) { false }
-    assert_equal "&lt;", Temple::Utils.escape_html_safe("<")
-  ensure
-    String.send(:undef_method, :html_safe?) if String.method_defined?(:html_safe?)
+  it 'should escape unsafe html strings' do
+    with_html_safe(false) do
+      Temple::Utils.escape_html_safe('<').should.equal '&lt;'
+    end
   end
 
-  def test_escape_html_safe_with_safe
-    String.send(:define_method, :html_safe?) { true }
-    assert_equal "<", Temple::Utils.escape_html_safe("<")
-  ensure
-    String.send(:undef_method, :html_safe?) if String.method_defined?(:html_safe?)
+  it 'should not escape safe html strings' do
+    with_html_safe(true) do
+      Temple::Utils.escape_html_safe('<').should.equal '<'
+    end
   end
 end

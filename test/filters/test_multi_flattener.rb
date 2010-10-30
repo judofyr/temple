@@ -1,12 +1,12 @@
 require 'helper'
 
-class TestTempleMultiFlattener < Test::Unit::TestCase
-  def setup
+describe Temple::Filters::MultiFlattener do
+  before do
     @filter = Temple::Filters::MultiFlattener.new
   end
 
-  def test_flattening
-    exp = @filter.compile([:multi,
+  it 'should flatten nested multi expressions' do
+    @filter.compile([:multi,
       [:static, "a"],
       [:multi,
        [:dynamic, "aa"],
@@ -17,15 +17,17 @@ class TestTempleMultiFlattener < Test::Unit::TestCase
        [:dynamic, "ab"],
       ],
       [:static, "b"],
-    ])
-
-    assert_equal([:multi,
+    ]).should.equal [:multi,
       [:static, "a"],
       [:dynamic, "aa"],
       [:static, "aaa"],
       [:static, "aab"],
       [:dynamic, "ab"],
       [:static, "b"],
-    ], exp)
+    ]
+  end
+
+  it 'should return first element' do
+    @filter.compile([:multi, [:block, 'foo']]).should.equal [:block, 'foo']
   end
 end

@@ -1,19 +1,32 @@
 require 'helper'
 
-class TestTempleFiltersEscapeHTML < Test::Unit::TestCase
-  def setup
+describe Temple::Filters::EscapeHTML do
+  before do
     @filter = Temple::Filters::EscapeHTML.new
   end
 
-  def test_escape_static
-    exp = @filter.compile([:multi,
+  it 'should handle escape expressions' do
+    @filter.compile([:multi,
       [:escape, :static, "a < b"],
       [:escape, :dynamic, "ruby_method"]
-    ])
-
-    assert_equal([:multi,
+    ]).should.equal [:multi,
       [:static, "a &lt; b"],
       [:dynamic, "Temple::Utils.escape_html((ruby_method))"],
-    ], exp)
+    ]
+  end
+
+  it 'should keep blocks intact' do
+    exp = [:multi, [:block, 'foo']]
+    @filter.compile(exp).should.equal exp
+  end
+
+  it 'should keep statics intact' do
+    exp = [:multi, [:static, '<']]
+    @filter.compile(exp).should.equal exp
+  end
+
+  it 'should keep dynamic intact' do
+    exp = [:multi, [:dynamic, 'foo']]
+    @filter.compile(exp).should.equal exp
   end
 end

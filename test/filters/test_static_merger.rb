@@ -1,49 +1,43 @@
 require 'helper'
 
-class TestTempleFiltersStaticMerger < Test::Unit::TestCase
-  def setup
+describe Temple::Filters::StaticMerger do
+  before do
     @filter = Temple::Filters::StaticMerger.new
   end
 
-  def test_several_statics
-    exp = @filter.compile([:multi,
+  it 'should merge serveral statics' do
+    @filter.compile([:multi,
       [:static, "Hello "],
       [:static, "World, "],
       [:static, "Good night"]
-    ])
-
-    assert_equal([:multi,
+    ]).should.equal [:multi,
       [:static, "Hello World, Good night"]
-    ], exp)
+    ]
   end
 
-  def test_several_statics_around_block
-    exp = @filter.compile([:multi,
+  it 'should merge serveral statics around block' do
+    @filter.compile([:multi,
       [:static, "Hello "],
       [:static, "World!"],
       [:block, "123"],
       [:static, "Good night, "],
       [:static, "everybody"]
-    ])
-
-    assert_equal([:multi,
+    ]).should.equal [:multi,
       [:static, "Hello World!"],
       [:block, "123"],
       [:static, "Good night, everybody"]
-    ], exp)
+    ]
   end
 
-  def test_several_statics_across_newlines
-    exp = @filter.compile([:multi,
+  it 'should merge serveral statics across newlines' do
+    @filter.compile([:multi,
       [:static, "Hello "],
       [:static, "World, "],
       [:newline],
       [:static, "Good night"]
-    ])
-
-    assert_equal([:multi,
+    ]).should.equal [:multi,
       [:static, "Hello World, Good night"],
       [:newline]
-    ], exp)
+    ]
   end
 end

@@ -1,130 +1,130 @@
 # -*- coding: UTF-8 -*-
-require 'helper'
+require 'engines/erb_helper'
 
 if "".respond_to?(:encoding)
-  class TestTempleEnginesERBM17N < Test::Unit::TestCase
-    def setup
+  describe 'ERB M17N' do
+    before do
       Temple::Engines::ERB.rock!
     end
 
-    def teardown
+    after do
       Temple::Engines::ERB.rock!
     end
 
-    def test_result_encoding
+    it 'should have correct result encoding' do
       erb = ERB.new("hello")
-      assert_equal __ENCODING__, erb.result.encoding
+      erb.result.encoding.should.equal __ENCODING__
 
       erb = ERB.new("こんにちは".encode("EUC-JP"))
-      assert_equal Encoding::EUC_JP, erb.result.encoding
+      erb.result.encoding.should.equal Encoding::EUC_JP
 
       erb = ERB.new("\xC4\xE3\xBA\xC3".force_encoding("EUC-CN"))
-      assert_equal Encoding::EUC_CN, erb.result.encoding
+      erb.result.encoding.should.equal Encoding::EUC_CN
 
       erb = ERB.new("γεια σας".encode("ISO-8859-7"))
-      assert_equal Encoding::ISO_8859_7, erb.result.encoding
+      erb.result.encoding.should.equal Encoding::ISO_8859_7
 
-      assert_raise(ArgumentError) {
+      lambda {
         ERB.new("こんにちは".force_encoding("ISO-2022-JP")) # dummy encoding
-      }
+      }.should.raise(ArgumentError)
     end
 
-    def test_generate_magic_comment
+    it 'should generate magic comment' do
       erb = ERB.new("hello")
-      assert_match(/#coding:UTF-8/, erb.src)
+      erb.src.should.match /#coding:UTF-8/
 
       erb = ERB.new("hello".force_encoding("EUC-JP"))
-      assert_match(/#coding:EUC-JP/, erb.src)
+      erb.src.should.match /#coding:EUC-JP/
 
       erb = ERB.new("hello".force_encoding("ISO-8859-9"))
-      assert_match(/#coding:ISO-8859-9/, erb.src)
+      erb.src.should.match /#coding:ISO-8859-9/
     end
 
-    def test_literal_encoding
+    it 'should have correct literal encoding' do
       erb = ERB.new("literal encoding is <%= 'hello'.encoding  %>")
-      assert_match(/literal encoding is UTF-8/, erb.result)
+      erb.result.should.match /literal encoding is UTF-8/
 
       erb = ERB.new("literal encoding is <%= 'こんにちは'.encoding  %>".encode("EUC-JP"))
-      assert_match(/literal encoding is EUC-JP/, erb.result)
+      erb.result.should.match /literal encoding is EUC-JP/
 
       erb = ERB.new("literal encoding is <%= '\xC4\xE3\xBA\xC3'.encoding %>".force_encoding("EUC-CN"))
-      assert_match(/literal encoding is GB2312/, erb.result)
+      erb.result.should.match /literal encoding is GB2312/
     end
 
-    def test___ENCODING__
+    it 'should have correct __ENCODING__' do
       erb = ERB.new("__ENCODING__ is <%= __ENCODING__ %>")
-      assert_match(/__ENCODING__ is UTF-8/, erb.result)
+      erb.result.should.match /__ENCODING__ is UTF-8/
 
       erb = ERB.new("__ENCODING__ is <%= __ENCODING__ %>".force_encoding("EUC-JP"))
-      assert_match(/__ENCODING__ is EUC-JP/, erb.result)
+      erb.result.should.match /__ENCODING__ is EUC-JP/
 
       erb = ERB.new("__ENCODING__ is <%= __ENCODING__ %>".force_encoding("Big5"))
-      assert_match(/__ENCODING__ is Big5/, erb.result)
+      erb.result.should.match /__ENCODING__ is Big5/
     end
 
-    def test_recognize_magic_comment
+    it 'should recognize magic comment' do
       erb = ERB.new(<<-EOS.encode("EUC-KR"))
 <%# -*- coding: EUC-KR -*- %>
 안녕하세요
       EOS
-      assert_match(/#coding:EUC-KR/, erb.src)
-      assert_equal Encoding::EUC_KR, erb.result.encoding
+      erb.src.should.match /#coding:EUC-KR/
+      erb.result.encoding.should.equal Encoding::EUC_KR
 
       erb = ERB.new(<<-EOS.encode("EUC-KR").force_encoding("ASCII-8BIT"))
 <%#-*- coding: EUC-KR -*-%>
 안녕하세요
       EOS
-      assert_match(/#coding:EUC-KR/, erb.src)
-      assert_equal Encoding::EUC_KR, erb.result.encoding
+      erb.src.should.match /#coding:EUC-KR/
+      erb.result.encoding.should.equal Encoding::EUC_KR
 
       erb = ERB.new(<<-EOS.encode("EUC-KR").force_encoding("ASCII-8BIT"))
 <%# vim: tabsize=8 encoding=EUC-KR shiftwidth=2 expandtab %>
 안녕하세요
       EOS
-      assert_match(/#coding:EUC-KR/, erb.src)
-      assert_equal Encoding::EUC_KR, erb.result.encoding
+      erb.src.should.match /#coding:EUC-KR/
+      erb.result.encoding.should.equal Encoding::EUC_KR
 
       erb = ERB.new(<<-EOS.encode("EUC-KR").force_encoding("ASCII-8BIT"))
 <%#coding:EUC-KR %>
 안녕하세요
       EOS
-      assert_match(/#coding:EUC-KR/, erb.src)
-      assert_equal Encoding::EUC_KR, erb.result.encoding
+      erb.src.should.match /#coding:EUC-KR/
+      erb.result.encoding.should.equal Encoding::EUC_KR
 
       erb = ERB.new(<<-EOS.encode("EUC-KR").force_encoding("EUC-JP"))
 <%#coding:EUC-KR %>
 안녕하세요
       EOS
-      assert_match(/#coding:EUC-KR/, erb.src)
-      assert_equal Encoding::EUC_KR, erb.result.encoding
+      erb.src.should.match /#coding:EUC-KR/
+      erb.result.encoding.should.equal Encoding::EUC_KR
     end
 
-    module M; end
-    def test_method_with_encoding
+    it 'should support method with encoding' do
+      m = Module.new
       obj = Object.new
-      obj.extend(M)
+      obj.extend(m)
 
       erb = ERB.new(<<-EOS.encode("EUC-JP").force_encoding("ASCII-8BIT"))
 <%#coding:EUC-JP %>
 literal encoding is <%= 'こんにちは'.encoding %>
 __ENCODING__ is <%= __ENCODING__ %>
     EOS
-      erb.def_method(M, :m_from_magic_comment)
+      erb.def_method(m, :m_from_magic_comment)
 
       result = obj.m_from_magic_comment
-      assert_equal Encoding::EUC_JP, result.encoding
-      assert_match(/literal encoding is EUC-JP/, result)
-      assert_match(/__ENCODING__ is EUC-JP/, result)
+      erb.result.encoding.should.equal Encoding::EUC_JP
+      erb.result.should.match /literal encoding is EUC-JP/
+      erb.result.should.match /__ENCODING__ is EUC-JP/
 
       erb = ERB.new(<<-EOS.encode("EUC-KR"))
 literal encoding is <%= '안녕하세요'.encoding %>
 __ENCODING__ is <%= __ENCODING__ %>
 EOS
-      erb.def_method(M, :m_from_eval_encoding)
+      erb.def_method(m, :m_from_eval_encoding)
       result = obj.m_from_eval_encoding
-      assert_equal Encoding::EUC_KR, result.encoding
-      assert_match(/literal encoding is EUC-KR/, result)
-      assert_match(/__ENCODING__ is EUC-KR/, result)
+      erb.result.encoding.should.equal Encoding::EUC_KR
+      erb.result.should.match /literal encoding is EUC-KR/
+      erb.result.should.match /__ENCODING__ is EUC-KR/
     end
   end
 end
