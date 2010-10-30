@@ -68,60 +68,59 @@ module Temple
   #   _buf << "Some content"
   #   foo = "More content"
   #   _buf << foo.downcase
+  class Generator
+    include Mixins::Options
 
-  module Generators
-    class Generator
-      include Mixins::Options
+    default_options[:buffer] = '_buf'
 
-      default_options[:buffer] = '_buf'
+    def initialize(options = {})
+      super
+      @compiling = false
+    end
 
-      def initialize(options = {})
-        super
-        @compiling = false
-      end
-
-      def compile(exp)
-        if @compiling
-          type, *args = exp
-          send("on_#{type}", *args)
-        else
-          begin
-            @compiling = true
-            [preamble, compile(exp), postamble].join(' ; ')
-          ensure
-            @compiling = false
-          end
+    def compile(exp)
+      if @compiling
+        type, *args = exp
+        send("on_#{type}", *args)
+      else
+        begin
+          @compiling = true
+          [preamble, compile(exp), postamble].join(' ; ')
+        ensure
+          @compiling = false
         end
-      end
-
-      def on_multi(*exp)
-        exp.map { |e| compile(e) }.join(' ; ')
-      end
-
-      def on_newline
-        "\n"
-      end
-
-      def on_capture(name, block)
-        capture_generator.new(:buffer => name).compile(block)
-      end
-
-      protected
-
-      def capture_generator
-        @capture_generator ||=
-          @options[:capture_generator] || Temple::Generators::StringBuffer
-      end
-
-      def buffer
-        @options[:buffer]
-      end
-
-      def concat(str)
-        "#{buffer} << (#{str})"
       end
     end
 
+    def on_multi(*exp)
+      exp.map { |e| compile(e) }.join(' ; ')
+    end
+
+    def on_newline
+      "\n"
+    end
+
+    def on_capture(name, block)
+      capture_generator.new(:buffer => name).compile(block)
+    end
+
+    protected
+
+    def capture_generator
+      @capture_generator ||=
+        @options[:capture_generator] || Temple::Generators::StringBuffer
+    end
+
+    def buffer
+      @options[:buffer]
+    end
+
+    def concat(str)
+      "#{buffer} << (#{str})"
+    end
+  end
+
+  module Generators
     # Implements an array buffer.
     #
     #   _buf = []

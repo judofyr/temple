@@ -1,6 +1,6 @@
 require 'helper'
 
-class SimpleGenerator < Temple::Generators::Generator
+class SimpleGenerator < Temple::Generator
   def preamble
     "#{buffer} = BUFFER"
   end
@@ -22,7 +22,7 @@ class SimpleGenerator < Temple::Generators::Generator
   end
 end
 
-describe Temple::Generators::Generator do
+describe Temple::Generator do
   it 'should compile simple expressions' do
     gen = SimpleGenerator.new
 

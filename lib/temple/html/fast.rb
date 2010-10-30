@@ -1,6 +1,6 @@
 module Temple
   module HTML
-    class Fast < Filters::Filter
+    class Fast < Filter
       temple_dispatch :html
 
       XHTML_DOCTYPES = {

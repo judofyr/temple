@@ -1,10 +1,13 @@
 require 'temple/version'
 
 module Temple
+  autoload :Generator,        'temple/generators'
   autoload :Generators,       'temple/generators'
   autoload :Engine,           'temple/engine'
   autoload :Utils,            'temple/utils'
   autoload :Mixins,           'temple/mixins'
+  autoload :Filter,           'temple/filter'
+  autoload :Template,         'temple/template'
 
   module Engines
     autoload :ERB,            'temple/engines/erb'
@@ -15,7 +18,6 @@ module Temple
   end
 
   module Filters
-    autoload :Filter,         'temple/filters/filter'
     autoload :MultiFlattener, 'temple/filters/multi_flattener'
     autoload :StaticMerger,   'temple/filters/static_merger'
     autoload :DynamicInliner, 'temple/filters/dynamic_inliner'
