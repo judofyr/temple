@@ -1,8 +1,9 @@
 # -*- encoding: utf-8 -*-
+require File.dirname(__FILE__) + "/lib/temple/version"
 
 Gem::Specification.new do |s|
   s.name = %q{temple}
-  s.version = "0.1.3"
+  s.version = Temple::VERSION
 
   s.authors = ["Magnus Holm"]
   s.date = %q{2010-01-23}

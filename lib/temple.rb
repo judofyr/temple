@@ -1,6 +1,6 @@
-module Temple
-  VERSION = "0.1.3"
+require 'temple/version'
 
+module Temple
   autoload :Generators, 'temple/generators'
   autoload :Engine,     'temple/engine'
   autoload :Utils,      'temple/utils'
