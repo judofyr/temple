@@ -1,5 +1,5 @@
 # -*- coding: UTF-8 -*-
-require File.dirname(__FILE__) + '/../helper'
+require 'helper'
 
 if "".respond_to?(:encoding)
   class TestTempleEnginesERBM17N < Test::Unit::TestCase

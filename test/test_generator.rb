@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/helper'
+require 'helper'
 
 class TestTempleGenerator < Test::Unit::TestCase
   class Simple < Temple::Generators::Generator

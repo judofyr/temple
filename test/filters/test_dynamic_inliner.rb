@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../helper'
+require 'helper'
 
 class TestTempleFiltersDynamicInliner < TestFilter(:DynamicInliner)
   def test_several_statics_into_dynamic

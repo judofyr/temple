@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../helper'
+require 'helper'
 
 class TestTempleFiltersStaticMerger < TestFilter(:StaticMerger)
   def test_several_statics

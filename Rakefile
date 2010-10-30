@@ -13,7 +13,7 @@ if RUBY_VERSION[0,3] == "1.8" and command?("turn")
   end
 else
   Rake::TestTask.new do |t|
-    t.libs << 'lib'
+    t.libs << 'lib' << 'test'
     t.pattern = 'test/**/test_*.rb'
     t.verbose = false
   end
