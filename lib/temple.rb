@@ -1,17 +1,17 @@
 require 'temple/version'
 
 module Temple
-  autoload :Generators, 'temple/generators'
-  autoload :Engine,     'temple/engine'
-  autoload :Utils,      'temple/utils'
-  autoload :Mixins,     'temple/mixins'
+  autoload :Generators,       'temple/generators'
+  autoload :Engine,           'temple/engine'
+  autoload :Utils,            'temple/utils'
+  autoload :Mixins,           'temple/mixins'
 
   module Engines
-    autoload :ERB,      'temple/engines/erb'
+    autoload :ERB,            'temple/engines/erb'
   end
 
   module Parsers
-    autoload :ERB,      'temple/parsers/erb'
+    autoload :ERB,            'temple/parsers/erb'
   end
 
   module Filters
