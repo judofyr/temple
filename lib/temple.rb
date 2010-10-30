@@ -1,9 +1,8 @@
 module Temple
   VERSION = "0.1.3"
 
-  autoload :Core,       'temple/core'
+  autoload :Generators, 'temple/generators'
   autoload :Engine,     'temple/engine'
-  autoload :Generator,  'temple/generator'
   autoload :Utils,      'temple/utils'
   autoload :Mixins,     'temple/mixins'
 

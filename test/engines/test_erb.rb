@@ -16,7 +16,7 @@ class TestTempleEnginesERB < Test::Unit::TestCase
   end
 
   def test_change_generator
-    gen = Temple::Core::StringBuffer
+    gen = Temple::Generators::StringBuffer
     erb = TempleERB.new("Hello", nil, nil, 'foo', :generator => gen)
     assert_match(/foo = ''/, erb.src)
 

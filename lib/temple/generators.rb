@@ -68,7 +68,71 @@ module Temple
   #   _buf << "Some content"
   #   foo = "More content"
   #   _buf << foo.downcase
-  module Core
+
+  module Generators
+    class Generator
+      include Mixins::Options
+
+      default_options[:buffer] = '_buf'
+
+      def initialize(options = {})
+        super
+        @compiling = false
+      end
+
+      def capture_generator
+        @capture_generator ||=
+          @options[:capture_generator] || Temple::Generators::StringBuffer
+      end
+
+      def compile(exp)
+        if @compiling
+          type, *args = exp
+          send("on_#{type}", *args)
+        else
+          begin
+            @compiling = true
+            [preamble, compile(exp), postamble].join(' ; ')
+          ensure
+            @compiling = false
+          end
+        end
+      end
+
+      def buffer(str = '')
+        @options[:buffer] + str
+      end
+
+      def concat(str)
+        buffer " << (#{str})"
+      end
+
+      def self.to_ruby(str)
+        str.inspect
+      end
+
+      def to_ruby(str)
+        Generator.to_ruby(str)
+      end
+
+      # Sensible defaults
+
+      def preamble;  '' end
+      def postamble; '' end
+
+      def on_multi(*exp)
+        exp.map { |e| compile(e) }.join(" ; ")
+      end
+
+      def on_newline
+        "\n"
+      end
+
+      def on_capture(name, block)
+        capture_generator.new(:buffer => name).compile(block)
+      end
+    end
+
     # Implements an array buffer.
     #
     #   _buf = []
@@ -111,7 +175,6 @@ module Temple
     #   _buf
     class StringBuffer < Array
       def preamble;  buffer " = ''" end
-      def postamble; buffer end
 
       def on_dynamic(code)
         concat(code) + '.to_s'
@@ -119,3 +182,4 @@ module Temple
     end
   end
 end
+

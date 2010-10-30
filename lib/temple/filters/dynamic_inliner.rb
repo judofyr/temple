@@ -63,7 +63,7 @@ module Temple
       end
 
       def static(str)
-        Generator.to_ruby(str)[1..-2]
+        Generators::Generator.to_ruby(str)[1..-2]
       end
 
       def dynamic(str)

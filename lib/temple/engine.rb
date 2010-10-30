@@ -40,9 +40,9 @@ module Temple
       use(Temple::Filters.const_get(filter), *args, &blk)
     end
 
-    # Shortcut for <tt>use Temple::Generator::parser</tt>
+    # Shortcut for <tt>use Temple::Generators::parser</tt>
     def self.generator(compiler, *args, &blk)
-      use(Temple::Core.const_get(compiler), *args, &blk)
+      use(Temple::Generators.const_get(compiler), *args, &blk)
     end
 
     def initialize(options = {})

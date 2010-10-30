@@ -18,7 +18,6 @@ Meta
 * Home: <http://github.com/judofyr/temple>
 * Bugs: <http://github.com/judofyr/temple/issues>
 * List: <http://groups.google.com/group/guardians-of-the-temple>
-* Core abstraction: {Temple::Core}
 
 
 Overview
@@ -165,8 +164,8 @@ abstraction and compile it down to the core abstraction.
 A generator is a compiler which takes an Sexp and returns a string which is
 valid Ruby code.
 
-Most of the time you would just use {Temple::Core::ArrayBuffer} or any of the
-other generators in {Temple::Core}, but nothing stops you from writing your
+Most of the time you would just use {Temple::Generators::ArrayBuffer} or any of the
+other generators in {Temple::Generators}, but nothing stops you from writing your
 own.
 
 In fact, one of the great things about Temple is that if you write a new

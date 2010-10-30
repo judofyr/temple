@@ -57,7 +57,7 @@ module Temple
         @trim_mode = trim_mode
         @parser = Parsers::ERB.new(:trim_mode => @trim_mode)
 
-        @generator = options[:generator] || Core::ArrayBuffer
+        @generator = options[:generator] || Generators::ArrayBuffer
 
         if @generator.is_a?(Class)
           @generator = @generator.new(:buffer => eoutvar)
