@@ -27,7 +27,7 @@ Temple is built on a theory that every template consists of three elements:
 
 * Static text
 * Dynamic text (pieces of Ruby which are evaluated and sent to the client)
-* Blocks (pieces of Ruby which are evaluated and *not* sent to the client, but 
+* Blocks (pieces of Ruby which are evaluated and *not* sent to the client, but
   might change the control flow).
 
 The goal of a template engine is to take the template and eventually compile
@@ -64,13 +64,13 @@ straightforward data structure, which can easily be written by hand and
 manipulated by computers.
 
 Some examples:
-    
+
     [:static, "Hello World!"]
-    
+
     [:multi,
       [:static, "Hello "],
       [:dynamic, "@world"]]
-    
+
     [:html, :tag, "em", "Hey hey"]
 
 *NOTE:* SexpProcessor, a library written by Ryan Davis, includes a `Sexp`
@@ -89,7 +89,7 @@ So what's an abstraction? An abstraction is when you introduce a new types:
 
     # Instead of:
     [:static, "<strong>Use the force</strong>"]
-    
+
     # You use:
     [:html, :tag, "strong", [:static, "Use the force"]]
 
@@ -127,7 +127,7 @@ class. Temple then assumes the initializer takes an optional option hash:
       def initialize(options = {})
         @options = options
       end
-      
+
       def compile(exp)
         # do stuff
       end
@@ -181,19 +181,19 @@ When you have a chain of a parsers, some filters and a generator you can finally
     class MyEngine < Temple::Engine
       # First run MyParser, passing the :strict option
       use MyParser, :strict
-      
+
       # Then a custom filter
       use MyFilter
-      
+
       # Then some general optimizations filters
       filter :MultiFlattener
       filter :StaticMerger
       filter :DynamicInliner
-      
+
       # Finally the generator
       generator :ArrayBuffer, :buffer
     end
-    
+
     engine = MyEngine.new(:strict => "For MyParser")
     engine.compile(something)
 
@@ -209,7 +209,7 @@ template engines. This gives you a wide range of features and your engine can
 be used right away in many projects.
 
     require 'tilt'
-    
+
     class MyTemplate < Tilt::Template
       def prepare
         @src = MyEngine.new(options).compile(data)
@@ -219,20 +219,20 @@ be used right away in many projects.
         @src
       end
     end
-    
+
     # Register your file extension:
     Tilt.register 'ext', MyTemplate
-    
+
     Tilt.new('example.ext').render     # => Render a file
     MyTemplate.new { "String" }.render # => Render a string
-    
+
 
 Installation
 ------------
 
     $ gem install temple
 
-    
+
 Acknowledgements
 ----------------
 
