@@ -3,7 +3,7 @@ require File.dirname(__FILE__) + '/helper'
 class TestTempleGenerator < Test::Unit::TestCase
   class Simple < Temple::Generators::Generator
     def preamble
-      buffer " = BUFFER"
+      "#{buffer} = BUFFER"
     end
 
     def postamble

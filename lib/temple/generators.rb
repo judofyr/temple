@@ -80,11 +80,6 @@ module Temple
         @compiling = false
       end
 
-      def capture_generator
-        @capture_generator ||=
-          @options[:capture_generator] || Temple::Generators::StringBuffer
-      end
-
       def compile(exp)
         if @compiling
           type, *args = exp
@@ -99,21 +94,8 @@ module Temple
         end
       end
 
-      def buffer(str = '')
-        @options[:buffer] + str
-      end
-
-      def concat(str)
-        buffer " << (#{str})"
-      end
-
-      # Sensible defaults
-
-      def preamble;  '' end
-      def postamble; '' end
-
       def on_multi(*exp)
-        exp.map { |e| compile(e) }.join(" ; ")
+        exp.map { |e| compile(e) }.join(' ; ')
       end
 
       def on_newline
@@ -122,6 +104,21 @@ module Temple
 
       def on_capture(name, block)
         capture_generator.new(:buffer => name).compile(block)
+      end
+
+      protected
+
+      def capture_generator
+        @capture_generator ||=
+          @options[:capture_generator] || Temple::Generators::StringBuffer
+      end
+
+      def buffer
+        @options[:buffer]
+      end
+
+      def concat(str)
+        "#{buffer} << (#{str})"
       end
     end
 
@@ -135,8 +132,8 @@ module Temple
     #   end
     #   _buf.join
     class ArrayBuffer < Generator
-      def preamble;  buffer " = []" end
-      def postamble; "#{buffer} =  #{buffer}.join"   end
+      def preamble;  "#{buffer} = []" end
+      def postamble; "#{buffer} = #{buffer}.join" end
 
       def on_static(text)
         concat(text.inspect)
@@ -166,7 +163,7 @@ module Temple
     #   end
     #   _buf
     class StringBuffer < Array
-      def preamble;  buffer " = ''" end
+      def preamble; "#{buffer} = ''" end
 
       def on_dynamic(code)
         concat(code) + '.to_s'
@@ -174,4 +171,3 @@ module Temple
     end
   end
 end
-
