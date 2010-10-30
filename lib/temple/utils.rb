@@ -54,7 +54,9 @@ module Temple
     def empty_exp?(exp)
       case exp[0]
       when :multi
-        exp[1..-1].all? { |e| e[0] == :newline }
+        exp[1..-1].all? {|e| empty_exp?(e) }
+      when :newline
+        true
       else
         false
       end
