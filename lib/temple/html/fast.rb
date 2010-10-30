@@ -49,8 +49,8 @@ module Temple
 
       def on_html_doctype(type)
         trailing_newlines = type[/(\A|[^\r])(\n+)\Z/, 2].to_s
+        text = type.downcase.strip
 
-        text = type.to_s.downcase.strip
         if text =~ /^xml/
           raise 'Invalid xml directive in html mode' if html?
           wrapper = @options[:attr_wrapper]
@@ -87,7 +87,7 @@ module Temple
         result
       end
 
-      def on_html_staticattrs(attrs)
+      def on_html_staticattrs(*attrs)
         result = {}
         attrs.each do |name, value|
           if result[name] && %w(class id).include?(name)
