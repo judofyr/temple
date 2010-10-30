@@ -1,6 +1,6 @@
 require 'helper'
 
-class TestTempleGenerator < Test::Unit::TestCase
+class TestTempleGeneratorsGenerator < Test::Unit::TestCase
   class Simple < Temple::Generators::Generator
     def preamble
       "#{buffer} = BUFFER"

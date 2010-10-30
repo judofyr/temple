@@ -1,6 +1,10 @@
 require 'helper'
 
-class TestTempleFiltersStaticMerger < TestFilter(:StaticMerger)
+class TestTempleFiltersStaticMerger < Test::Unit::TestCase
+  def setup
+    @filter = Temple::Filters::StaticMerger.new
+  end
+
   def test_several_statics
     exp = @filter.compile([:multi,
       [:static, "Hello "],

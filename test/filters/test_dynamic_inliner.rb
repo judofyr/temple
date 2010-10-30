@@ -1,6 +1,10 @@
 require 'helper'
 
-class TestTempleFiltersDynamicInliner < TestFilter(:DynamicInliner)
+class TestTempleFiltersDynamicInliner < Test::Unit::TestCase
+  def setup
+    @filter = Temple::Filters::DynamicInliner.new
+  end
+
   def test_several_statics_into_dynamic
     exp = @filter.compile([:multi,
       [:static, "Hello "],
