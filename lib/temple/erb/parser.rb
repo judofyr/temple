@@ -1,6 +1,6 @@
 module Temple
-  module Parsers
-    class ERB
+  module ERB
+    class Parser
       include Mixins::Options
 
       ERB_PATTERN = /(<%%|%%>)|<%(==?|\#)?(.*?)?-?%>/m

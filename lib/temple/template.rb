@@ -6,7 +6,7 @@ module Temple
     class << self
       def engine(engine = nil)
         if engine
-          @engine = Symbol === engine ? Temple::Engines.const_get(engine) : engine
+          @engine = engine
         elsif @engine
           @engine
         else

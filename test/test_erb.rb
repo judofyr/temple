@@ -3,11 +3,11 @@ require 'erb'
 
 class Bacon::Context
   def erb(src, options = {})
-    Temple::Templates::ERB.new(options) { src }.render
+    Temple::ERB::Template.new(options) { src }.render
   end
 end
 
-describe Temple::Templates::ERB do
+describe Temple::ERB::Template do
 
   it 'should compile erb' do
     src = %q{

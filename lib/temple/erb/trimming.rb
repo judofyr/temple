@@ -1,6 +1,6 @@
 module Temple
-  module Filters
-    class TrimERB < Filter
+  module ERB
+    class Trimming < Filter
       def on_multi(*exps)
         case options[:trim_mode]
         when '>'

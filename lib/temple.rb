@@ -9,12 +9,11 @@ module Temple
   autoload :Filter,           'temple/filter'
   autoload :Template,         'temple/template'
 
-  module Engines
-    autoload :ERB,            'temple/engines/erb'
-  end
-
-  module Parsers
-    autoload :ERB,            'temple/parsers/erb'
+  module ERB
+    autoload :Engine,         'temple/erb/engine'
+    autoload :Parser,         'temple/erb/parser'
+    autoload :Template,       'temple/erb/template'
+    autoload :Trimming,       'temple/erb/trimming'
   end
 
   module Filters
@@ -23,14 +22,9 @@ module Temple
     autoload :DynamicInliner, 'temple/filters/dynamic_inliner'
     autoload :EscapeHTML,     'temple/filters/escape_html'
     autoload :Debugger,       'temple/filters/debugger'
-    autoload :TrimERB,        'temple/filters/trim_erb'
   end
 
   module HTML
     autoload :Fast,           'temple/html/fast'
-  end
-
-  module Templates
-    autoload :ERB,            'temple/templates/erb'
   end
 end

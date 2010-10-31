@@ -30,11 +30,6 @@ module Temple
       filters << [filter, args, blk]
     end
 
-    # Shortcut for <tt>use Temple::Parsers::parser</tt>
-    def self.parser(parser, *args, &blk)
-      use(Temple::Parsers.const_get(parser), *args, &blk)
-    end
-
     # Shortcut for <tt>use Temple::Filters::parser</tt>
     def self.filter(filter, *args, &blk)
       use(Temple::Filters.const_get(filter), *args, &blk)
