@@ -1,9 +1,5 @@
 require 'rake/testtask'
 
-def command?(command)
-  system("type #{command} > /dev/null")
-end
-
 task :default => :test
 task :test do
   sh "bacon -Ilib -Itest --automatic --quiet"
