@@ -25,7 +25,7 @@ module Temple
               curr << exp[1]
             end
           else
-            res << compile(exp)
+            res << compile!(exp)
             state = :looking unless exp.first == :newline
           end
         end

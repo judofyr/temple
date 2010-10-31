@@ -73,27 +73,17 @@ module Temple
 
     default_options[:buffer] = '_buf'
 
-    def initialize(options = {})
-      super
-      @compiling = false
+    def compile(exp)
+      [preamble, compile!(exp), postamble].join(' ; ')
     end
 
-    def compile(exp)
-      if @compiling
-        type, *args = exp
-        send("on_#{type}", *args)
-      else
-        begin
-          @compiling = true
-          [preamble, compile(exp), postamble].join(' ; ')
-        ensure
-          @compiling = false
-        end
-      end
+    def compile!(exp)
+      type, *args = exp
+      send("on_#{type}", *args)
     end
 
     def on_multi(*exp)
-      exp.map { |e| compile(e) }.join(' ; ')
+      exp.map { |e| compile!(e) }.join(' ; ')
     end
 
     def on_newline
