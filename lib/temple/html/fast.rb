@@ -32,7 +32,7 @@ module Temple
       end
 
       def xhtml?
-        @options[:format] == :xhtml
+        options[:format] == :xhtml
       end
 
       def html?
@@ -40,11 +40,11 @@ module Temple
       end
 
       def html5?
-        @options[:format] == :html5
+        options[:format] == :html5
       end
 
       def html4?
-        @options[:format] == :html4
+        options[:format] == :html4
       end
 
       def on_html_doctype(type)
@@ -53,10 +53,10 @@ module Temple
 
         if text =~ /^xml/
           raise 'Invalid xml directive in html mode' if html?
-          wrapper = @options[:attr_wrapper]
+          wrapper = options[:attr_wrapper]
           str = "<?xml version=#{wrapper}1.0#{wrapper} encoding=#{wrapper}#{text.split(' ')[1] || "utf-8"}#{wrapper} ?>"
         else
-          case @options[:format]
+          case options[:format]
           when :html5
             str = '<!DOCTYPE html>'
           when :html4
@@ -78,7 +78,7 @@ module Temple
       end
 
       def on_html_tag(name, attrs, closed, content)
-        closed ||= @options[:autoclose].include?(name)
+        closed ||= options[:autoclose].include?(name)
         raise "Closed tag #{name} has content" if closed && !empty_exp?(content)
         result = [:multi, [:static, "<#{name}"], compile!(attrs)]
         result << [:static, " /"] if closed && xhtml?
@@ -91,10 +91,10 @@ module Temple
         result = {}
         attrs.each do |name, value|
           if result[name] && %w(class id).include?(name)
-            raise 'Multiple id attributes specified, but id concatenation disabled' if name == 'id' && !@options[:id_delimiter]
+            raise 'Multiple id attributes specified, but id concatenation disabled' if name == 'id' && !options[:id_delimiter]
             result[name] = [:multi,
                             result[name],
-                            [:static, (name == 'class' ? ' ' : @options[:id_delimiter])],
+                            [:static, (name == 'class' ? ' ' : options[:id_delimiter])],
                             value]
           else
             result[name] = value
@@ -105,9 +105,9 @@ module Temple
                    [:static, ' '],
                    [:static, name],
                    [:static, '='],
-                   [:static, @options[:attr_wrapper]],
+                   [:static, options[:attr_wrapper]],
                    value,
-                   [:static, @options[:attr_wrapper]]]
+                   [:static, options[:attr_wrapper]]]
         end
       end
     end

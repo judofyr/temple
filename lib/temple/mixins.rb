@@ -44,6 +44,8 @@ module Temple
         base.class_eval { extend ClassMethods }
       end
 
+      attr_reader :options
+
       def initialize(options = {})
         @options = self.class.default_options.merge(options)
       end

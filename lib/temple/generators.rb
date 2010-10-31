@@ -98,11 +98,11 @@ module Temple
 
     def capture_generator
       @capture_generator ||=
-        @options[:capture_generator] || Temple::Generators::StringBuffer
+        options[:capture_generator] || Temple::Generators::StringBuffer
     end
 
     def buffer
-      @options[:buffer]
+      options[:buffer]
     end
 
     def concat(str)
