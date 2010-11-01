@@ -72,17 +72,17 @@ module Temple
 
       def on_html_comment(content)
         [:multi,
-          [:static, "<!--"],
+          [:static, '<!--'],
           compile!(content),
-          [:static, "-->"]]
+          [:static, '-->']]
       end
 
       def on_html_tag(name, attrs, closed, content)
         closed ||= options[:autoclose].include?(name)
         raise "Closed tag #{name} has content" if closed && !empty_exp?(content)
         result = [:multi, [:static, "<#{name}"], compile!(attrs)]
-        result << [:static, " /"] if closed && xhtml?
-        result << [:static, ">"] << compile!(content)
+        result << [:static, ' /'] if closed && xhtml?
+        result << [:static, '>'] << compile!(content)
         result << [:static, "</#{name}>"] if !closed
         result
       end
@@ -113,4 +113,3 @@ module Temple
     end
   end
 end
-

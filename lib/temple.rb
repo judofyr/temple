@@ -26,5 +26,6 @@ module Temple
 
   module HTML
     autoload :Fast,           'temple/html/fast'
+    autoload :Pretty,         'temple/html/pretty'
   end
 end

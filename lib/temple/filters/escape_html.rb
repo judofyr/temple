@@ -1,14 +1,26 @@
 module Temple
   module Filters
     class EscapeHTML < Filter
-      def on_escape(type, value)
-        case type
-        when :static
-          value = options[:user_html_safe] ? escape_html_safe(value) : escape_html(value)
-        when :dynamic
-          value = "Temple::Utils.escape_html#{options[:use_html_safe] ? '_safe' : ''}((#{value}))"
-        end
-        [type, value]
+      temple_dispatch :escape, :html
+
+      def on_escape_static(value)
+        [:static, options[:user_html_safe] ? escape_html_safe(value) : escape_html(value)]
+      end
+
+      def on_escape_dynamic(value)
+        [:dynamic, "Temple::Utils.escape_html#{options[:use_html_safe] ? '_safe' : ''}((#{value}))"]
+      end
+
+      def on_html_staticattrs(*attrs)
+        [:html, :staticattrs, *attrs.map {|k,v| [k, compile!(v)] }]
+      end
+
+      def on_html_comment(content)
+        [:html, :comment, compile!(content)]
+      end
+
+      def on_html_tag(name, attrs, closed, content)
+        [:html, :tag, name, compile!(attrs), closed, compile!(content)]
       end
     end
   end

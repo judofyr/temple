@@ -27,14 +27,16 @@ module Temple
       end
 
       module ClassMethods
-        def temple_dispatch(base)
-          class_eval %{def on_#{base}(type, *args)
-            if respond_to?("on_" #{base.to_s.inspect} "_\#{type}")
-              send("on_" #{base.to_s.inspect} "_\#{type}", *args)
-            else
-              [:#{base}, type, *args]
-            end
-          end}
+        def temple_dispatch(*bases)
+          bases.each do |base|
+            class_eval %{def on_#{base}(type, *args)
+              if respond_to?("on_" #{base.to_s.inspect} "_\#{type}")
+                send("on_" #{base.to_s.inspect} "_\#{type}", *args)
+              else
+                [:#{base}, type, *args]
+              end
+            end}
+          end
         end
       end
     end
