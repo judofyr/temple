@@ -4,7 +4,7 @@ module Temple
       set_default_options :indent => '  ',
                           :pretty => true
 
-      INDENT_TAGS = %w(base div form head html img input li link meta ol
+      INDENT_TAGS = %w(base div doctype form head html img input li link meta ol
                        script style table tbody td th thead title tr ul).freeze
 
       def initialize(opts = {})
@@ -29,6 +29,11 @@ module Temple
         else
           [:dynamic, content]
         end
+      end
+
+      def on_html_doctype(type)
+        @last = 'doctype'
+        super
       end
 
       def on_html_comment(content)
@@ -56,10 +61,12 @@ module Temple
         result
       end
 
+      # Return indentation if not in pre tag
       def indent
         @stack.include?('pre') ? '' : ("\n" + ((options[:indent] || '') * @stack.size))
       end
 
+      # Return indentation before tag
       def tag_indent(name)
         @last && (INDENT_TAGS.include?(@last) || INDENT_TAGS.include?(name)) ? indent : ''
       end
