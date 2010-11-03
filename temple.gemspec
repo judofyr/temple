@@ -6,7 +6,7 @@ Gem::Specification.new do |s|
   s.version = Temple::VERSION
 
   s.authors = ["Magnus Holm"]
-  s.date = %q{2010-01-23}
+  s.date = %q{2010-11-03}
   s.email = %q{judofyr@gmail.com}
   s.homepage = %q{http://dojo.rubyforge.org/}
   s.require_paths = ["lib"]
