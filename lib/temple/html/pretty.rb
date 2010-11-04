@@ -4,8 +4,9 @@ module Temple
       set_default_options :indent => '  ',
                           :pretty => true
 
-      INDENT_TAGS = %w(base div doctype form head html img input li link meta ol
-                       script style table tbody td th thead title tr ul).freeze
+      INDENT_TAGS = %w(base dd div dl doctype dt fieldset form head h1 h2 h3 
+                       h4 h5 h6 hr html img input li link meta ol p script 
+                       style table tbody td tfoot th thead title tr ul).freeze
 
       def initialize(opts = {})
         super
