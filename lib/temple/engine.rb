@@ -22,33 +22,35 @@ module Temple
   #   engine.compile(something)
   #
   class Engine
+    include Mixins::Options
+
     def self.filters
       @filters ||= []
     end
 
-    def self.use(filter, *args, &blk)
-      filters << [filter, args, blk]
+    def self.use(filter, *options, &block)
+      filters << [filter, options, block]
     end
 
     # Shortcut for <tt>use Temple::Filters::parser</tt>
-    def self.filter(filter, *args, &blk)
-      use(Temple::Filters.const_get(filter), *args, &blk)
+    def self.filter(filter, *options, &block)
+      use(Temple::Filters.const_get(filter), *options, &block)
     end
 
     # Shortcut for <tt>use Temple::Generators::parser</tt>
-    def self.generator(compiler, *args, &blk)
-      use(Temple::Generators.const_get(compiler), *args, &blk)
+    def self.generator(compiler, *options, &block)
+      use(Temple::Generators.const_get(compiler), *options, &block)
     end
 
-    def initialize(options = {})
-      @chain = self.class.filters.map do |filter, args, blk|
-        opt = args.last.is_a?(Hash) ? args.last.dup : {}
-        opt = args.inject(opt) do |memo, ele|
-          memo[ele] = options[ele] if options.has_key?(ele)
-          memo
-        end
+    def initialize(opts = {})
+      super
 
-        filter.new(opt, &blk)
+      @chain = self.class.filters.map do |filter, opt, block|
+        result = {}
+        opt.each do |key|
+          result[key] = options[key] if options.has_key?(key)
+        end
+        filter.new(result, &block)
       end
     end
 
