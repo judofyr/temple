@@ -2,11 +2,11 @@ module Temple
   module HTML
     class Pretty < Fast
       set_default_options :indent => '  ',
-                          :pretty => true
-
-      INDENT_TAGS = %w(base dd div dl doctype dt fieldset form head h1 h2 h3
-                       h4 h5 h6 hr html img input li link meta ol p script
-                       style table tbody td tfoot th thead title tr ul).freeze
+                          :pretty => true,
+                          :indent_tags => %w(base dd div dl doctype dt fieldset form head h1 h2 h3
+                                             h4 h5 h6 hr html img input li link meta ol p script
+                                             style table tbody td tfoot th thead title tr ul).freeze,
+                          :pre_tags => %w(pre textarea).freeze
 
       def initialize(opts = {})
         super
@@ -58,12 +58,17 @@ module Temple
 
       # Return indentation if not in pre tag
       def indent
-        @stack.include?('pre') ? '' : ("\n" + ((options[:indent] || '') * @stack.size))
+        preformatted? ? '' : ("\n" + ((options[:indent] || '') * @stack.size))
+      end
+
+      # Are we in a preformatted text area
+      def preformatted?
+        options[:pre_tags].any? {|tag| @stack.include?(tag) }
       end
 
       # Return indentation before tag
       def tag_indent(name)
-        @last && (INDENT_TAGS.include?(@last) || INDENT_TAGS.include?(name)) ? indent : ''
+        @last && (options[:indent_tags].include?(@last) || options[:indent_tags].include?(name)) ? indent : ''
       end
     end
   end
