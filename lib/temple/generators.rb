@@ -91,15 +91,10 @@ module Temple
     end
 
     def on_capture(name, block)
-      capture_generator.new(:buffer => name).compile(block)
+      options[:capture_generator].new(:buffer => name).compile(block)
     end
 
     protected
-
-    def capture_generator
-      @capture_generator ||=
-        options[:capture_generator] || Temple::Generators::StringBuffer
-    end
 
     def buffer
       options[:buffer]
@@ -155,8 +150,10 @@ module Temple
       def preamble; "#{buffer} = ''" end
 
       def on_dynamic(code)
-        concat(code) + '.to_s'
+        concat("(#{code}).to_s")
       end
     end
   end
+
+  Generator.default_options[:capture_generator] = Temple::Generators::StringBuffer
 end
