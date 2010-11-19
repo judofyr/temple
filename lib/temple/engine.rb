@@ -44,13 +44,14 @@ module Temple
       use(Temple::Generators.const_get(compiler), *options, &block)
     end
 
-    def initialize(opts = {})
-      super
-      @chain = self.class.chain.map { |f| f.call(options) }
+    def compile(thing)
+      chain.inject(thing) {|m, e| e.compile(m) }
     end
 
-    def compile(thing)
-      @chain.inject(thing) { |m, e| e.compile(m) }
+    protected
+
+    def chain
+      @chain ||= self.class.chain.map { |f| f.call(options) }
     end
   end
 end

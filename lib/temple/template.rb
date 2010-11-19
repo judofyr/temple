@@ -30,6 +30,6 @@ module Temple
     # @return [String] Compiled template ruby code
     def precompiled_template(locals = {})
       @src
-      end
+    end
   end
 end
