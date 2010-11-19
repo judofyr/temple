@@ -1,5 +1,11 @@
 require 'helper'
 
+class HtmlSafeString < String
+  def html_safe?
+    true
+  end
+end
+
 describe Temple::Filters::EscapeHTML do
   before do
     @filter = Temple::Filters::EscapeHTML.new
@@ -28,5 +34,14 @@ describe Temple::Filters::EscapeHTML do
   it 'should keep dynamic intact' do
     exp = [:multi, [:dynamic, 'foo']]
     @filter.compile(exp).should.equal exp
+  end
+
+  it 'should have use_html_safe option' do
+    filter = Temple::Filters::EscapeHTML.new(:use_html_safe => true)
+    filter.compile([:multi,
+      [:escape, :static, HtmlSafeString.new("a < b")],
+    ]).should.equal [:multi,
+      [:static, "a < b"],
+    ]
   end
 end
