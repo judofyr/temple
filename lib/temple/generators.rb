@@ -91,10 +91,14 @@ module Temple
     end
 
     def on_capture(name, block)
-      options[:capture_generator].new(:buffer => name).compile(block)
+      capture_generator.new(:buffer => name).compile(block)
     end
 
     protected
+
+    def capture_generator
+      options[:capture_generator]
+    end
 
     def buffer
       options[:buffer]
