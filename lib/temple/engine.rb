@@ -24,12 +24,14 @@ module Temple
   class Engine
     include Mixins::Options
 
-    def self.filters
-      @filters ||= []
+    def self.chain
+      @chain ||= []
     end
 
     def self.use(filter, *options, &block)
-      filters << [filter, options, block]
+      chain << proc do |opts|
+        filter.new(Hash[*opts.select {|k,v| options.include?(k) }.flatten], &block)
+      end
     end
 
     # Shortcut for <tt>use Temple::Filters::parser</tt>
@@ -44,14 +46,7 @@ module Temple
 
     def initialize(opts = {})
       super
-
-      @chain = self.class.filters.map do |filter, opt, block|
-        result = {}
-        opt.each do |key|
-          result[key] = options[key] if options.has_key?(key)
-        end
-        filter.new(result, &block)
-      end
+      @chain = self.class.chain.map { |f| f.call(options) }
     end
 
     def compile(thing)
