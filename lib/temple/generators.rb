@@ -174,7 +174,8 @@ module Temple
     #   _buf
     class RailsOutputBuffer < StringBuffer
       set_default_options :buffer_class => 'ActionView::OutputBuffer',
-                          :buffer => '@output_buffer'
+                          :buffer => '@output_buffer',
+                          :capture_generator => RailsOutputBuffer
 
       def preamble
         "#{buffer} = #{options[:buffer_class]}.new"
@@ -182,10 +183,6 @@ module Temple
 
       def concat(str)
         "#{buffer}.safe_concat((#{str}))"
-      end
-
-      def on_capture(name, block)
-        ["#{name} = #{buffer}", compile!(block), name].join(' ; ')
       end
     end
   end
