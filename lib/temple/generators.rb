@@ -91,14 +91,10 @@ module Temple
     end
 
     def on_capture(name, block)
-      capture_generator.new(:buffer => name).compile(block)
+      options[:capture_generator].new(:buffer => name).compile(block)
     end
 
     protected
-
-    def capture_generator
-      options[:capture_generator]
-    end
 
     def buffer
       options[:buffer]
@@ -120,8 +116,13 @@ module Temple
     #   end
     #   _buf.join
     class ArrayBuffer < Generator
-      def preamble;  "#{buffer} = []" end
-      def postamble; "#{buffer} = #{buffer}.join" end
+      def preamble
+        "#{buffer} = []"
+      end
+
+      def postamble
+        "#{buffer} = #{buffer}.join"
+      end
 
       def on_static(text)
         concat(text.inspect)
@@ -138,7 +139,9 @@ module Temple
 
     # Just like ArrayBuffer, but doesn't call #join on the array.
     class Array < ArrayBuffer
-      def postamble; buffer; end
+      def postamble
+        buffer
+      end
     end
 
     # Implements a string buffer.
@@ -151,10 +154,38 @@ module Temple
     #   end
     #   _buf
     class StringBuffer < Array
-      def preamble; "#{buffer} = ''" end
+      def preamble
+        "#{buffer} = ''"
+      end
 
       def on_dynamic(code)
         concat("(#{code}).to_s")
+      end
+    end
+
+    # Implements a rails output buffer.
+    #
+    #   _buf = ActionView::OutputBuffer
+    #   _buf.safe_concat "static"
+    #   _buf.safe_concat dynamic.to_s
+    #   block do
+    #     _buf << "more static"
+    #   end
+    #   _buf
+    class RailsOutputBuffer < StringBuffer
+      set_default_options :buffer_class => 'ActionView::OutputBuffer',
+                          :buffer => '@output_buffer'
+
+      def preamble
+        "#{buffer} = #{options[:buffer_class]}.new"
+      end
+
+      def concat(str)
+        "#{buffer}.safe_concat((#{str}))"
+      end
+
+      def on_capture(name, block)
+        ["#{name} = #{buffer}", compile!(block), name].join(' ; ')
       end
     end
   end
