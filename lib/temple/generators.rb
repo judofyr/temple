@@ -165,13 +165,13 @@ module Temple
 
     # Implements a rails output buffer.
     #
-    #   _buf = ActionView::OutputBuffer
-    #   _buf.safe_concat "static"
-    #   _buf.safe_concat dynamic.to_s
+    #   @output_buffer = ActionView::OutputBuffer
+    #   @output_buffer.safe_concat "static"
+    #   @output_buffer.safe_concat dynamic.to_s
     #   block do
-    #     _buf << "more static"
+    #     @output_buffer << "more static"
     #   end
-    #   _buf
+    #   @output_buffer
     class RailsOutputBuffer < StringBuffer
       set_default_options :buffer_class => 'ActionView::OutputBuffer',
                           :buffer => '@output_buffer',
