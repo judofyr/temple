@@ -11,17 +11,17 @@ module Temple
       def initialize(opts = {})
         super
         @last = nil
-        @stack = []
+        @indent = 0
       end
 
       def on_static(content)
         @last = nil
-        [:static, options[:pretty] ? content.gsub("\n", indent) : content]
+        [:static, options[:pretty] && !@preformatted ? content.gsub("\n", indent) : content]
       end
 
       def on_dynamic(content)
         @last = nil
-        [:dynamic, options[:pretty] ? %{(#{content}).to_s.gsub("\n", #{indent.inspect})} : content]
+        [:dynamic, options[:pretty] && !@preformatted ? %{(#{content}).to_s.gsub("\n", #{indent.inspect})} : content]
       end
 
       def on_html_doctype(type)
@@ -35,7 +35,7 @@ module Temple
       end
 
       def on_html_tag(name, attrs, closed, content)
-        return super if !options[:pretty]
+        return super if !options[:pretty] || @preformatted
 
         closed ||= options[:autoclose].include?(name)
         raise "Closed tag #{name} has content" if closed && !empty_exp?(content)
@@ -44,13 +44,15 @@ module Temple
         result << [:static, ' /'] if closed && xhtml?
         result << [:static, '>']
 
-        @stack << name
         @last = name
+        @preformatted = options[:pre_tags].include?(name)
+        @indent += 1
         result << compile!(content)
-        @stack.pop
+        @indent -= 1
 
         result << [:static, "#{tag_indent(name)}</#{name}>"] if !closed
         @last = name
+        @preformatted = false
         result
       end
 
@@ -58,12 +60,7 @@ module Temple
 
       # Return indentation if not in pre tag
       def indent
-        preformatted? ? '' : ("\n" + ((options[:indent] || '') * @stack.size))
-      end
-
-      # Are we in a preformatted text area
-      def preformatted?
-        options[:pre_tags].any? {|tag| @stack.include?(tag) }
+        "\n" + (options[:indent] || '') * @indent
       end
 
       # Return indentation before tag

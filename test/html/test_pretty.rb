@@ -35,6 +35,6 @@ describe Temple::HTML::Pretty do
                       [:static, ">"],
                       [:static, "text"],
                       [:static, "</p>"]],
-                     [:static, "\n</pre>"]]
+                     [:static, "</pre>"]]
   end
 end
