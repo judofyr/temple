@@ -57,8 +57,12 @@ module Temple
           default_options.merge!(opts)
         end
 
-        def default_options(opts = nil)
-          @default_options ||= superclass.respond_to?(:default_options) ? superclass.default_options.dup : {}
+        def default_options
+          @default_options ||= if superclass.respond_to?(:default_options)
+                                 Hash.new {|hash, key| superclass.default_options[key] }
+                               else
+                                 {}
+                               end
         end
       end
     end
