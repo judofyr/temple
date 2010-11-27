@@ -2,6 +2,10 @@ module Temple
   module Utils
     extend self
 
+    def indent(text, indent, pre_tags)
+      pre_tags =~ text ? text : text.gsub("\n", indent)
+    end
+
     # Returns an escaped copy of `html`.
     # Strings which are declared as html_safe are not escaped.
     #

@@ -12,16 +12,21 @@ module Temple
         super
         @last = nil
         @indent = 0
+        @pretty = options[:pretty]
+      end
+
+      def compile(exp)
+        [:multi, preamble, compile!(exp)]
       end
 
       def on_static(content)
         @last = nil
-        [:static, options[:pretty] && !@preformatted ? content.gsub("\n", indent) : content]
+        [:static, @pretty ? content.gsub("\n", indent) : content]
       end
 
       def on_dynamic(content)
         @last = nil
-        [:dynamic, options[:pretty] && !@preformatted ? %{(#{content}).to_s.gsub("\n", #{indent.inspect})} : content]
+        [:dynamic, @pretty ? "Temple::Utils.indent((#{content}), #{indent.inspect}, _temple_pre_tags)" : content]
       end
 
       def on_html_doctype(type)
@@ -30,33 +35,39 @@ module Temple
       end
 
       def on_html_comment(content)
-        return super if !options[:pretty]
+        return super unless @pretty
         [:multi, [:static, indent], super]
       end
 
       def on_html_tag(name, attrs, closed, content)
-        return super if !options[:pretty] || @preformatted
+        return super unless @pretty
 
         closed ||= options[:autoclose].include?(name)
         raise "Closed tag #{name} has content" if closed && !empty_exp?(content)
 
+        @pretty = false
         result = [:multi, [:static, "#{tag_indent(name)}<#{name}"], compile!(attrs)]
         result << [:static, ' /'] if closed && xhtml?
         result << [:static, '>']
 
         @last = name
-        @preformatted = options[:pre_tags].include?(name)
+        @pretty = !options[:pre_tags].include?(name)
         @indent += 1
         result << compile!(content)
         @indent -= 1
 
         result << [:static, "#{tag_indent(name)}</#{name}>"] if !closed
         @last = name
-        @preformatted = false
+        @pretty = true
         result
       end
 
       protected
+
+      def preamble
+        regexp = options[:pre_tags].map {|t| "<#{t}" }.join('|')
+        [:block, "_temple_pre_tags = /#{regexp}/"]
+      end
 
       # Return indentation if not in pre tag
       def indent

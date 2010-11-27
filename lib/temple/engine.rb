@@ -44,8 +44,8 @@ module Temple
       use(Temple::Generators.const_get(compiler), *options, &block)
     end
 
-    def compile(thing)
-      chain.inject(thing) {|m, e| e.compile(m) }
+    def compile(input)
+      chain.inject(input) {|m, e| e.compile(m) }
     end
 
     protected
