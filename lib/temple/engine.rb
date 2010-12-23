@@ -29,8 +29,9 @@ module Temple
     end
 
     def self.use(filter, *options, &block)
+      default_options = Hash === options.last ? options.pop : {}
       chain << proc do |opts|
-        filter.new(Hash[*opts.select {|k,v| options.include?(k) }.flatten], &block)
+        filter.new(default_options.merge(Hash[*opts.select {|k,v| options.include?(k) }.flatten]), &block)
       end
     end
 
