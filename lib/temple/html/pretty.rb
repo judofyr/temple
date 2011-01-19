@@ -3,7 +3,7 @@ module Temple
     class Pretty < Fast
       set_default_options :indent => '  ',
                           :pretty => true,
-                          :indent_tags => %w(base dd div dl doctype dt fieldset form head h1 h2 h3
+                          :indent_tags => %w(base body dd div dl doctype dt fieldset form head h1 h2 h3
                                              h4 h5 h6 hr html img input li link meta ol p script
                                              style table tbody td tfoot th thead title tr ul).freeze,
                           :pre_tags => %w(pre textarea).freeze
