@@ -3,8 +3,8 @@ module Temple
     class EscapeHTML < Filter
       temple_dispatch :escape, :html
 
-      # Activate the usage of html_safe if it is available (for Rails 3 for example)
-      default_options[:use_html_safe] = ''.respond_to?(:html_safe)
+      # Activate the usage of html_safe? if it is available (for Rails 3 for example)
+      default_options[:use_html_safe] = ''.respond_to?(:html_safe?)
 
       def on_escape_static(value)
         [:static, options[:use_html_safe] ? escape_html_safe(value) : escape_html(value)]
