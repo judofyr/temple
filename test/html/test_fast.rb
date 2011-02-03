@@ -7,6 +7,7 @@ describe Temple::HTML::Fast do
 
   it 'should compile html doctype' do
     @html.compile([:multi, [:html, :doctype, '5']]).should.equal [:multi, [:static, '<!DOCTYPE html>']]
+    @html.compile([:multi, [:html, :doctype, 'html']]).should.equal [:multi, [:static, '<!DOCTYPE html>']]
     @html.compile([:multi, [:html, :doctype, '1.1']]).should.equal [:multi,
       [:static, '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">']]
   end

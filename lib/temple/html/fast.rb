@@ -6,6 +6,7 @@ module Temple
       XHTML_DOCTYPES = {
         '1.1'          => '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">',
         '5'            => '<!DOCTYPE html>',
+        'html'         => '<!DOCTYPE html>',
         'strict'       => '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">',
         'frameset'     => '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Frameset//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd">',
         'mobile'       => '<!DOCTYPE html PUBLIC "-//WAPFORUM//DTD XHTML Mobile 1.2//EN" "http://www.openmobilealliance.org/tech/DTD/xhtml-mobile12.dtd">',
@@ -26,6 +27,8 @@ module Temple
 
       def initialize(options = {})
         super
+        # html5 is now called html only
+        @options[:format] = :html5 if @options[:format] == :html
         unless [:xhtml, :html4, :html5].include?(@options[:format])
           raise "Invalid format #{@options[:format].inspect}"
         end
