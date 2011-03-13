@@ -22,6 +22,7 @@ module Temple
     autoload :DynamicInliner, 'temple/filters/dynamic_inliner'
     autoload :EscapeHTML,     'temple/filters/escape_html'
     autoload :Debugger,       'temple/filters/debugger'
+    autoload :Hook,           'temple/filters/hook'
   end
 
   module HTML
