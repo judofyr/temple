@@ -9,10 +9,14 @@ module Temple
   autoload :Filter,           'temple/filter'
   autoload :Template,         'temple/template'
 
+  module Templates
+    autoload :Tilt,           'temple/templates/tilt'
+    autoload :Rails,          'temple/templates/rails'
+  end
+
   module ERB
     autoload :Engine,         'temple/erb/engine'
     autoload :Parser,         'temple/erb/parser'
-    autoload :Template,       'temple/erb/template'
     autoload :Trimming,       'temple/erb/trimming'
   end
 
@@ -28,5 +32,11 @@ module Temple
   module HTML
     autoload :Fast,           'temple/html/fast'
     autoload :Pretty,         'temple/html/pretty'
+  end
+
+  def self.Template(engine)
+    template = Class.new(Temple::Templates::Tilt)
+    template.engine(engine)
+    template
   end
 end
