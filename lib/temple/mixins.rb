@@ -41,29 +41,29 @@ module Temple
       end
     end
 
+    module DefaultOptions
+      def set_default_options(options)
+        default_options.update(options)
+      end
+
+      def default_options
+        @default_options ||= if superclass.respond_to?(:default_options)
+                               Hash.new {|hash, key| superclass.default_options[key] }
+                             else
+                               {}
+                             end
+      end
+    end
+
     module Options
       def self.included(base)
-        base.class_eval { extend ClassMethods }
+        base.class_eval { extend DefaultOptions }
       end
 
       attr_reader :options
 
       def initialize(options = {})
         @options = self.class.default_options.merge(options)
-      end
-
-      module ClassMethods
-        def set_default_options(opts)
-          default_options.merge!(opts)
-        end
-
-        def default_options
-          @default_options ||= if superclass.respond_to?(:default_options)
-                                 Hash.new {|hash, key| superclass.default_options[key] }
-                               else
-                                 {}
-                               end
-        end
       end
     end
   end
