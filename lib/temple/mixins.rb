@@ -47,11 +47,8 @@ module Temple
       end
 
       def default_options
-        @default_options ||= if superclass.respond_to?(:default_options)
-                               Hash.new {|hash, key| superclass.default_options[key] }
-                             else
-                               {}
-                             end
+        @default_options ||= Utils::MutableHash.new(superclass.respond_to?(:default_options) ?
+                                                    superclass.default_options : nil)
       end
     end
 
@@ -63,7 +60,7 @@ module Temple
       attr_reader :options
 
       def initialize(options = {})
-        @options = self.class.default_options.merge(options)
+        @options = Utils::ImmutableHash.new(options, self.class.default_options)
       end
     end
   end

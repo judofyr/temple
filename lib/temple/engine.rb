@@ -29,9 +29,12 @@ module Temple
     end
 
     def self.use(filter, *options, &block)
-      default_options = Hash === options.last ? options.pop : {}
+      # Local option values which apply only to this filter.
+      # These options cannot be overwritten by the user.
+      local_opts = Hash === options.last ? options.pop : nil
       chain << proc do |opts|
-        filter.new(default_options.merge(Hash[*opts.select {|k,v| options.include?(k) }.flatten]), &block)
+        filtered_opts = Hash[*options.select {|k| opts.include?(k) }.map {|k| [k, opts[k]] }.flatten]
+        filter.new(Utils::ImmutableHash.new(local_opts, filtered_opts), &block)
       end
     end
 
