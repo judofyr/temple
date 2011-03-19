@@ -19,7 +19,7 @@ module Temple
       end
 
       def each
-        keys.each { yield(k, self[k]) }
+        keys.each {|k| yield(k, self[k]) }
       end
 
       def keys
