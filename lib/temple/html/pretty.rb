@@ -16,7 +16,7 @@ module Temple
       end
 
       def call(exp)
-        [:multi, preamble, compile(exp)]
+        @pretty ? [:multi, preamble, compile(exp)] : super
       end
 
       def on_static(content)
@@ -82,7 +82,7 @@ module Temple
       def compile_attribute(name, value)
         return super unless @pretty
 
-        tmp = tmp_var('htmlattr')
+        tmp = tmp_var(:htmlattr)
         [:multi,
          [:capture, tmp, value],
          [:block, "unless #{tmp}.empty?"],
