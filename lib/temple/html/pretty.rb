@@ -78,22 +78,6 @@ module Temple
       def tag_indent(name)
         @last && (options[:indent_tags].include?(@last) || options[:indent_tags].include?(name)) ? indent : ''
       end
-
-      def compile_attribute(name, value)
-        return super unless @pretty
-
-        tmp = tmp_var(:htmlattr)
-        [:multi,
-         [:capture, tmp, value],
-         [:block, "unless #{tmp}.empty?"],
-                    [:static, ' '],
-                    [:static, name],
-                    [:static, '='],
-                    [:static, options[:attr_wrapper]],
-                    [:dynamic, tmp],
-                    [:static, options[:attr_wrapper]],
-         [:block, 'end']]
-      end
     end
   end
 end
