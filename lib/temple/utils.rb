@@ -103,7 +103,7 @@ module Temple
     # @return [String] Variable name
     def tmp_var(prefix)
       @tmp_var ||= 0
-      "_temple#{prefix}#{@tmp_var += 1}"
+      "_temple_#{prefix}#{@tmp_var += 1}"
     end
 
     def empty_exp?(exp)

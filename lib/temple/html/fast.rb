@@ -108,7 +108,24 @@ module Temple
         end
       end
 
+      protected
+
       def compile_attribute(name, value)
+        if empty_exp?(value)
+          [:multi]
+        elsif contains_static?(value)
+          attribute(name, value)
+        else
+          tmp = tmp_var(:htmlattr)
+          [:multi,
+           [:capture, tmp, value],
+           [:block, "unless #{tmp}.empty?"],
+             attribute(name, [:dynamic, tmp]),
+           [:block, 'end']]
+        end
+      end
+
+      def attribute(name, value)
         [:multi,
          [:static, ' '],
          [:static, name],
@@ -116,6 +133,17 @@ module Temple
          [:static, options[:attr_wrapper]],
          value,
          [:static, options[:attr_wrapper]]]
+      end
+
+      def contains_static?(exp)
+        case exp[0]
+        when :multi
+          exp[1..-1].any? {|e| contains_static?(e) }
+        when :static
+          true
+        else
+          false
+        end
       end
     end
   end
