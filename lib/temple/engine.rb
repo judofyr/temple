@@ -18,34 +18,30 @@ module Temple
   #     generator :ArrayBuffer, :buffer
   #   end
   #
+  #   class SpecialEngine < MyEngine
+  #     append MyCodeOptimizer
+  #     replace Temple::Generators::ArrayBuffer, Temple::Generators::RailsOutputBuffer
+  #   end
+  #
   #   engine = MyEngine.new(:strict => "For MyParser")
   #   engine.call(something)
   #
   class Engine
     include Mixins::Options
+    include Mixins::EngineDSL
+    extend  Mixins::EngineDSL
+
+    attr_reader :chain
 
     def self.chain
-      @chain ||= []
+      @chain ||= superclass.respond_to?(:chain) ? superclass.chain.dup : []
     end
 
-    def self.use(filter, *options, &block)
-      # Local option values which apply only to this filter.
-      # These options cannot be overwritten by the user.
-      local_opts = Hash === options.last ? options.pop : nil
-      chain << proc do |opts|
-        filtered_opts = Hash[*options.select {|k| opts.include?(k) }.map {|k| [k, opts[k]] }.flatten]
-        filter.new(Utils::ImmutableHash.new(local_opts, filtered_opts), &block)
-      end
-    end
-
-    # Shortcut for <tt>use Temple::Filters::parser</tt>
-    def self.filter(filter, *options, &block)
-      use(Temple::Filters.const_get(filter), *options, &block)
-    end
-
-    # Shortcut for <tt>use Temple::Generators::parser</tt>
-    def self.generator(compiler, *options, &block)
-      use(Temple::Generators.const_get(compiler), *options, &block)
+    def initialize(o = {})
+      super
+      @chain = self.class.chain.dup
+      yield(self) if block_given?
+      @chain = build_chain
     end
 
     def call(input)
@@ -54,8 +50,19 @@ module Temple
 
     protected
 
-    def chain
-      @chain ||= self.class.chain.map { |f| f.call(options) }
+    def build_chain
+      chain.map do |e|
+        name, filter, option_filter, local_options = e
+        if Class === filter
+          filtered_options = Utils::ImmutableHash.new(local_options,
+              Hash[*option_filter.select {|k| options.include?(k) }.map {|k| [k, options[k]] }.flatten])
+          filter.new(filtered_options)
+        elsif UnboundMethod === filter
+          filter.bind(self)
+        else
+          filter
+        end
+      end
     end
   end
 end
