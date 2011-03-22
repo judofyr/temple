@@ -51,6 +51,7 @@ module Temple
       end
 
       def on_html_doctype(type)
+        type = type.to_s
         trailing_newlines = type[/(\A|[^\r])(\n+)\Z/, 2].to_s
         text = type.downcase.strip
 
