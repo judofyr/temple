@@ -6,7 +6,7 @@ describe Temple::Filters::DynamicInliner do
   end
 
   it 'should compile several statics into dynamic' do
-    @filter.compile([:multi,
+    @filter.call([:multi,
       [:static, "Hello "],
       [:static, "World\n "],
       [:static, "Have a nice day"]
@@ -14,7 +14,7 @@ describe Temple::Filters::DynamicInliner do
   end
 
   it 'should compile several dynamics into dynamic' do
-    @filter.compile([:multi,
+    @filter.call([:multi,
       [:dynamic, "@hello"],
       [:dynamic, "@world"],
       [:dynamic, "@yeah"]
@@ -22,7 +22,7 @@ describe Temple::Filters::DynamicInliner do
   end
 
   it 'should compile static and dynamic into dynamic' do
-    @filter.compile([:multi,
+    @filter.call([:multi,
       [:static, "Hello"],
       [:dynamic, "@world"],
       [:dynamic, "@yeah"],
@@ -31,7 +31,7 @@ describe Temple::Filters::DynamicInliner do
   end
 
   it 'should merge statics and dynamics around a block' do
-    exp = @filter.compile([:multi,
+    exp = @filter.call([:multi,
       [:static, "Hello "],
       [:dynamic, "@world"],
       [:block, "Oh yeah"],
@@ -46,21 +46,21 @@ describe Temple::Filters::DynamicInliner do
 
   it 'should keep blocks intact' do
     exp = [:multi, [:block, 'foo']]
-    @filter.compile(exp).should.equal exp
+    @filter.call(exp).should.equal exp
   end
 
   it 'should keep single statics intact' do
     exp = [:multi, [:static, 'foo']]
-    @filter.compile(exp).should.equal exp
+    @filter.call(exp).should.equal exp
   end
 
   it 'should keep single dynamic intact' do
     exp = [:multi, [:dynamic, 'foo']]
-    @filter.compile(exp).should.equal exp
+    @filter.call(exp).should.equal exp
   end
 
   it 'should inline inside multi' do
-    @filter.compile([:multi,
+    @filter.call([:multi,
       [:static, "Hello "],
       [:dynamic, "@world"],
       [:multi,
@@ -76,7 +76,7 @@ describe Temple::Filters::DynamicInliner do
   end
 
   it 'should merge across newlines' do
-    exp = @filter.compile([:multi,
+    exp = @filter.call([:multi,
       [:static, "Hello \n"],
       [:newline],
       [:dynamic, "@world"],
@@ -87,7 +87,7 @@ describe Temple::Filters::DynamicInliner do
   end
 
   it 'should compile static followed by newline' do
-    @filter.compile([:multi,
+    @filter.call([:multi,
       [:static, "Hello \n"],
       [:newline],
       [:block, "world"]

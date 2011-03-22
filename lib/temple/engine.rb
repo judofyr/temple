@@ -19,7 +19,7 @@ module Temple
   #   end
   #
   #   engine = MyEngine.new(:strict => "For MyParser")
-  #   engine.compile(something)
+  #   engine.call(something)
   #
   class Engine
     include Mixins::Options
@@ -48,8 +48,8 @@ module Temple
       use(Temple::Generators.const_get(compiler), *options, &block)
     end
 
-    def compile(input)
-      chain.inject(input) {|m, e| e.compile(m) }
+    def call(input)
+      chain.inject(input) {|m, e| e.call(m) }
     end
 
     protected

@@ -9,7 +9,7 @@ module Temple
         require 'pp' if options[:debug_pretty]
       end
 
-      def compile(exp)
+      def call(exp)
         if options[:debug]
           puts options[:debug_prefix] if options[:debug_prefix]
           if options[:debug_pretty]

@@ -12,7 +12,7 @@ module Temple
       # @return [void]
       def prepare
         opts = Utils::ImmutableHash.new({ :file => eval_file }, options, self.class.default_options)
-        @src = self.class.engine.new(opts).compile(data)
+        @src = self.class.engine.new(opts).call(data)
       end
 
       # A string containing the (Ruby) source code for the template.

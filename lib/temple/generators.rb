@@ -73,17 +73,17 @@ module Temple
 
     default_options[:buffer] = '_buf'
 
-    def compile(exp)
-      [preamble, compile!(exp), postamble].join(' ; ')
+    def call(exp)
+      [preamble, compile(exp), postamble].join(' ; ')
     end
 
-    def compile!(exp)
+    def compile(exp)
       type, *args = exp
       send("on_#{type}", *args)
     end
 
     def on_multi(*exp)
-      exp.map { |e| compile!(e) }.join(' ; ')
+      exp.map { |e| compile(e) }.join(' ; ')
     end
 
     def on_newline
@@ -91,7 +91,7 @@ module Temple
     end
 
     def on_capture(name, block)
-      options[:capture_generator].new(:buffer => name).compile(block)
+      options[:capture_generator].new(:buffer => name).call(block)
     end
 
     protected

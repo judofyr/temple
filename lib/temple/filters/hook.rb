@@ -7,14 +7,8 @@ module Temple
         @hooks = options.values
       end
 
-      def compile(exp)
-        @hooks.inject(exp) do |e, hook|
-          if hook.respond_to? :compile
-            hook.compile(e)
-          else
-            hook.call(e)
-          end
-        end
+      def call(exp)
+        @hooks.inject(exp) {|e, hook| hook.call(e) }
       end
     end
   end

@@ -6,7 +6,7 @@ describe Temple::Filters::StaticMerger do
   end
 
   it 'should merge serveral statics' do
-    @filter.compile([:multi,
+    @filter.call([:multi,
       [:static, "Hello "],
       [:static, "World, "],
       [:static, "Good night"]
@@ -16,7 +16,7 @@ describe Temple::Filters::StaticMerger do
   end
 
   it 'should merge serveral statics around block' do
-    @filter.compile([:multi,
+    @filter.call([:multi,
       [:static, "Hello "],
       [:static, "World!"],
       [:block, "123"],
@@ -30,7 +30,7 @@ describe Temple::Filters::StaticMerger do
   end
 
   it 'should merge serveral statics across newlines' do
-    @filter.compile([:multi,
+    @filter.call([:multi,
       [:static, "Hello "],
       [:static, "World, "],
       [:newline],

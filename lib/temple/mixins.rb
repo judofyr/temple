@@ -5,11 +5,11 @@ module Temple
         base.class_eval { extend ClassMethods }
       end
 
-      def compile(exp)
-        compile!(exp)
+      def call(exp)
+        compile(exp)
       end
 
-      def compile!(exp)
+      def compile(exp)
         type, *args = exp
         if respond_to?("on_#{type}")
           send("on_#{type}", *args)
@@ -19,11 +19,11 @@ module Temple
       end
 
       def on_multi(*exps)
-        [:multi, *exps.map {|exp| compile!(exp) }]
+        [:multi, *exps.map {|exp| compile(exp) }]
       end
 
       def on_capture(name, exp)
-        [:capture, name, compile!(exp)]
+        [:capture, name, compile(exp)]
       end
 
       module ClassMethods

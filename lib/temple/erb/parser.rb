@@ -10,7 +10,7 @@ module Temple
         '%%>' => '%>',
       }.freeze
 
-      def compile(input)
+      def call(input)
         result = [:multi]
         pos = 0
         input.scan(ERB_PATTERN) do |escaped, indicator, code|

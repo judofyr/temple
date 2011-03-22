@@ -6,7 +6,7 @@ describe Temple::Filters::MultiFlattener do
   end
 
   it 'should flatten nested multi expressions' do
-    @filter.compile([:multi,
+    @filter.call([:multi,
       [:static, "a"],
       [:multi,
        [:dynamic, "aa"],
@@ -28,6 +28,6 @@ describe Temple::Filters::MultiFlattener do
   end
 
   it 'should return first element' do
-    @filter.compile([:multi, [:block, 'foo']]).should.equal [:block, 'foo']
+    @filter.call([:multi, [:block, 'foo']]).should.equal [:block, 'foo']
   end
 end

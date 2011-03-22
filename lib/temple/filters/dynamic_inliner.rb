@@ -53,7 +53,7 @@ module Temple
             # If we found a single exp last time, let's add it.
             res.concat(prev) if state == :single
             # Compile the current exp (unless it's the noop)
-            res << compile!(exp) unless head == :noop
+            res << compile(exp) unless head == :noop
             # Now we're looking for more!
             state = :looking
           end

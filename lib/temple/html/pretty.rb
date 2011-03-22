@@ -15,8 +15,8 @@ module Temple
         @pretty = options[:pretty]
       end
 
-      def compile(exp)
-        [:multi, preamble, compile!(exp)]
+      def call(exp)
+        [:multi, preamble, compile(exp)]
       end
 
       def on_static(content)
@@ -46,14 +46,14 @@ module Temple
         raise "Closed tag #{name} has content" if closed && !empty_exp?(content)
 
         @pretty = false
-        result = [:multi, [:static, "#{tag_indent(name)}<#{name}"], compile!(attrs)]
+        result = [:multi, [:static, "#{tag_indent(name)}<#{name}"], compile(attrs)]
         result << [:static, ' /'] if closed && xhtml?
         result << [:static, '>']
 
         @last = name
         @pretty = !options[:pre_tags].include?(name)
         @indent += 1
-        result << compile!(content)
+        result << compile(content)
         @indent -= 1
 
         result << [:static, "#{tag_indent(name)}</#{name}>"] if !closed

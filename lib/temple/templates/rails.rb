@@ -10,7 +10,7 @@ module Temple
         extend Temple::Template
 
         def compile(template)
-          self.class.engine.new(self.class.default_options).compile(template.source)
+          self.class.engine.new(self.class.default_options).call(template.source)
         end
 
         def self.register(name)
@@ -22,7 +22,7 @@ module Temple
         extend Temple::Template
 
         def self.call(template)
-          engine.new(default_options).compile(template.source)
+          engine.new(default_options).call(template.source)
         end
 
         def self.register(name)
