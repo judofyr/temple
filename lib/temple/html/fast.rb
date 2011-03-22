@@ -39,15 +39,7 @@ module Temple
       end
 
       def html?
-        html5? or html4?
-      end
-
-      def html5?
-        options[:format] == :html5
-      end
-
-      def html4?
-        options[:format] == :html4
+        options[:format] == :html5 || options[:format] == :html4
       end
 
       def on_html_doctype(type)
