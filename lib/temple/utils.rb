@@ -98,6 +98,14 @@ module Temple
       end
     end
 
+    # Generate unique temporary variable name
+    #
+    # @return [String] Variable name
+    def tmp_var(prefix)
+      @tmp_var ||= 0
+      "_temple#{prefix}#{@tmp_var += 1}"
+    end
+
     def empty_exp?(exp)
       case exp[0]
       when :multi
