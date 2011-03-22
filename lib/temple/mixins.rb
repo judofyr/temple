@@ -103,7 +103,23 @@ module Temple
       end
     end
 
+    module CoreDispatcher
+      def on_multi(*exps)
+        [:multi, *exps.map {|exp| compile(exp) }]
+      end
+
+      def on_capture(name, exp)
+        [:capture, name, compile(exp)]
+      end
+
+      def on_escape(flag, exp)
+        [:escape, flag, compile(exp)]
+      end
+    end
+
     module Dispatcher
+      include CoreDispatcher
+
       def self.included(base)
         base.class_eval { extend ClassMethods }
       end
@@ -119,14 +135,6 @@ module Temple
         else
           exp
         end
-      end
-
-      def on_multi(*exps)
-        [:multi, *exps.map {|exp| compile(exp) }]
-      end
-
-      def on_capture(name, exp)
-        [:capture, name, compile(exp)]
       end
 
       module ClassMethods

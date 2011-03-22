@@ -12,9 +12,10 @@ describe Temple::Filters::EscapeHTML do
   end
 
   it 'should handle escape expressions' do
-    @filter.call([:multi,
-      [:escape, :static, "a < b"],
-      [:escape, :dynamic, "ruby_method"]
+    @filter.call([:escape, true,
+                  [:multi,
+                   [:static, "a < b"],
+                   [:dynamic, "ruby_method"]]
     ]).should.equal [:multi,
       [:static, "a &lt; b"],
       [:dynamic, "Temple::Utils.escape_html((ruby_method))"],
@@ -38,10 +39,8 @@ describe Temple::Filters::EscapeHTML do
 
   it 'should have use_html_safe option' do
     filter = Temple::Filters::EscapeHTML.new(:use_html_safe => true)
-    filter.call([:multi,
-      [:escape, :static, HtmlSafeString.new("a < b")],
-    ]).should.equal [:multi,
-      [:static, "a < b"],
-    ]
+    filter.call([:escape, true,
+      [:static, HtmlSafeString.new("a < b")],
+    ]).should.equal [:static, "a < b"],
   end
 end
