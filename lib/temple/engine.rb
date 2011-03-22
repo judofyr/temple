@@ -41,6 +41,7 @@ module Temple
       super
       @chain = self.class.chain.dup
       yield(self) if block_given?
+      [*options[:chain]].each {|block| block.call(self) }
       @chain = build_chain
     end
 
