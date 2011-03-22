@@ -104,14 +104,18 @@ module Temple
           end
         end
         result.sort.inject([:multi]) do |list, (name, value)|
-          list << [:multi,
-                   [:static, ' '],
-                   [:static, name],
-                   [:static, '='],
-                   [:static, options[:attr_wrapper]],
-                   value,
-                   [:static, options[:attr_wrapper]]]
+          list << compile_attribute(name, value)
         end
+      end
+
+      def compile_attribute(name, value)
+        [:multi,
+         [:static, ' '],
+         [:static, name],
+         [:static, '='],
+         [:static, options[:attr_wrapper]],
+         value,
+         [:static, options[:attr_wrapper]]]
       end
     end
   end
