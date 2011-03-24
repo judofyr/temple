@@ -55,9 +55,8 @@ module Temple
       chain.map do |e|
         name, filter, option_filter, local_options = e
         if Class === filter
-          filtered_options = Utils::ImmutableHash.new(local_options,
-              Hash[*option_filter.select {|k| options.include?(k) }.map {|k| [k, options[k]] }.flatten])
-          filter.new(filtered_options)
+          filtered_options = Hash[*option_filter.select {|k| options.include?(k) }.map {|k| [k, options[k]] }.flatten]
+          filter.new(Utils::ImmutableHash.new(local_options, filtered_options))
         elsif UnboundMethod === filter
           filter.bind(self)
         else
