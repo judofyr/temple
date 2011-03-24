@@ -46,6 +46,7 @@ module Temple
     end
 
     def indent(text, indent, pre_tags)
+      text = text.to_s
       pre_tags =~ text ? text : text.gsub("\n", indent)
     end
 
