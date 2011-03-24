@@ -106,6 +106,15 @@ describe Temple::Engine do
     end
   end
 
+  it 'should have #remove' do
+    e = TestEngine.new do |engine|
+      engine.remove :MyFilter1
+      engine.chain.size.should.equal 6
+      engine.chain[0].first.should.equal :Parser
+      engine.chain[1].first.should.equal :MyFilter2
+    end
+  end
+
   it 'should have #replace' do
     e = TestEngine.new do |engine|
       engine.before :Parser, :MyParser do |exp|

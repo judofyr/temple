@@ -9,6 +9,16 @@ module Temple
         chain.unshift(element(args, block))
       end
 
+      def remove(name)
+        found = false
+        chain.reject! do |i|
+          equal = i.first == name
+          found = true if equal
+          equal
+        end
+        raise "#{name} not found" unless found
+      end
+
       alias use append
 
       def before(name, *args, &block)
