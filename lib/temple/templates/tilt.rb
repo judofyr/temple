@@ -22,7 +22,7 @@ module Temple
         @src
       end
 
-      def self.register(name)
+      def self.register_as(name)
         ::Tilt.register name.to_s, self
       end
     end

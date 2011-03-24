@@ -4,7 +4,7 @@ require 'tilt'
 
 class Bacon::Context
   def erb(src, options = {})
-    Temple::Template(Temple::ERB::Engine).new(options) { src }.render
+    Temple::Templates::Tilt(Temple::ERB::Engine).new(options) { src }.render
   end
 end
 

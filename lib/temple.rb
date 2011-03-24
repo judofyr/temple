@@ -8,11 +8,7 @@ module Temple
   autoload :Mixins,           'temple/mixins'
   autoload :Filter,           'temple/filter'
   autoload :Template,         'temple/template'
-
-  module Templates
-    autoload :Tilt,           'temple/templates/tilt'
-    autoload :Rails,          'temple/templates/rails'
-  end
+  autoload :Templates,        'temple/templates'
 
   module ERB
     autoload :Engine,         'temple/erb/engine'
@@ -32,11 +28,5 @@ module Temple
     autoload :Dispatcher,     'temple/html/dispatcher'
     autoload :Fast,           'temple/html/fast'
     autoload :Pretty,         'temple/html/pretty'
-  end
-
-  def self.Template(engine)
-    template = Class.new(Temple::Templates::Tilt)
-    template.engine(engine)
-    template
   end
 end

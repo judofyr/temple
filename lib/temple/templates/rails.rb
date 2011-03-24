@@ -13,7 +13,7 @@ module Temple
           self.class.build_engine.call(template.source)
         end
 
-        def self.register(name)
+        def self.register_as(name)
           ActionView::Template.register_template_handler name.to_sym, self
         end
       end
@@ -25,7 +25,7 @@ module Temple
           build_engine.call(template.source)
         end
 
-        def self.register(name)
+        def self.register_as(name)
           ActionView::Template.register_template_handler name.to_sym, self
         end
       end
