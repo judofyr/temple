@@ -47,7 +47,8 @@ module Temple
 
     def indent(text, indent, pre_tags)
       text = text.to_s
-      pre_tags =~ text ? text : text.gsub("\n", indent)
+      text.gsub!("\n", indent) if pre_tags !~ text
+      text
     end
 
     # Returns an escaped copy of `html`.
