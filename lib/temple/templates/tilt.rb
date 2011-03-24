@@ -3,7 +3,7 @@ require 'tilt'
 module Temple
   module Templates
     class Tilt < ::Tilt::Template
-      extend Temple::Template
+      extend Mixins::Template
 
       # Prepare Temple template
       #

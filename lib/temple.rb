@@ -7,7 +7,6 @@ module Temple
   autoload :Utils,            'temple/utils'
   autoload :Mixins,           'temple/mixins'
   autoload :Filter,           'temple/filter'
-  autoload :Template,         'temple/template'
   autoload :Templates,        'temple/templates'
 
   module ERB

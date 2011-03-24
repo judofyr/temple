@@ -7,7 +7,7 @@ module Temple
     if ::Rails::VERSION::MAJOR == 3 && ::Rails::VERSION::MINOR < 1
       class Rails < ActionView::TemplateHandler
         include ActionView::TemplateHandlers::Compilable
-        extend Temple::Template
+        extend Mixins::Template
 
         def compile(template)
           self.class.build_engine.call(template.source)
@@ -19,7 +19,7 @@ module Temple
       end
     else
       class Rails
-        extend Temple::Template
+        extend Mixins::Template
 
         def self.call(template)
           build_engine.call(template.source)
