@@ -41,6 +41,6 @@ describe Temple::Filters::EscapeHTML do
     filter = Temple::Filters::EscapeHTML.new(:use_html_safe => true)
     filter.call([:escape, true,
       [:static, HtmlSafeString.new("a < b")],
-    ]).should.equal [:static, "a < b"],
+    ]).should.equal [:static, "a < b"]
   end
 end

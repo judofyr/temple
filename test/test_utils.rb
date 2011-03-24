@@ -46,11 +46,11 @@ describe Temple::Utils::ImmutableHash do
   end
 
   it 'has keys' do
-    Temple::Utils::ImmutableHash.new({:a => 1},{:b => 2, :a => 3}).keys.sort.should.equal [:a,:b]
+    Temple::Utils::ImmutableHash.new({:a => 1},{:b => 2, :a => 3}).keys.should.equal [:a,:b]
   end
 
   it 'has to_a' do
-    Temple::Utils::ImmutableHash.new({:a => 1},{:b => 2, :a => 3}).to_a.sort.should.equal [[:a, 1], [:b, 2]]
+    Temple::Utils::ImmutableHash.new({:a => 1},{:b => 2, :a => 3}).to_a.should.equal [[:a, 1], [:b, 2]]
   end
 end
 

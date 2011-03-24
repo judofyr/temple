@@ -13,7 +13,8 @@ module Temple
     end
 
     def build_engine(*options)
-      engine.new(Utils::ImmutableHash.new(*options, default_options)) do |engine|
+      options << default_options
+      engine.new(Utils::ImmutableHash.new(*options)) do |engine|
         chain.each {|block| engine.instance_eval(&block) }
       end
     end
