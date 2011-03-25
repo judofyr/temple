@@ -79,7 +79,11 @@ module Temple
 
     def compile(exp)
       type, *args = exp
-      send("on_#{type}", *args)
+      if respond_to?("on_#{type}")
+        send("on_#{type}", *args)
+      else
+        raise "Generator supports only core expressions - found #{exp.inspect}"
+      end
     end
 
     def on_multi(*exp)
