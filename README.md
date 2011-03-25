@@ -115,7 +115,7 @@ mind working across processes, it's not a problem at all.
 Compilers
 ---------
 
-A *compiler* is simply an object which responds a method called #compile which
+A *compiler* is simply an object which responds a method called #call which
 takes one argument and returns a value. It's illegal for a compiler to mutate
 the argument, and it should be possible to use the same instance several times
 (although not by several threads at the same time).
@@ -128,7 +128,7 @@ class. Temple then assumes the initializer takes an optional option hash:
         @options = options
       end
 
-      def compile(exp)
+      def call(exp)
         # do stuff
       end
     end
@@ -195,7 +195,7 @@ When you have a chain of a parsers, some filters and a generator you can finally
     end
 
     engine = MyEngine.new(:strict => "For MyParser")
-    engine.compile(something)
+    engine.call(something)
 
 And then?
 ---------
@@ -203,25 +203,13 @@ And then?
 You've ran the template through the parser, some filters and in the end a
 generator. What happens next?
 
-Temple's mission ends here, so it's all up to you, but we recommend using
-[Tilt](http://github.com/rtomayko/tilt), the generic interface to Ruby
-template engines. This gives you a wide range of features and your engine can
-be used right away in many projects.
+Temple provides helpers to create template classes for [Tilt](http://github.com/rtomayko/tilt) and
+Rails.
 
     require 'tilt'
 
-    class MyTemplate < Tilt::Template
-      def prepare
-        @src = MyEngine.new(options).compile(data)
-      end
-
-      def template_source
-        @src
-      end
-    end
-
-    # Register your file extension:
-    Tilt.register 'ext', MyTemplate
+    # Create template class MyTemplate and register your file extension
+    MyTemplate = Temple::Templates::Tilt(MyEngine, :register_as => 'ext')
 
     Tilt.new('example.ext').render     # => Render a file
     MyTemplate.new { "String" }.render # => Render a string
