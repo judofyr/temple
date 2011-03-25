@@ -8,7 +8,7 @@ Gem::Specification.new do |s|
   s.date          = Date.today.to_s
 
   s.authors       = ['Magnus Holm', 'Daniel Mendler']
-  s.email         = 'judofyr@gmail.com'
+  s.email         = ['judofyr@gmail.com', 'mail@daniel-mendler.de']
   s.homepage      = 'http://dojo.rubyforge.org/'
   s.summary       = 'Template compilation framework in Ruby'
 
