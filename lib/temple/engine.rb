@@ -54,10 +54,11 @@ module Temple
     def build_chain
       chain.map do |e|
         name, filter, option_filter, local_options = e
-        if Class === filter
+        case filter
+        when Class
           filtered_options = Hash[*option_filter.select {|k| options.include?(k) }.map {|k| [k, options[k]] }.flatten]
           filter.new(Utils::ImmutableHash.new(local_options, filtered_options))
-        elsif UnboundMethod === filter
+        when UnboundMethod
           filter.bind(self)
         else
           filter

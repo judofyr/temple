@@ -22,22 +22,29 @@ end
 describe Temple::Engine do
   it 'should build chain' do
     TestEngine.chain.size.should.equal 7
+
     TestEngine.chain[0].first.should.equal :Parser
     TestEngine.chain[0].size.should.equal 2
     TestEngine.chain[0].last.should.be.instance_of UnboundMethod
+
     TestEngine.chain[1].first.should.equal :MyFilter1
     TestEngine.chain[1].size.should.equal 2
     TestEngine.chain[1].last.should.be.instance_of UnboundMethod
+
     TestEngine.chain[2].first.should.equal :MyFilter2
     TestEngine.chain[2].size.should.equal 2
     TestEngine.chain[2].last.should.be.instance_of UnboundMethod
+
     TestEngine.chain[3].size.should.equal 4
     TestEngine.chain[3].should.equal [:'Temple::HTML::Pretty', Temple::HTML::Pretty, [:format], {:pretty => true}]
+
     TestEngine.chain[4].size.should.equal 4
     TestEngine.chain[4].should.equal [:MultiFlattener, Temple::Filters::MultiFlattener, [], nil]
+
     TestEngine.chain[5].size.should.equal 4
     TestEngine.chain[5].should.equal [:ArrayBuffer, Temple::Generators::ArrayBuffer, [], nil]
-    TestEngine.chain[6].size.should.equal 4
+
+    TestEngine.chain[6].size.should.equal 2
     TestEngine.chain[6][0].should.equal :FinalFilter
     TestEngine.chain[6][1].should.be.instance_of OtherCallable
   end

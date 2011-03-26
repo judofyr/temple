@@ -92,9 +92,12 @@ module Temple
         end
 
         filter ||= args.shift
-        raise(ArgumentError, 'Class or callable argument is required') unless Class === filter || filter.respond_to?(:call)
 
-        if Proc === filter
+        case filter
+        when Proc
+          # Proc or block argument
+          # The proc is converted to a method of the engine class.
+          # The proc can then access the option hash of the engine.
           raise(ArgumentError, 'Too many arguments') unless args.empty?
           raise(ArgumentError, 'Proc or blocks must have arity 1') unless filter.arity == 1
           method_name = "FILTER #{name}"
@@ -105,10 +108,17 @@ module Temple
             (class << self; self; end).class_eval { define_method(method_name, &filter) }
             [name, method(method_name)]
           end
-        else
+        when Class
+          # Class argument (e.g Filter class)
+          # The options are passed to the classes constructor.
           local_options = Hash === args.last ? args.pop : nil
           raise(ArgumentError, 'Only symbols allowed in option filter') unless args.all? {|o| Symbol === o }
           [name, filter, args, local_options]
+        else
+          # Other callable argument (e.g. Object of class which implements #call or Method)
+          # The callable has no access to the option hash of the engine.
+          raise(ArgumentError, 'Class or callable argument is required') unless filter.respond_to?(:call)
+          [name, filter]
         end
       end
     end
