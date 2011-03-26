@@ -95,8 +95,8 @@ module Temple
         raise(ArgumentError, 'Class or callable argument is required') unless Class === filter || filter.respond_to?(:call)
 
         if Proc === filter
-          raise(ArgumentError, 'No option filter allowed') unless args.empty?
-          raise(ArgumentError, 'Procs must have arity 1') unless filter.arity == 1
+          raise(ArgumentError, 'Too many arguments') unless args.empty?
+          raise(ArgumentError, 'Proc or blocks must have arity 1') unless filter.arity == 1
           method_name = "FILTER #{name}"
           if Class === self
             define_method(method_name, &filter)
