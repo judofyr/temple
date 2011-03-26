@@ -88,7 +88,6 @@ module Temple
 
         if block
           raise(ArgumentError, 'Class and block argument are not allowed at the same time') if filter
-          raise(ArgumentError, 'Block must have arity 1') unless block.arity == 1
           filter = block
         end
 
@@ -97,6 +96,7 @@ module Temple
 
         if Proc === filter
           raise(ArgumentError, 'No option filter allowed') unless args.empty?
+          raise(ArgumentError, 'Procs must have arity 1') unless filter.arity == 1
           method_name = "FILTER #{name}"
           if Class === self
             define_method(method_name, &filter)

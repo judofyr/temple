@@ -12,7 +12,7 @@ class TestEngine < Temple::Engine
     [:static, input]
   end
   use :MyFilter1, proc {|exp| exp }
-  use :MyFilter2, proc {|options, exp| exp }
+  use :MyFilter2, proc {|exp| exp }
   use Temple::HTML::Pretty, :format, :pretty => true
   filter :MultiFlattener
   generator :ArrayBuffer
