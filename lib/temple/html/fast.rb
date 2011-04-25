@@ -86,6 +86,7 @@ module Temple
       def on_html_staticattrs(*attrs)
         result = {}
         attrs.each do |name, value|
+          name = name.to_s
           if result[name] && %w(class id).include?(name)
             raise 'Multiple id attributes specified, but id concatenation disabled' if name == 'id' && !options[:id_delimiter]
             result[name] = [:multi,
