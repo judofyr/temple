@@ -105,7 +105,7 @@ module Temple
 
       def compile_attribute(name, value)
         if empty_exp?(value)
-          [:multi]
+          value
         elsif contains_static?(value)
           attribute(name, value)
         else
