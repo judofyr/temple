@@ -118,5 +118,16 @@ module Temple
         false
       end
     end
+
+    def contains_static?(exp)
+      case exp[0]
+      when :multi
+        exp[1..-1].any? {|e| contains_static?(e) }
+      when :static
+        true
+      else
+        false
+      end
+    end
   end
 end

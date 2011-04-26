@@ -128,17 +128,6 @@ module Temple
          value,
          [:static, options[:attr_wrapper]]]
       end
-
-      def contains_static?(exp)
-        case exp[0]
-        when :multi
-          exp[1..-1].any? {|e| contains_static?(e) }
-        when :static
-          true
-        else
-          false
-        end
-      end
     end
   end
 end
