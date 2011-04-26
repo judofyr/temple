@@ -12,25 +12,24 @@ module Temple
     #     [:static, "Hello World!"]]
     class StaticMerger < Filter
       def on_multi(*exps)
-        res = [:multi]
-        curr = nil
-        state = :looking
+        result = [:multi]
+        text = nil
 
         exps.each do |exp|
           if exp.first == :static
-            if state == :looking
-              res << [:static, (curr = exp[1].dup)]
-              state = :static
+            if text
+              text << exp.last
             else
-              curr << exp[1]
+              text = exp.last.dup
+              result << [:static, text]
             end
           else
-            res << compile(exp)
-            state = :looking unless exp.first == :newline
+            result << compile(exp)
+            text = nil unless exp.first == :newline
           end
         end
 
-        res
+        result
       end
     end
   end
