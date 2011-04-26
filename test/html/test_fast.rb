@@ -66,9 +66,9 @@ describe Temple::HTML::Fast do
   it 'should compile html with static attrs' do
     @html.call([:html, :tag,
       'div',
-      [:html, :staticattrs,
-       ['id', [:static, 'test']],
-       ['class', [:dynamic, 'block']]],
+      [:html, :attrs,
+       [:html, :attr, 'id', [:static, 'test']],
+       [:html, :attr, 'class', [:dynamic, 'block']]],
        false, [:content]
     ]).should.equal [:multi,
                      [:static,
@@ -100,7 +100,7 @@ describe Temple::HTML::Fast do
 
   it 'should compile html with merged ids' do
     @html.call([:html, :tag,
-      'div', [:html, :staticattrs, ['id', [:static, 'a']], ['id', [:dynamic, 'b']]],
+      'div', [:html, :attrs, [:html, :attr, 'id', [:static, 'a']], [:html, :attr, 'id', [:dynamic, 'b']]],
       false, [:content]
     ]).should.equal [:multi,
                      [:static, "<div"],
@@ -122,7 +122,7 @@ describe Temple::HTML::Fast do
 
   it 'should compile html with merged classes' do
     @html.call([:html, :tag,
-      'div', [:html, :staticattrs, ['class', [:static, 'a']], ['class', [:dynamic, 'b']]],
+      'div', [:html, :attrs, [:html, :attr, 'class', [:static, 'a']], [:html, :attr, 'class', [:dynamic, 'b']]],
       false, [:content]
     ]).should.equal [:multi,
                      [:static, "<div"],

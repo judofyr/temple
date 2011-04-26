@@ -1,8 +1,12 @@
 module Temple
   module HTML
     module Dispatcher
-      def on_html_staticattrs(*attrs)
-        [:html, :staticattrs, *attrs.map {|k,v| [k, compile(v)] }]
+      def on_html_attrs(*attrs)
+        [:html, :attrs, *attrs.map {|a| compile(a) }]
+      end
+
+      def on_html_attr(name, content)
+        [:html, :attr, name, compile(content)]
       end
 
       def on_html_comment(content)
