@@ -97,9 +97,7 @@ module Temple
             result[name] = value
           end
         end
-        result.sort.inject([:multi]) do |list, (name, value)|
-          list << compile_attribute(name, value)
-        end
+        [:multi, *result.sort.map {|(name, value)| compile_attribute(name, value) }]
       end
 
       protected
