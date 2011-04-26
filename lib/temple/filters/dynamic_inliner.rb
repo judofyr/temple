@@ -3,22 +3,20 @@ module Temple
     # Inlines several static/dynamic into a single dynamic.
     class DynamicInliner < Filter
       def on_multi(*exps)
-        res = [:multi]
+        result = [:multi]
         curr = nil
         prev = []
         state = :looking
 
-        # We add a noop because we need to do some cleanup at the end too.
-        (exps + [:noop]).each do |exp|
-          head, arg = exp
+        exps.each do |exp|
+          type, arg = exp
 
-          case head
+          case type
           when :newline
-            case state
-            when :looking
+            if state == :looking
               # We haven't found any static/dynamic, so let's just add it
-              res << exp
-            when :single, :several
+              result << exp
+            else
               # We've found something, so let's make sure the generated
               # dynamic contains a newline by escaping a newline and
               # starting a new string:
@@ -31,43 +29,40 @@ module Temple
           when :dynamic, :static
             case state
             when :looking
-              # Found a single static/dynamic.  We don't want to turn this
+              # Found a single static/dynamic. We don't want to turn this
               # into a dynamic yet.  Instead we store it, and if we find
               # another one, we add both then.
               state = :single
               prev = [exp]
-              curr = [:dynamic, '"' + send(head, arg)]
+              curr = [:dynamic, '"']
             when :single
-              # Yes! We found another one.  Append the content to the current
-              # dynamic and add it to the result.
-              curr[1] << send(head, arg)
-              res << curr
+              # Yes! We found another one. Add the current dynamic to the result.
               state = :several
-            when :several
-              # Yet another dynamic/single.  Just add it now.
-              curr[1] << send(head, arg)
+              result << curr
             end
+            curr[1] << (type == :static ? arg.inspect[1..-2] : "\#{#{arg}}")
           else
-            # We need to add the closing quote.
-            curr[1] << '"' unless state == :looking
-            # If we found a single exp last time, let's add it.
-            res.concat(prev) if state == :single
-            # Compile the current exp (unless it's the noop)
-            res << compile(exp) unless head == :noop
+            if state != :looking
+              # We need to add the closing quote.
+              curr[1] << '"'
+              # If we found a single exp last time, let's add it.
+              result.concat(prev) if state == :single
+            end
+            # Compile the current exp
+            result << compile(exp)
             # Now we're looking for more!
             state = :looking
           end
         end
 
-        res
-      end
+        if state != :looking
+          # We need to add the closing quote.
+          curr[1] << '"'
+          # If we found a single exp last time, let's add it.
+          result.concat(prev) if state == :single
+        end
 
-      def static(str)
-        str.inspect[1..-2]
-      end
-
-      def dynamic(str)
-        '#{%s}' % str
+        result
       end
     end
   end
