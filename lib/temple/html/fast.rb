@@ -23,7 +23,7 @@ module Temple
       set_default_options :format => :xhtml,
                           :attr_wrapper => "'",
                           :autoclose => %w[meta img link br hr input area param col base],
-                          :id_delimiter => '_'
+                          :join_delimiter => {'id' => '_', 'class' => ' '}
 
       def initialize(options = {})
         super
@@ -89,12 +89,11 @@ module Temple
           raise 'Attribute is not a html attr' if attr[0] != :html || attr[1] != :attr
           name = attr[2].to_s
           if result[name]
-            raise "Multiple #{name} attributes specified" unless %w(class id).include?(name)
-            raise 'Multiple id attributes specified, but id concatenation disabled' if name == 'id' && !options[:id_delimiter]
+            raise "Multiple #{name} attributes specified" unless options[:join_delimiter].include?(name)
             result[name] = [:html, :attr, name,
                             [:multi,
                              result[name][3],
-                             [:static, (name == 'class' ? ' ' : options[:id_delimiter])],
+                             [:static, options[:join_delimiter][name]],
                              attr[3]]]
           else
             result[name] = attr
