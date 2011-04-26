@@ -85,14 +85,26 @@ module Temple
         result = {}
         attrs.each do |attr|
           raise 'Attribute is not a html attr' if attr[0] != :html || attr[1] != :attr
-          name = attr[2].to_s
+          name, value = attr[2].to_s, attr[3]
           if result[name]
             raise "Multiple #{name} attributes specified" unless options[:join_delimiter].include?(name)
-            result[name] = [:html, :attr, name,
-                            [:multi,
-                             result[name][3],
-                             [:static, options[:join_delimiter][name]],
-                             attr[3]]]
+            if contains_static?(value)
+              result[name] = [:html, :attr, name,
+                              [:multi,
+                               result[name][3],
+                               [:static, options[:join_delimiter][name]],
+                               value]]
+            else
+              tmp = unique_name
+              result[name] = [:html, :attr, name,
+                              [:multi,
+                               result[name][3],
+                               [:capture, tmp, value],
+                               [:block, "unless #{tmp}.empty?"],
+                               [:static, options[:join_delimiter][name]],
+                               [:dynamic, tmp],
+                               [:block, 'end']]]
+            end
           else
             result[name] = attr
           end
@@ -110,7 +122,7 @@ module Temple
           [:multi,
            [:capture, tmp, value],
            [:block, "unless #{tmp}.empty?"],
-             attribute(name, [:dynamic, tmp]),
+           attribute(name, [:dynamic, tmp]),
            [:block, 'end']]
         end
       end
@@ -125,6 +137,24 @@ module Temple
          [:static, options[:attr_wrapper]],
          compile(value),
          [:static, options[:attr_wrapper]]]
+      end
+
+      def contains_static?(exp)
+        stack = [exp]
+        until stack.empty?
+          exp = stack.shift
+          case exp[0]
+          when :multi
+            stack.unshift(*exp[1..-1])
+          when :escape
+            stack.unshift(exp[2])
+          when :block
+            return false
+          when :static
+            return true
+          end
+        end
+        false
       end
     end
   end
