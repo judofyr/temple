@@ -23,7 +23,7 @@ module Temple
       set_default_options :format => :xhtml,
                           :attr_wrapper => "'",
                           :autoclose => %w[meta img link br hr input area param col base],
-                          :id_delimiter => '_'
+                          :join_delimiter => {'id' => '_', 'class' => ' '}
 
       def initialize(options = {})
         super
@@ -83,27 +83,26 @@ module Temple
         result
       end
 
-      def on_html_staticattrs(*attrs)
+      def on_html_attrs(*attrs)
         result = {}
-        attrs.each do |name, value|
-          name = name.to_s
+        attrs.each do |attr|
+          raise 'Attribute is not a html attr' if attr[0] != :html || attr[1] != :attr
+          name = attr[2].to_s
           if result[name]
-            raise "Multiple #{name} attributes specified" unless %w(class id).include?(name)
-            raise 'Multiple id attributes specified, but id concatenation disabled' if name == 'id' && !options[:id_delimiter]
-            result[name] = [:multi,
-                            result[name],
-                            [:static, (name == 'class' ? ' ' : options[:id_delimiter])],
-                            value]
+            raise "Multiple #{name} attributes specified" unless options[:join_delimiter].include?(name)
+            result[name] = [:html, :attr, name,
+                            [:multi,
+                             result[name][3],
+                             [:static, options[:join_delimiter][name]],
+                             attr[3]]]
           else
-            result[name] = value
+            result[name] = attr
           end
         end
-        [:multi, *result.sort.map {|(name, value)| compile_attribute(name, value) }]
+        [:multi, *result.sort.map {|name,attr| compile(attr) }]
       end
 
-      protected
-
-      def compile_attribute(name, value)
+      def on_html_attr(name, value)
         if empty_exp?(value)
           value
         elsif contains_static?(value)
@@ -118,13 +117,15 @@ module Temple
         end
       end
 
+      protected
+
       def attribute(name, value)
         [:multi,
          [:static, ' '],
-         [:static, name],
+         [:static, name.to_s],
          [:static, '='],
          [:static, options[:attr_wrapper]],
-         value,
+         compile(value),
          [:static, options[:attr_wrapper]]]
       end
     end
