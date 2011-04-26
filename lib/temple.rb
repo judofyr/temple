@@ -25,6 +25,7 @@ module Temple
 
   module HTML
     autoload :Dispatcher,     'temple/html/dispatcher'
+    autoload :Filter,         'temple/html/filter'
     autoload :Fast,           'temple/html/fast'
     autoload :Pretty,         'temple/html/pretty'
   end
