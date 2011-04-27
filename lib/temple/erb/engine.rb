@@ -5,7 +5,6 @@ module Temple
       filter :Escapable, :use_html_safe
       use Temple::ERB::Trimming, :trim_mode
       filter :MultiFlattener
-      filter :StaticMerger
       filter :DynamicInliner
       generator :ArrayBuffer
     end
