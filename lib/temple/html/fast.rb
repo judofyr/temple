@@ -95,7 +95,7 @@ module Temple
                                [:static, options[:join_delimiter][name]],
                                value]]
             else
-              tmp = unique_name
+              tmp = tmp_var
               result[name] = [:html, :attr, name,
                               [:multi,
                                result[name][3],
@@ -118,7 +118,7 @@ module Temple
         elsif contains_static?(value)
           attribute(name, value)
         else
-          tmp = tmp_var(:htmlattr)
+          tmp = tmp_var
           [:multi,
            [:capture, tmp, value],
            [:block, "unless #{tmp}.empty?"],

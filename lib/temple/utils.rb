@@ -100,12 +100,13 @@ module Temple
       end
     end
 
-    # Generate unique temporary variable name
+    # Generate unique variable name
     #
     # @return [String] Variable name
-    def tmp_var(prefix)
+    def tmp_var(prefix = nil)
       @tmp_var ||= 0
-      "_temple_#{prefix}#{@tmp_var += 1}"
+      prefix ||= (@tmp_prefix ||= self.class.name.gsub('::', '_').downcase)
+      "_#{prefix}#{@tmp_var += 1}"
     end
 
     def empty_exp?(exp)
