@@ -21,7 +21,7 @@ module Temple
       set_default_options :format => :xhtml,
                           :attr_wrapper => "'",
                           :autoclose => %w[meta img link br hr input area param col base],
-                          :join_delimiter => {'id' => '_', 'class' => ' '}
+                          :attr_delimiter => {'id' => '_', 'class' => ' '}
 
       def initialize(options = {})
         super
@@ -87,7 +87,7 @@ module Temple
           raise 'Attribute is not a html attr' if attr[0] != :html || attr[1] != :attr
           name, value = attr[2].to_s, attr[3]
           if result[name]
-            delimiter = options[:join_delimiter][name]
+            delimiter = options[:attr_delimiter][name]
             raise "Multiple #{name} attributes specified" unless delimiter
             if contains_static?(value)
               result[name] = [:html, :attr, name,
