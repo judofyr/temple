@@ -42,7 +42,7 @@ describe Temple::Generator do
     str.should.match(/VAR = BUFFER/)
     str.should.match(/VAR << \(S:static\)/)
     str.should.match(/VAR << \(D:dynamic\)/)
-    str.should.match(/ B:block /)
+    str.should.match(/ B:block;/)
   end
 
   it 'should compile capture' do
@@ -71,7 +71,7 @@ describe Temple::Generator do
     str.should.match(     /foo = BUFFER/)
     str.should.match(     /foo << \(S:static\)/)
     str.should.match(     /foo << \(D:dynamic\)/)
-    str.should.match(     / B:block /)
+    str.should.match(     / B:block;/)
     str.should.match(/VAR << \(S:after\)/)
     str.should.match(/VAR\Z/)
   end
@@ -89,6 +89,6 @@ describe Temple::Generator do
     lines = str.split("\n")
     lines[0].should.match(/VAR << \(S:static\)/)
     lines[1].should.match(/VAR << \(D:dynamic\)/)
-    lines[2].should.match(/ B:block /)
+    lines[2].should.match(/ B:block;/)
   end
 end

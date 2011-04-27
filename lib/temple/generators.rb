@@ -74,7 +74,7 @@ module Temple
     default_options[:buffer] = '_buf'
 
     def call(exp)
-      [preamble, compile(exp), postamble].join(' ; ')
+      [preamble, compile(exp), postamble].join('; ')
     end
 
     def compile(exp)
@@ -87,7 +87,7 @@ module Temple
     end
 
     def on_multi(*exp)
-      exp.map { |e| compile(e) }.join(' ; ')
+      exp.map {|e| compile(e) }.join('; ')
     end
 
     def on_newline
