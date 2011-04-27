@@ -22,15 +22,23 @@ module Temple
 
       def on_static(content)
         if @pretty
-          content = Utils.indent(content, indent, @pre_tags)
+          content.gsub!("\n", indent) if @pre_tags !~ content
           @last = content.sub!(/\r?\n\s*$/, ' ') ? nil : :noindent
         end
         [:static, content]
       end
 
-      def on_dynamic(content)
-        @last = :noindent
-        [:dynamic, @pretty ? "Temple::Utils.indent((#{content}), #{indent.inspect}, _temple_pre_tags)" : content]
+      def on_dynamic(code)
+        if @pretty
+          @last = :noindent
+          tmp = tmp_var
+          [:multi,
+           [:block, "#{tmp} = (#{code}).to_s"],
+           [:block, "#{tmp}.gsub!(\"\\n\", #{indent.inspect}) if _temple_pre_tags !~ #{tmp}"],
+           [:dynamic, tmp]]
+        else
+          [:dynamic, code]
+        end
       end
 
       def on_html_doctype(type)

@@ -20,7 +20,10 @@ describe Temple::HTML::Pretty do
                        [:static, ">"],
                        [:multi,
                         [:static, "text"],
-                       [:dynamic, 'Temple::Utils.indent((code), "\n    ", _temple_pre_tags)']],
+                        [:multi,
+                         [:block, "_temple_html_pretty1 = (code).to_s"],
+                         [:block, '_temple_html_pretty1.gsub!("\n", "\n    ") if _temple_pre_tags !~ _temple_html_pretty1'],
+                         [:dynamic, "_temple_html_pretty1"]]],
                        [:static, "</p>"]],
                       [:static, "\n</div>"]]]
   end

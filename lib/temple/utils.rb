@@ -45,12 +45,6 @@ module Temple
       end
     end
 
-    def indent(text, indent, pre_tags)
-      text = text.to_s
-      text.gsub!("\n", indent) if pre_tags !~ text
-      text
-    end
-
     # Returns an escaped copy of `html`.
     # Strings which are declared as html_safe are not escaped.
     #
