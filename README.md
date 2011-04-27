@@ -27,7 +27,7 @@ Temple is built on a theory that every template consists of three elements:
 
 * Static text
 * Dynamic text (pieces of Ruby which are evaluated and sent to the client)
-* Blocks (pieces of Ruby which are evaluated and *not* sent to the client, but
+* Codes (pieces of Ruby which are evaluated and *not* sent to the client, but
   might change the control flow).
 
 The goal of a template engine is to take the template and eventually compile
@@ -37,9 +37,9 @@ it into *the core abstraction*:
       [:static, "Hello "],
       [:dynamic, "@user.name"],
       [:static, "!\n"],
-      [:block, "if @user.birthday == Date.today"],
+      [:code, "if @user.birthday == Date.today"],
       [:static, "Happy birthday!"],
-      [:block, "end"]]
+      [:code, "end"]]
 
 Then you can apply some optimizations, feed it to Temple and it generates fast
 Ruby code for you:
