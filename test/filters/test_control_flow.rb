@@ -53,4 +53,21 @@ describe Temple::Filters::ControlFlow do
       [:code, 'end']
     ]
   end
+
+  it 'should process cond' do
+    @filter.call([:cond,
+      ['cond1', [:exp1]],
+      ['cond2', [:exp2]],
+      [:else,   [:exp3]],
+    ]).should.equal [:multi,
+      [:code, 'case true'],
+      [:code, 'when cond1'],
+      [:exp1],
+      [:code, 'when cond2'],
+      [:exp2],
+      [:code, 'else'],
+      [:exp3],
+      [:code, 'end']
+    ]
+  end
 end

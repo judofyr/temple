@@ -15,6 +15,15 @@ module Temple
         result
       end
 
+      def on_cond(*cases)
+        result = [:multi, [:code, 'case true']]
+        cases.map do |condition, exp|
+          result << [:code, condition == :else ? 'else' : "when #{condition}"] << compile(exp)
+        end
+        result << [:code, 'end']
+        result
+      end
+
       def on_block(code, exp)
         [:multi,
          [:code, code],

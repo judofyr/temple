@@ -143,6 +143,10 @@ module Temple
       def on_block(code, content)
         [:block, code, compile(content)]
       end
+
+      def on_cond(*cases)
+        [:cond, *cases.map {|condition, exp| [condition, compile(exp)] }]
+      end
     end
 
     module Dispatcher
