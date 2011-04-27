@@ -97,10 +97,10 @@ module Temple
     # Generate unique variable name
     #
     # @return [String] Variable name
-    def tmp_var(prefix = nil)
-      @tmp_var ||= 0
-      prefix ||= (@tmp_prefix ||= self.class.name.gsub('::', '_').downcase)
-      "_#{prefix}#{@tmp_var += 1}"
+    def unique_name(prefix = nil)
+      @unique_name ||= 0
+      prefix ||= (@unique_prefix ||= self.class.name.gsub('::', '_').downcase)
+      "_#{prefix}#{@unique_name += 1}"
     end
 
     def empty_exp?(exp)

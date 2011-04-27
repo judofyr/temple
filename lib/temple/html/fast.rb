@@ -97,7 +97,7 @@ module Temple
                                [:static, delimiter],
                                value]]
             else
-              tmp = tmp_var
+              tmp = unique_name
               result[name] = [:html, :attr, name,
                               [:multi,
                                result[name][3],
@@ -120,7 +120,7 @@ module Temple
         elsif contains_static?(value)
           attribute(name, value)
         else
-          tmp = tmp_var
+          tmp = unique_name
           [:multi,
            [:capture, tmp, value],
            [:block, "unless #{tmp}.empty?"],

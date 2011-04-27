@@ -31,10 +31,10 @@ module Temple
       def on_dynamic(code)
         if @pretty
           @last = :noindent
-          tmp = tmp_var
+          tmp = unique_name
           [:multi,
            [:block, "#{tmp} = (#{code}).to_s"],
-           [:block, "#{tmp}.gsub!(\"\\n\", #{indent.inspect}) if _temple_pre_tags !~ #{tmp}"],
+           [:block, "#{tmp}.gsub!(\"\\n\", #{indent.inspect}) if #{@pre_tags_name} !~ #{tmp}"],
            [:dynamic, tmp]]
         else
           [:dynamic, code]
@@ -76,7 +76,8 @@ module Temple
       protected
 
       def preamble
-        [:block, "_temple_pre_tags = /#{@pre_tags.source}/"]
+        @pre_tags_name = unique_name
+        [:block, "#{@pre_tags_name} = /#{@pre_tags.source}/"]
       end
 
       # Return indentation if not in pre tag
