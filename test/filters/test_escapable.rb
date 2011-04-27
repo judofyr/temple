@@ -6,9 +6,9 @@ class HtmlSafeString < String
   end
 end
 
-describe Temple::Filters::EscapeHTML do
+describe Temple::Filters::Escapable do
   before do
-    @filter = Temple::Filters::EscapeHTML.new
+    @filter = Temple::Filters::Escapable.new
   end
 
   it 'should handle escape expressions' do
@@ -38,9 +38,16 @@ describe Temple::Filters::EscapeHTML do
   end
 
   it 'should have use_html_safe option' do
-    filter = Temple::Filters::EscapeHTML.new(:use_html_safe => true)
+    filter = Temple::Filters::Escapable.new(:use_html_safe => true)
     filter.call([:escape, true,
-      [:static, HtmlSafeString.new("a < b")],
+      [:static, HtmlSafeString.new("a < b")]
     ]).should.equal [:static, "a < b"]
+  end
+
+  it 'should support censoring' do
+    filter = Temple::Filters::Escapable.new(:escape_code => '(%s).gsub("Temple sucks", "Temple rocks")')
+    filter.call([:escape, true,
+      [:static, "~~ Temple sucks ~~"]
+    ]).should.equal [:static, "~~ Temple rocks ~~"]
   end
 end

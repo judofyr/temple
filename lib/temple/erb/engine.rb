@@ -2,7 +2,7 @@ module Temple
   module ERB
     class Engine < Temple::Engine
       use Temple::ERB::Parser, :auto_escape
-      filter :EscapeHTML, :use_html_safe
+      filter :Escapable, :use_html_safe
       use Temple::ERB::Trimming, :trim_mode
       filter :MultiFlattener
       filter :StaticMerger
