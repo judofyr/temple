@@ -140,8 +140,8 @@ module Temple
         [:if, condition, *cases.compact.map {|e| compile(e) }]
       end
 
-      def on_loop(code, content)
-        [:loop, code, compile(content)]
+      def on_block(code, content)
+        [:block, code, compile(content)]
       end
     end
 

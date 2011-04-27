@@ -22,7 +22,7 @@ module Temple
       end
 
       def code?(exp)
-        exp[0] == :dynamic || exp[0] == :block
+        exp[0] == :dynamic || exp[0] == :code
       end
 
       def static?(exp)

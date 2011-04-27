@@ -27,7 +27,7 @@ module Temple
             when /=/
               result << [:escape, indicator.length <= 1 && options[:auto_escape], [:dynamic, code]]
             else
-              result << [:block, code]
+              result << [:code, code]
             end
           end
         end

@@ -33,8 +33,8 @@ module Temple
           @last = :noindent
           tmp = unique_name
           [:multi,
-           [:block, "#{tmp} = (#{code}).to_s"],
-           [:block, "#{tmp}.gsub!(\"\\n\", #{indent.inspect}) if #{@pre_tags_name} !~ #{tmp}"],
+           [:code, "#{tmp} = (#{code}).to_s"],
+           [:code, "#{tmp}.gsub!(\"\\n\", #{indent.inspect}) if #{@pre_tags_name} !~ #{tmp}"],
            [:dynamic, tmp]]
         else
           [:dynamic, code]
@@ -76,7 +76,7 @@ module Temple
 
       def preamble
         @pre_tags_name = unique_name
-        [:block, "#{@pre_tags_name} = /#{@pre_tags.source}/"]
+        [:code, "#{@pre_tags_name} = /#{@pre_tags.source}/"]
       end
 
       # Return indentation if not in pre tag

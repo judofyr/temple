@@ -137,8 +137,8 @@ describe Temple::HTML::Fast do
                      [:static, "</div>"]]
   end
 
-  it 'should keep blocks intact' do
-    exp = [:multi, [:block, 'foo']]
+  it 'should keep codes intact' do
+    exp = [:multi, [:code, 'foo']]
     @html.call(exp).should.equal exp
   end
 

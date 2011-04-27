@@ -30,22 +30,22 @@ describe Temple::Filters::DynamicInliner do
     ]).should.equal [:multi, [:dynamic, '"Hello#{@world}#{@yeah}Nice"']]
   end
 
-  it 'should merge statics and dynamics around a block' do
+  it 'should merge statics and dynamics around a code' do
     exp = @filter.call([:multi,
       [:static, "Hello "],
       [:dynamic, "@world"],
-      [:block, "Oh yeah"],
+      [:code, "Oh yeah"],
       [:dynamic, "@yeah"],
       [:static, "Once more"]
     ]).should.equal [:multi,
       [:dynamic, '"Hello #{@world}"'],
-      [:block, "Oh yeah"],
+      [:code, "Oh yeah"],
       [:dynamic, '"#{@yeah}Once more"']
     ]
   end
 
-  it 'should keep blocks intact' do
-    exp = [:multi, [:block, 'foo']]
+  it 'should keep codes intact' do
+    exp = [:multi, [:code, 'foo']]
     @filter.call(exp).should.equal exp
   end
 
@@ -90,11 +90,11 @@ describe Temple::Filters::DynamicInliner do
     @filter.call([:multi,
       [:static, "Hello \n"],
       [:newline],
-      [:block, "world"]
+      [:code, "world"]
     ]).should.equal [:multi,
       [:static, "Hello \n"],
       [:newline],
-      [:block, "world"]
+      [:code, "world"]
     ]
   end
 end

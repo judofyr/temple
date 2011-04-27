@@ -44,9 +44,9 @@ module Temple
   # The Ruby code must be a complete expression in the sense that you can pass
   # it to eval() and it would not raise SyntaxError.
   #
-  # === [:block, ruby]
+  # === [:code, ruby]
   #
-  # Block indicates that the given Ruby code should be evaluated, and may
+  # Code indicates that the given Ruby code should be evaluated, and may
   # change the control flow. Any \n causes a newline in the generated code.
   #
   # === [:newline]
@@ -136,7 +136,7 @@ module Temple
         concat(code)
       end
 
-      def on_block(code)
+      def on_code(code)
         code
       end
     end

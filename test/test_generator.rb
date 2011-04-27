@@ -17,8 +17,8 @@ class SimpleGenerator < Temple::Generator
     concat "D:#{s}"
   end
 
-  def on_block(s)
-    "B:#{s}"
+  def on_code(s)
+    "C:#{s}"
   end
 end
 
@@ -28,7 +28,7 @@ describe Temple::Generator do
 
     gen.call([:static, "test"]).should.match(/ << \(S:test\)/)
     gen.call([:dynamic, "test"]).should.match(/ << \(D:test\)/)
-    gen.call([:block, "test"]).should.match(/B:test/)
+    gen.call([:code, "test"]).should.match(/C:test/)
   end
 
   it 'should compile multi expression' do
@@ -36,13 +36,13 @@ describe Temple::Generator do
     str = gen.call([:multi,
       [:static, "static"],
       [:dynamic, "dynamic"],
-      [:block, "block"]
+      [:code, "code"]
     ])
 
     str.should.match(/VAR = BUFFER/)
     str.should.match(/VAR << \(S:static\)/)
     str.should.match(/VAR << \(D:dynamic\)/)
-    str.should.match(/ B:block;/)
+    str.should.match(/ C:code;/)
   end
 
   it 'should compile capture' do
@@ -62,7 +62,7 @@ describe Temple::Generator do
       [:capture, "foo", [:multi,
         [:static, "static"],
         [:dynamic, "dynamic"],
-        [:block, "block"]]],
+        [:code, "code"]]],
 
       [:static, "after"]
     ])
@@ -71,7 +71,7 @@ describe Temple::Generator do
     str.should.match(     /foo = BUFFER/)
     str.should.match(     /foo << \(S:static\)/)
     str.should.match(     /foo << \(D:dynamic\)/)
-    str.should.match(     / B:block;/)
+    str.should.match(     / C:code;/)
     str.should.match(/VAR << \(S:after\)/)
     str.should.match(/VAR\Z/)
   end
@@ -83,12 +83,12 @@ describe Temple::Generator do
       [:newline],
       [:dynamic, "dynamic"],
       [:newline],
-      [:block, "block"]
+      [:code, "code"]
     ])
 
     lines = str.split("\n")
     lines[0].should.match(/VAR << \(S:static\)/)
     lines[1].should.match(/VAR << \(D:dynamic\)/)
-    lines[2].should.match(/ B:block;/)
+    lines[2].should.match(/ C:code;/)
   end
 end
