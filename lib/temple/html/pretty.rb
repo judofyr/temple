@@ -60,8 +60,7 @@ module Temple
 
         @pretty = false
         result = [:multi, [:static, "#{tag_indent(name)}<#{name}"], compile(attrs)]
-        result << [:static, ' /'] if closed && xhtml?
-        result << [:static, '>']
+        result << [:static, (closed && xhtml? ? ' /' : '') + '>']
 
         @pretty = !options[:pre_tags].include?(name)
         @indent += 1

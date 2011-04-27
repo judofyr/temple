@@ -27,8 +27,8 @@ describe Temple::HTML::Fast do
     ]).should.equal [:multi,
                      [:static, "<img"],
                      [:attrs],
-                     [:static, " /"],
-                     [:static, ">"], [:multi]]
+                     [:static, " />"],
+                     [:multi]]
   end
 
   it 'should compile explicitly closed html tag' do
@@ -38,8 +38,8 @@ describe Temple::HTML::Fast do
     ]).should.equal [:multi,
                      [:static, "<closed"],
                      [:attrs],
-                     [:static, " /"],
-                     [:static, ">"], [:multi]]
+                     [:static, " />"],
+                     [:multi]]
   end
 
   it 'should raise error on closed tag with content' do
@@ -79,18 +79,12 @@ describe Temple::HTML::Fast do
                         [:dynamic, "block"]],
                        [:block, "unless _temple_html_fast1.empty?"],
                        [:multi,
-                        [:static, " "],
-                        [:static, "class"],
-                        [:static, "="],
-                        [:static, "'"],
+                        [:static, " class='"],
                         [:dynamic, "_temple_html_fast1"],
                         [:static, "'"]],
                        [:block, "end"]],
                       [:multi,
-                       [:static, " "],
-                       [:static, "id"],
-                       [:static, "="],
-                       [:static, "'"],
+                       [:static, " id='"],
                        [:static, "test"],
                        [:static, "'"]]],
                      [:static, ">"],
@@ -106,10 +100,7 @@ describe Temple::HTML::Fast do
                      [:static, "<div"],
                      [:multi,
                       [:multi,
-                       [:static, " "],
-                       [:static, "id"],
-                       [:static, "="],
-                       [:static, "'"],
+                       [:static, " id='"],
                        [:multi,
                         [:static, "a"],
                         [:capture, "_temple_html_fast1",
@@ -131,10 +122,8 @@ describe Temple::HTML::Fast do
     ]).should.equal [:multi,
                      [:static, "<div"],
                      [:multi,
-                      [:multi, [:static, " "],
-                       [:static, "class"],
-                       [:static, "="],
-                       [:static, "'"],
+                      [:multi,
+                       [:static, " class='"],
                        [:multi,
                         [:static, "a"],
                         [:capture, "_temple_html_fast1",

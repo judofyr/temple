@@ -75,8 +75,7 @@ module Temple
         closed ||= options[:autoclose].include?(name)
         raise "Closed tag #{name} has content" if closed && !empty_exp?(content)
         result = [:multi, [:static, "<#{name}"], compile(attrs)]
-        result << [:static, ' /'] if closed && xhtml?
-        result << [:static, '>'] << compile(content)
+        result << [:static, (closed && xhtml? ? ' /' : '') + '>'] << compile(content)
         result << [:static, "</#{name}>"] if !closed
         result
       end
@@ -133,10 +132,7 @@ module Temple
 
       def attribute(name, value)
         [:multi,
-         [:static, ' '],
-         [:static, name.to_s],
-         [:static, '='],
-         [:static, options[:attr_wrapper]],
+         [:static, " #{name}=#{options[:attr_wrapper]}"],
          compile(value),
          [:static, options[:attr_wrapper]]]
       end
