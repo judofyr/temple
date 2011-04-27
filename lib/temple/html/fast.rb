@@ -115,13 +115,13 @@ module Temple
 
       def on_html_attr(name, value)
         if empty_exp?(value)
-          value
+          compile(value)
         elsif contains_static?(value)
           attribute(name, value)
         else
           tmp = unique_name
           [:multi,
-           [:capture, tmp, value],
+           [:capture, tmp, compile(value)],
            [:if, "!#{tmp}.empty?",
             attribute(name, [:dynamic, tmp])]]
         end
