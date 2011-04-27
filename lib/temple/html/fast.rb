@@ -87,12 +87,13 @@ module Temple
           raise 'Attribute is not a html attr' if attr[0] != :html || attr[1] != :attr
           name, value = attr[2].to_s, attr[3]
           if result[name]
-            raise "Multiple #{name} attributes specified" unless options[:join_delimiter].include?(name)
+            delimiter = options[:join_delimiter][name]
+            raise "Multiple #{name} attributes specified" unless delimiter
             if contains_static?(value)
               result[name] = [:html, :attr, name,
                               [:multi,
                                result[name][3],
-                               [:static, options[:join_delimiter][name]],
+                               [:static, delimiter],
                                value]]
             else
               tmp = tmp_var
@@ -101,7 +102,7 @@ module Temple
                                result[name][3],
                                [:capture, tmp, value],
                                [:block, "unless #{tmp}.empty?"],
-                               [:static, options[:join_delimiter][name]],
+                               [:static, delimiter],
                                [:dynamic, tmp],
                                [:block, 'end']]]
             end
