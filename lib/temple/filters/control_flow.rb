@@ -1,5 +1,8 @@
 module Temple
   module Filters
+    # Control flow filter which processes [:if, condition, yes-exp, no-exp]
+    # and [:block, code, content] expressions.
+    # This is useful for ruby code generation with lots of conditionals.
     class ControlFlow < Filter
       def on_if(condition, yes, no = nil)
         result = [:multi, [:code, "if #{condition}"], compile(yes)]
