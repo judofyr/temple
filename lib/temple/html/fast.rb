@@ -101,10 +101,10 @@ module Temple
                               [:multi,
                                result[name][3],
                                [:capture, tmp, value],
-                               [:block, "unless #{tmp}.empty?"],
-                               [:static, delimiter],
-                               [:dynamic, tmp],
-                               [:block, 'end']]]
+                               [:if, "!#{tmp}.empty?",
+                                [:multi,
+                                 [:static, delimiter],
+                                 [:dynamic, tmp]]]]]
             end
           else
             result[name] = attr
@@ -122,9 +122,8 @@ module Temple
           tmp = unique_name
           [:multi,
            [:capture, tmp, value],
-           [:block, "unless #{tmp}.empty?"],
-           attribute(name, [:dynamic, tmp]),
-           [:block, 'end']]
+           [:if, "!#{tmp}.empty?",
+            attribute(name, [:dynamic, tmp])]]
         end
       end
 
@@ -138,21 +137,16 @@ module Temple
       end
 
       def contains_static?(exp)
-        stack = [exp]
-        until stack.empty?
-          exp = stack.shift
-          case exp[0]
-          when :multi
-            stack.unshift(*exp[1..-1])
-          when :escape
-            stack.unshift(exp[2])
-          when :block
-            return false
-          when :static
-            return true
-          end
+        case exp[0]
+        when :multi
+          exp[1..-1].any? {|e| contains_static?(e) }
+        when :escape
+          contains_static?(exp[2])
+        when :static
+          true
+        else
+          false
         end
-        false
       end
     end
   end

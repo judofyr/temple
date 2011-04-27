@@ -135,6 +135,14 @@ module Temple
       def on_escape(flag, exp)
         [:escape, flag, compile(exp)]
       end
+
+      def on_if(condition, *cases)
+        [:if, condition, *cases.compact.map {|e| compile(e) }]
+      end
+
+      def on_loop(code, content)
+        [:loop, code, compile(content)]
+      end
     end
 
     module Dispatcher

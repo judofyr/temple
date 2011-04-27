@@ -16,6 +16,7 @@ module Temple
   end
 
   module Filters
+    autoload :ControlFlow,    'temple/filters/control_flow'
     autoload :MultiFlattener, 'temple/filters/multi_flattener'
     autoload :StaticMerger,   'temple/filters/static_merger'
     autoload :DynamicInliner, 'temple/filters/dynamic_inliner'
