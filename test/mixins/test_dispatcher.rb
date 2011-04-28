@@ -1,6 +1,6 @@
 require 'helper'
 
-class TestFilter
+class FilterWithDispatcherMixin
   include Temple::Mixins::Dispatcher
 
   temple_dispatch :second
@@ -16,18 +16,18 @@ end
 
 describe Temple::Mixins::Dispatcher do
   before do
-    @filter = TestFilter.new
+    @filter = FilterWithDispatcherMixin.new
   end
 
   it 'should return unhandled expressions' do
-    @filter.compile([:unhandled]).should.equal [:unhandled]
+    @filter.call([:unhandled]).should.equal [:unhandled]
   end
 
   it 'should dispatch first level' do
-    @filter.compile([:test, 42]).should.equal [:on_test, 42]
+    @filter.call([:test, 42]).should.equal [:on_test, 42]
   end
 
   it 'should dispatch second level' do
-    @filter.compile([:second, :test, 42]).should.equal [:on_second_test, 42]
+    @filter.call([:second, :test, 42]).should.equal [:on_second_test, 42]
   end
 end
