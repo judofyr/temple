@@ -60,7 +60,7 @@ describe Temple::Filters::ControlFlow do
       ['cond2', [:exp2]],
       [:else,   [:exp3]],
     ]).should.equal [:multi,
-      [:code, 'case true'],
+      [:code, 'case'],
       [:code, 'when cond1'],
       [:exp1],
       [:code, 'when cond2'],

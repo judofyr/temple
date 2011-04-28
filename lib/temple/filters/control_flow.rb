@@ -16,7 +16,7 @@ module Temple
       end
 
       def on_cond(*cases)
-        result = [:multi, [:code, 'case true']]
+        result = [:multi, [:code, 'case']]
         cases.map do |condition, exp|
           result << [:code, condition == :else ? 'else' : "when #{condition}"] << compile(exp)
         end
