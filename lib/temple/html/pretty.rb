@@ -6,7 +6,7 @@ module Temple
                           :indent_tags => %w(base body dd div dl dt fieldset form head h1 h2 h3
                                              h4 h5 h6 hr html img input li link meta ol p script
                                              style table tbody td tfoot th thead title tr ul).freeze,
-                          :pre_tags => %w(pre textarea).freeze
+                          :pre_tags => %w(code pre textarea).freeze
 
       def initialize(opts = {})
         super
