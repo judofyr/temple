@@ -144,6 +144,10 @@ module Temple
         [:if, condition, *cases.compact.map {|e| compile(e) }]
       end
 
+      def on_case(arg, *cases)
+        [:case, arg, *cases.map {|condition, exp| [condition, compile(exp)] }]
+      end
+
       def on_block(code, content)
         [:block, code, compile(content)]
       end

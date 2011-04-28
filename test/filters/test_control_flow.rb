@@ -70,4 +70,21 @@ describe Temple::Filters::ControlFlow do
       [:code, 'end']
     ]
   end
+
+  it 'should process case' do
+    @filter.call([:case, 'var',
+      ['Array',  [:exp1]],
+      ['String', [:exp2]],
+      [:else,    [:exp3]],
+    ]).should.equal [:multi,
+      [:code, 'case (var)'],
+      [:code, 'when Array'],
+      [:exp1],
+      [:code, 'when String'],
+      [:exp2],
+      [:code, 'else'],
+      [:exp3],
+      [:code, 'end']
+    ]
+  end
 end
