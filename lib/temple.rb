@@ -22,6 +22,7 @@ module Temple
     autoload :DynamicInliner, 'temple/filters/dynamic_inliner'
     autoload :Escapable,      'temple/filters/escapable'
     autoload :Debugger,       'temple/filters/debugger'
+    autoload :Eraser,         'temple/filters/eraser'
   end
 
   module HTML
