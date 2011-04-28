@@ -3,7 +3,7 @@ module Temple
   #
   # The core abstraction is what every template evetually should be compiled
   # to. Currently it consists of four essential and two convenient types:
-  # multi, static, dynamic, block, newline and capture.
+  # multi, static, dynamic, code, newline and capture.
   #
   # When compiling, there's two different strings we'll have to think about.
   # First we have the generated code. This is what your engine (from Temple's
@@ -94,8 +94,8 @@ module Temple
       "\n"
     end
 
-    def on_capture(name, block)
-      options[:capture_generator].new(:buffer => name).call(block)
+    def on_capture(name, exp)
+      options[:capture_generator].new(:buffer => name).call(exp)
     end
 
     def on_static(text)
@@ -127,9 +127,6 @@ module Temple
     #   _buf = []
     #   _buf << "static"
     #   _buf << dynamic
-    #   block do
-    #     _buf << "more static"
-    #   end
     #   _buf.join
     class Array < Generator
       def preamble
@@ -153,9 +150,6 @@ module Temple
     #   _buf = ''
     #   _buf << "static"
     #   _buf << dynamic.to_s
-    #   block do
-    #     _buf << "more static"
-    #   end
     #   _buf
     class StringBuffer < Array
       def preamble
@@ -172,9 +166,6 @@ module Temple
     #   @output_buffer = ActionView::OutputBuffer
     #   @output_buffer.safe_concat "static"
     #   @output_buffer.safe_concat dynamic.to_s
-    #   block do
-    #     @output_buffer << "more static"
-    #   end
     #   @output_buffer
     class RailsOutputBuffer < StringBuffer
       set_default_options :buffer_class => 'ActionView::OutputBuffer',
