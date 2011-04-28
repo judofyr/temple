@@ -98,6 +98,18 @@ module Temple
       options[:capture_generator].new(:buffer => name).call(block)
     end
 
+    def on_static(text)
+      concat(text.inspect)
+    end
+
+    def on_dynamic(code)
+      concat(code)
+    end
+
+    def on_code(code)
+      code
+    end
+
     protected
 
     def buffer
@@ -119,32 +131,20 @@ module Temple
     #     _buf << "more static"
     #   end
     #   _buf.join
-    class ArrayBuffer < Generator
+    class Array < Generator
       def preamble
         "#{buffer} = []"
       end
 
       def postamble
-        "#{buffer} = #{buffer}.join"
-      end
-
-      def on_static(text)
-        concat(text.inspect)
-      end
-
-      def on_dynamic(code)
-        concat(code)
-      end
-
-      def on_code(code)
-        code
+        buffer
       end
     end
 
-    # Just like ArrayBuffer, but doesn't call #join on the array.
-    class Array < ArrayBuffer
+    # Just like Array, but calls #join on the array.
+    class ArrayBuffer < Array
       def postamble
-        buffer
+        "#{buffer} = #{buffer}.join"
       end
     end
 
