@@ -23,12 +23,12 @@ module Temple
                           :autoclose => %w[meta img link br hr input area param col base],
                           :attr_delimiter => {'id' => '_', 'class' => ' '}
 
-      def initialize(options = {})
+      def initialize(opts = {})
         super
         # html5 is now called html only
-        @options[:format] = :html5 if @options[:format] == :html
-        unless [:xhtml, :html4, :html5].include?(@options[:format])
-          raise "Invalid format #{@options[:format].inspect}"
+        options[:format] = :html5 if options[:format] == :html
+        unless [:xhtml, :html4, :html5].include?(options[:format])
+          raise "Invalid format #{options[:format].inspect}"
         end
       end
 
