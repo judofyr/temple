@@ -17,8 +17,10 @@ module Temple
 
       def on_case(arg, *cases)
         result = [:multi, [:code, arg ? "case (#{arg})" : 'case']]
-        cases.map do |condition, exp|
-          result << [:code, condition == :else ? 'else' : "when #{condition}"] << compile(exp)
+        cases.map do |c|
+          condition, *exps = c
+          result << [:code, condition == :else ? 'else' : "when #{condition}"]
+          exps.each {|e| result << compile(e) }
         end
         result << [:code, 'end']
         result
