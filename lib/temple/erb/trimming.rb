@@ -25,6 +25,8 @@ module Temple
         [:multi, *exps]
       end
 
+      protected
+
       def code?(exp)
         exp[0] == :escape || exp[0] == :code
       end
