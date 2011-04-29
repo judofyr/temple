@@ -28,7 +28,7 @@ describe Temple::Generator do
 
     gen.call([:static,  'test']).should.equal '_buf = BUFFER; _buf << (S:test); _buf'
     gen.call([:dynamic, 'test']).should.equal '_buf = BUFFER; _buf << (D:test); _buf'
-    gen.call([:code,  'test']).should.equal '_buf = BUFFER; C:test; _buf'
+    gen.call([:code,    'test']).should.equal '_buf = BUFFER; C:test; _buf'
   end
 
   it 'should compile multi expression' do
@@ -72,5 +72,44 @@ describe Temple::Generator do
       [:code, "code"]
     ]).should.equal "VAR = BUFFER; VAR << (S:static); \n; " +
       "VAR << (D:dynamic); \n; C:code; VAR"
+  end
+end
+
+describe Temple::Generators::Array do
+  it 'should compile simple expressions' do
+    gen = Temple::Generators::Array.new
+    gen.call([:static,  'test']).should.equal '_buf = []; _buf << ("test"); _buf'
+    gen.call([:dynamic, 'test']).should.equal '_buf = []; _buf << (test); _buf'
+    gen.call([:code,    'test']).should.equal '_buf = []; test; _buf'
+  end
+end
+
+describe Temple::Generators::ArrayBuffer do
+  it 'should compile simple expressions' do
+    gen = Temple::Generators::ArrayBuffer.new
+    gen.call([:static,  'test']).should.equal '_buf = []; _buf << ("test"); _buf = _buf.join'
+    gen.call([:dynamic, 'test']).should.equal '_buf = []; _buf << (test); _buf = _buf.join'
+    gen.call([:code,    'test']).should.equal '_buf = []; test; _buf = _buf.join'
+  end
+end
+
+describe Temple::Generators::StringBuffer do
+  it 'should compile simple expressions' do
+    gen = Temple::Generators::StringBuffer.new
+    gen.call([:static,  'test']).should.equal '_buf = \'\'; _buf << ("test"); _buf'
+    gen.call([:dynamic, 'test']).should.equal '_buf = \'\'; _buf << ((test).to_s); _buf'
+    gen.call([:code,    'test']).should.equal '_buf = \'\'; test; _buf'
+  end
+end
+
+describe Temple::Generators::RailsOutputBuffer do
+  it 'should compile simple expressions' do
+    gen = Temple::Generators::RailsOutputBuffer.new
+    gen.call([:static,  'test']).should.equal '@output_buffer = ActionView::OutputBuffer.new; ' +
+      '@output_buffer.safe_concat(("test")); @output_buffer'
+    gen.call([:dynamic, 'test']).should.equal '@output_buffer = ActionView::OutputBuffer.new; ' +
+      '@output_buffer.safe_concat(((test).to_s)); @output_buffer'
+    gen.call([:code,    'test']).should.equal '@output_buffer = ActionView::OutputBuffer.new; ' +
+      'test; @output_buffer'
   end
 end
