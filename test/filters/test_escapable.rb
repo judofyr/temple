@@ -22,8 +22,8 @@ describe Temple::Filters::Escapable do
     ]
   end
 
-  it 'should keep blocks intact' do
-    exp = [:multi, [:block, 'foo']]
+  it 'should keep codes intact' do
+    exp = [:multi, [:code, 'foo']]
     @filter.call(exp).should.equal exp
   end
 

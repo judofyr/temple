@@ -6,7 +6,7 @@ module Temple
                           :indent_tags => %w(base body dd div dl dt fieldset form head h1 h2 h3
                                              h4 h5 h6 hr html img input li link meta ol p script
                                              style table tbody td tfoot th thead title tr ul).freeze,
-                          :pre_tags => %w(pre textarea).freeze
+                          :pre_tags => %w(code pre textarea).freeze
 
       def initialize(opts = {})
         super
@@ -33,8 +33,8 @@ module Temple
           @last = :noindent
           tmp = unique_name
           [:multi,
-           [:block, "#{tmp} = (#{code}).to_s"],
-           [:block, "#{tmp}.gsub!(\"\\n\", #{indent.inspect}) if #{@pre_tags_name} !~ #{tmp}"],
+           [:code, "#{tmp} = (#{code}).to_s"],
+           [:code, "#{tmp}.gsub!(\"\\n\", #{indent.inspect}) if #{@pre_tags_name} !~ #{tmp}"],
            [:dynamic, tmp]]
         else
           [:dynamic, code]
@@ -55,8 +55,9 @@ module Temple
       def on_html_tag(name, attrs, closed, content)
         return super unless @pretty
 
+        name = name.to_s
         closed ||= options[:autoclose].include?(name)
-        raise "Closed tag #{name} has content" if closed && !empty_exp?(content)
+        raise(InvalidExpression, "Closed tag #{name} has content") if closed && !empty_exp?(content)
 
         @pretty = false
         result = [:multi, [:static, "#{tag_indent(name)}<#{name}"], compile(attrs)]
@@ -76,7 +77,7 @@ module Temple
 
       def preamble
         @pre_tags_name = unique_name
-        [:block, "#{@pre_tags_name} = /#{@pre_tags.source}/"]
+        [:code, "#{@pre_tags_name} = /#{@pre_tags.source}/"]
       end
 
       # Return indentation if not in pre tag

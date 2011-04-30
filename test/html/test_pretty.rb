@@ -9,7 +9,7 @@ describe Temple::HTML::Pretty do
     @html.call([:html, :tag, 'div', [:multi], false,
       [:html, :tag, 'p', [:multi], false, [:multi, [:static, 'text'], [:dynamic, 'code']]]
     ]).should.equal [:multi,
-                     [:block, "_temple_html_pretty1 = /<pre|<textarea/"],
+                     [:code, "_temple_html_pretty1 = /<code|<pre|<textarea/"],
                      [:multi,
                       [:static, "<div"],
                       [:multi],
@@ -21,8 +21,8 @@ describe Temple::HTML::Pretty do
                        [:multi,
                         [:static, "text"],
                         [:multi,
-                         [:block, "_temple_html_pretty2 = (code).to_s"],
-                         [:block, '_temple_html_pretty2.gsub!("\n", "\n    ") if _temple_html_pretty1 !~ _temple_html_pretty2'],
+                         [:code, "_temple_html_pretty2 = (code).to_s"],
+                         [:code, '_temple_html_pretty2.gsub!("\n", "\n    ") if _temple_html_pretty1 !~ _temple_html_pretty2'],
                          [:dynamic, "_temple_html_pretty2"]]],
                        [:static, "</p>"]],
                       [:static, "\n</div>"]]]
@@ -33,7 +33,7 @@ describe Temple::HTML::Pretty do
     @html.call([:html, :tag, 'pre', [:multi], false,
       [:html, :tag, 'p', [:multi], false, [:static, 'text']]
     ]).should.equal [:multi,
-                     [:block, "_temple_html_pretty1 = /<pre|<textarea/"],
+                     [:code, "_temple_html_pretty1 = /<code|<pre|<textarea/"],
                      [:multi,
                       [:static, "<pre"],
                       [:multi],

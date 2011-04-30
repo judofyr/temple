@@ -131,14 +131,36 @@ module Temple
       def on_capture(name, exp)
         [:capture, name, compile(exp)]
       end
+    end
 
+    module EscapeDispatcher
       def on_escape(flag, exp)
         [:escape, flag, compile(exp)]
       end
     end
 
+    module ControlFlowDispatcher
+      def on_if(condition, *cases)
+        [:if, condition, *cases.compact.map {|e| compile(e) }]
+      end
+
+      def on_case(arg, *cases)
+        [:case, arg, *cases.map {|condition, exp| [condition, compile(exp)] }]
+      end
+
+      def on_block(code, content)
+        [:block, code, compile(content)]
+      end
+
+      def on_cond(*cases)
+        [:cond, *cases.map {|condition, exp| [condition, compile(exp)] }]
+      end
+    end
+
     module Dispatcher
       include CoreDispatcher
+      include EscapeDispatcher
+      include ControlFlowDispatcher
 
       def self.included(base)
         base.class_eval { extend ClassMethods }

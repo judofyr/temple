@@ -1,5 +1,9 @@
 module Temple
   module ERB
+    # ERB trimming
+    # Set option :trim_mode to
+    #    <> - omit newline for lines starting with <% and ending in %>
+    #    >  - omit newline for lines ending in %>
     class Trimming < Filter
       def on_multi(*exps)
         case options[:trim_mode]
@@ -21,8 +25,10 @@ module Temple
         [:multi, *exps]
       end
 
+      protected
+
       def code?(exp)
-        exp[0] == :dynamic || exp[0] == :block
+        exp[0] == :escape || exp[0] == :code
       end
 
       def static?(exp)

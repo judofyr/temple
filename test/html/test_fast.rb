@@ -77,12 +77,11 @@ describe Temple::HTML::Fast do
                       [:multi,
                        [:capture, "_temple_html_fast1",
                         [:dynamic, "block"]],
-                       [:block, "unless _temple_html_fast1.empty?"],
-                       [:multi,
-                        [:static, " class='"],
-                        [:dynamic, "_temple_html_fast1"],
-                        [:static, "'"]],
-                       [:block, "end"]],
+                       [:if, "!_temple_html_fast1.empty?",
+                        [:multi,
+                         [:static, " class='"],
+                         [:dynamic, "_temple_html_fast1"],
+                         [:static, "'"]]]],
                       [:multi,
                        [:static, " id='"],
                        [:static, "test"],
@@ -105,10 +104,10 @@ describe Temple::HTML::Fast do
                         [:static, "a"],
                         [:capture, "_temple_html_fast1",
                          [:dynamic, "b"]],
-                        [:block, "unless _temple_html_fast1.empty?"],
-                        [:static, "_"],
-                        [:dynamic, "_temple_html_fast1"],
-                        [:block, "end"]],
+                        [:if, "!_temple_html_fast1.empty?",
+                         [:multi,
+                          [:static, "_"],
+                          [:dynamic, "_temple_html_fast1"]]]],
                        [:static, "'"]]],
                      [:static, ">"],
                      [:content],
@@ -128,18 +127,18 @@ describe Temple::HTML::Fast do
                         [:static, "a"],
                         [:capture, "_temple_html_fast1",
                          [:dynamic, "b"]],
-                        [:block, "unless _temple_html_fast1.empty?"],
-                        [:static, " "],
-                        [:dynamic, "_temple_html_fast1"],
-                        [:block, "end"]],
+                        [:if, "!_temple_html_fast1.empty?",
+                         [:multi,
+                          [:static, " "],
+                          [:dynamic, "_temple_html_fast1"]]]],
                        [:static, "'"]]],
                      [:static, ">"],
                      [:content],
                      [:static, "</div>"]]
   end
 
-  it 'should keep blocks intact' do
-    exp = [:multi, [:block, 'foo']]
+  it 'should keep codes intact' do
+    exp = [:multi, [:code, 'foo']]
     @html.call(exp).should.equal exp
   end
 

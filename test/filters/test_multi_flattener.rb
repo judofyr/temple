@@ -28,6 +28,6 @@ describe Temple::Filters::MultiFlattener do
   end
 
   it 'should return first element' do
-    @filter.call([:multi, [:block, 'foo']]).should.equal [:block, 'foo']
+    @filter.call([:multi, [:code, 'foo']]).should.equal [:code, 'foo']
   end
 end

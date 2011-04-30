@@ -23,12 +23,12 @@ module Temple
                           :autoclose => %w[meta img link br hr input area param col base],
                           :attr_delimiter => {'id' => '_', 'class' => ' '}
 
-      def initialize(options = {})
+      def initialize(opts = {})
         super
         # html5 is now called html only
-        @options[:format] = :html5 if @options[:format] == :html
-        unless [:xhtml, :html4, :html5].include?(@options[:format])
-          raise "Invalid format #{@options[:format].inspect}"
+        options[:format] = :html5 if options[:format] == :html
+        unless [:xhtml, :html4, :html5].include?(options[:format])
+          raise "Invalid format #{options[:format].inspect}"
         end
       end
 
@@ -72,8 +72,9 @@ module Temple
       end
 
       def on_html_tag(name, attrs, closed, content)
+        name = name.to_s
         closed ||= options[:autoclose].include?(name)
-        raise "Closed tag #{name} has content" if closed && !empty_exp?(content)
+        raise(InvalidExpression, "Closed tag #{name} has content") if closed && !empty_exp?(content)
         result = [:multi, [:static, "<#{name}"], compile(attrs)]
         result << [:static, (closed && xhtml? ? ' /' : '') + '>'] << compile(content)
         result << [:static, "</#{name}>"] if !closed
@@ -83,7 +84,7 @@ module Temple
       def on_html_attrs(*attrs)
         result = {}
         attrs.each do |attr|
-          raise 'Attribute is not a html attr' if attr[0] != :html || attr[1] != :attr
+          raise(InvalidExpression, 'Attribute is not a html attr') if attr[0] != :html || attr[1] != :attr
           name, value = attr[2].to_s, attr[3]
           next if empty_exp?(value)
           if result[name]
@@ -101,10 +102,10 @@ module Temple
                               [:multi,
                                result[name][3],
                                [:capture, tmp, value],
-                               [:block, "unless #{tmp}.empty?"],
-                               [:static, delimiter],
-                               [:dynamic, tmp],
-                               [:block, 'end']]]
+                               [:if, "!#{tmp}.empty?",
+                                [:multi,
+                                 [:static, delimiter],
+                                 [:dynamic, tmp]]]]]
             end
           else
             result[name] = attr
@@ -122,9 +123,8 @@ module Temple
           tmp = unique_name
           [:multi,
            [:capture, tmp, compile(value)],
-           [:block, "unless #{tmp}.empty?"],
-           attribute(name, [:dynamic, tmp]),
-           [:block, 'end']]
+           [:if, "!#{tmp}.empty?",
+            attribute(name, [:dynamic, tmp])]]
         end
       end
 
@@ -138,21 +138,16 @@ module Temple
       end
 
       def contains_static?(exp)
-        stack = [exp]
-        until stack.empty?
-          exp = stack.shift
-          case exp[0]
-          when :multi
-            stack.unshift(*exp[1..-1])
-          when :escape
-            stack.unshift(exp[2])
-          when :block
-            return false
-          when :static
-            return true
-          end
+        case exp[0]
+        when :multi
+          exp[1..-1].any? {|e| contains_static?(e) }
+        when :escape
+          contains_static?(exp[2])
+        when :static
+          true
+        else
+          false
         end
-        false
       end
     end
   end

@@ -9,12 +9,6 @@ module Temple
         [:html, :attr, name, compile(content)]
       end
 
-      # WARNING: [:html, :staticattrs, ...] is deprecated
-      # Translate to [:html, :attrs]
-      def on_html_staticattrs(*attrs)
-        compile([:html, :attrs, *attrs.map {|k,v| [:html, :attr, k, v] }])
-      end
-
       def on_html_comment(content)
         [:html, :comment, compile(content)]
       end

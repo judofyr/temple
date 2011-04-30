@@ -15,16 +15,16 @@ describe Temple::Filters::StaticMerger do
     ]
   end
 
-  it 'should merge serveral statics around block' do
+  it 'should merge serveral statics around code' do
     @filter.call([:multi,
       [:static, "Hello "],
       [:static, "World!"],
-      [:block, "123"],
+      [:code, "123"],
       [:static, "Good night, "],
       [:static, "everybody"]
     ]).should.equal [:multi,
       [:static, "Hello World!"],
-      [:block, "123"],
+      [:code, "123"],
       [:static, "Good night, everybody"]
     ]
   end

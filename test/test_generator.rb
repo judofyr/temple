@@ -17,8 +17,8 @@ class SimpleGenerator < Temple::Generator
     concat "D:#{s}"
   end
 
-  def on_block(s)
-    "B:#{s}"
+  def on_code(s)
+    "C:#{s}"
   end
 end
 
@@ -26,69 +26,90 @@ describe Temple::Generator do
   it 'should compile simple expressions' do
     gen = SimpleGenerator.new
 
-    gen.call([:static, "test"]).should.match(/ << \(S:test\)/)
-    gen.call([:dynamic, "test"]).should.match(/ << \(D:test\)/)
-    gen.call([:block, "test"]).should.match(/B:test/)
+    gen.call([:static,  'test']).should.equal '_buf = BUFFER; _buf << (S:test); _buf'
+    gen.call([:dynamic, 'test']).should.equal '_buf = BUFFER; _buf << (D:test); _buf'
+    gen.call([:code,    'test']).should.equal '_buf = BUFFER; C:test; _buf'
   end
 
   it 'should compile multi expression' do
     gen = SimpleGenerator.new(:buffer => "VAR")
-    str = gen.call([:multi,
+    gen.call([:multi,
       [:static, "static"],
       [:dynamic, "dynamic"],
-      [:block, "block"]
-    ])
-
-    str.should.match(/VAR = BUFFER/)
-    str.should.match(/VAR << \(S:static\)/)
-    str.should.match(/VAR << \(D:dynamic\)/)
-    str.should.match(/ B:block;/)
+      [:code, "code"]
+    ]).should.equal 'VAR = BUFFER; VAR << (S:static); VAR << (D:dynamic); C:code; VAR'
   end
 
   it 'should compile capture' do
     gen = SimpleGenerator.new(:buffer => "VAR", :capture_generator => SimpleGenerator)
-    str = gen.call([:capture, "foo", [:static, "test"]])
-
-    str.should.match(/foo = BUFFER/)
-    str.should.match(/foo << \(S:test\)/)
-    str.should.match(/VAR\Z/)
+    gen.call([:capture, "foo",
+      [:static, "test"]
+    ]).should.equal 'VAR = BUFFER; foo = BUFFER; foo << (S:test); foo; VAR'
   end
 
   it 'should compile capture with multi' do
     gen = SimpleGenerator.new(:buffer => "VAR", :capture_generator => SimpleGenerator)
-    str = gen.call([:multi,
+    gen.call([:multi,
       [:static, "before"],
 
       [:capture, "foo", [:multi,
         [:static, "static"],
         [:dynamic, "dynamic"],
-        [:block, "block"]]],
+        [:code, "code"]]],
 
       [:static, "after"]
-    ])
-
-    str.should.match(/VAR << \(S:before\)/)
-    str.should.match(     /foo = BUFFER/)
-    str.should.match(     /foo << \(S:static\)/)
-    str.should.match(     /foo << \(D:dynamic\)/)
-    str.should.match(     / B:block;/)
-    str.should.match(/VAR << \(S:after\)/)
-    str.should.match(/VAR\Z/)
+    ]).should.equal 'VAR = BUFFER; VAR << (S:before); foo = BUFFER; foo << (S:static); ' +
+      'foo << (D:dynamic); C:code; foo; VAR << (S:after); VAR'
   end
 
   it 'should compile newlines' do
     gen = SimpleGenerator.new(:buffer => "VAR")
-    str = gen.call([:multi,
+    gen.call([:multi,
       [:static, "static"],
       [:newline],
       [:dynamic, "dynamic"],
       [:newline],
-      [:block, "block"]
-    ])
+      [:code, "code"]
+    ]).should.equal "VAR = BUFFER; VAR << (S:static); \n; " +
+      "VAR << (D:dynamic); \n; C:code; VAR"
+  end
+end
 
-    lines = str.split("\n")
-    lines[0].should.match(/VAR << \(S:static\)/)
-    lines[1].should.match(/VAR << \(D:dynamic\)/)
-    lines[2].should.match(/ B:block;/)
+describe Temple::Generators::Array do
+  it 'should compile simple expressions' do
+    gen = Temple::Generators::Array.new
+    gen.call([:static,  'test']).should.equal '_buf = []; _buf << ("test"); _buf'
+    gen.call([:dynamic, 'test']).should.equal '_buf = []; _buf << (test); _buf'
+    gen.call([:code,    'test']).should.equal '_buf = []; test; _buf'
+  end
+end
+
+describe Temple::Generators::ArrayBuffer do
+  it 'should compile simple expressions' do
+    gen = Temple::Generators::ArrayBuffer.new
+    gen.call([:static,  'test']).should.equal '_buf = []; _buf << ("test"); _buf = _buf.join'
+    gen.call([:dynamic, 'test']).should.equal '_buf = []; _buf << (test); _buf = _buf.join'
+    gen.call([:code,    'test']).should.equal '_buf = []; test; _buf = _buf.join'
+  end
+end
+
+describe Temple::Generators::StringBuffer do
+  it 'should compile simple expressions' do
+    gen = Temple::Generators::StringBuffer.new
+    gen.call([:static,  'test']).should.equal '_buf = \'\'; _buf << ("test"); _buf'
+    gen.call([:dynamic, 'test']).should.equal '_buf = \'\'; _buf << ((test).to_s); _buf'
+    gen.call([:code,    'test']).should.equal '_buf = \'\'; test; _buf'
+  end
+end
+
+describe Temple::Generators::RailsOutputBuffer do
+  it 'should compile simple expressions' do
+    gen = Temple::Generators::RailsOutputBuffer.new
+    gen.call([:static,  'test']).should.equal '@output_buffer = ActionView::OutputBuffer.new; ' +
+      '@output_buffer.safe_concat(("test")); @output_buffer'
+    gen.call([:dynamic, 'test']).should.equal '@output_buffer = ActionView::OutputBuffer.new; ' +
+      '@output_buffer.safe_concat(((test).to_s)); @output_buffer'
+    gen.call([:code,    'test']).should.equal '@output_buffer = ActionView::OutputBuffer.new; ' +
+      'test; @output_buffer'
   end
 end

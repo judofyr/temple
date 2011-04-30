@@ -1,9 +1,12 @@
 module Temple
+  class InvalidExpression < RuntimeError
+  end
+
   # == The Core Abstraction
   #
   # The core abstraction is what every template evetually should be compiled
   # to. Currently it consists of four essential and two convenient types:
-  # multi, static, dynamic, block, newline and capture.
+  # multi, static, dynamic, code, newline and capture.
   #
   # When compiling, there's two different strings we'll have to think about.
   # First we have the generated code. This is what your engine (from Temple's
@@ -44,9 +47,9 @@ module Temple
   # The Ruby code must be a complete expression in the sense that you can pass
   # it to eval() and it would not raise SyntaxError.
   #
-  # === [:block, ruby]
+  # === [:code, ruby]
   #
-  # Block indicates that the given Ruby code should be evaluated, and may
+  # Code indicates that the given Ruby code should be evaluated, and may
   # change the control flow. Any \n causes a newline in the generated code.
   #
   # === [:newline]
@@ -82,7 +85,7 @@ module Temple
       if respond_to?("on_#{type}")
         send("on_#{type}", *args)
       else
-        raise "Generator supports only core expressions - found #{exp.inspect}"
+        raise InvalidExpression, "Generator supports only core expressions - found #{exp.inspect}"
       end
     end
 
@@ -94,8 +97,20 @@ module Temple
       "\n"
     end
 
-    def on_capture(name, block)
-      options[:capture_generator].new(:buffer => name).call(block)
+    def on_capture(name, exp)
+      options[:capture_generator].new(:buffer => name).call(exp)
+    end
+
+    def on_static(text)
+      concat(text.inspect)
+    end
+
+    def on_dynamic(code)
+      concat(code)
+    end
+
+    def on_code(code)
+      code
     end
 
     protected
@@ -115,36 +130,21 @@ module Temple
     #   _buf = []
     #   _buf << "static"
     #   _buf << dynamic
-    #   block do
-    #     _buf << "more static"
-    #   end
     #   _buf.join
-    class ArrayBuffer < Generator
+    class Array < Generator
       def preamble
         "#{buffer} = []"
       end
 
       def postamble
-        "#{buffer} = #{buffer}.join"
-      end
-
-      def on_static(text)
-        concat(text.inspect)
-      end
-
-      def on_dynamic(code)
-        concat(code)
-      end
-
-      def on_block(code)
-        code
+        buffer
       end
     end
 
-    # Just like ArrayBuffer, but doesn't call #join on the array.
-    class Array < ArrayBuffer
+    # Just like Array, but calls #join on the array.
+    class ArrayBuffer < Array
       def postamble
-        buffer
+        "#{buffer} = #{buffer}.join"
       end
     end
 
@@ -153,9 +153,6 @@ module Temple
     #   _buf = ''
     #   _buf << "static"
     #   _buf << dynamic.to_s
-    #   block do
-    #     _buf << "more static"
-    #   end
     #   _buf
     class StringBuffer < Array
       def preamble
@@ -172,9 +169,6 @@ module Temple
     #   @output_buffer = ActionView::OutputBuffer
     #   @output_buffer.safe_concat "static"
     #   @output_buffer.safe_concat dynamic.to_s
-    #   block do
-    #     @output_buffer << "more static"
-    #   end
     #   @output_buffer
     class RailsOutputBuffer < StringBuffer
       set_default_options :buffer_class => 'ActionView::OutputBuffer',
