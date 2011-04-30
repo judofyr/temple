@@ -180,7 +180,7 @@ module Temple
       end
 
       module ClassMethods
-        def temple_dispatch(*bases)
+        def dispatch(*bases)
           bases.each do |base|
             class_eval %{def on_#{base}(type, *args)
               if respond_to?("on_" #{base.to_s.inspect} "_\#{type}")

@@ -3,7 +3,7 @@ module Temple
     class Filter < Temple::Filter
       include Dispatcher
 
-      temple_dispatch :html
+      dispatch :html
     end
   end
 end
