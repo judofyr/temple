@@ -10,9 +10,6 @@ module Temple
       def match(grammar, exp, &block)
         false
       end
-
-      protected
-
     end
 
     class Or < Rule
