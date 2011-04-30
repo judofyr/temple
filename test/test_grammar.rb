@@ -1,5 +1,11 @@
 require 'helper'
 
+module ExtendedGrammar
+  extend Temple::Grammar
+
+  Expression << [:extended, Expression]
+end
+
 describe Temple::Grammar do
   it 'should match core expressions' do
     Temple::Grammar.should.match [:multi]
@@ -45,5 +51,11 @@ describe Temple::Grammar do
   it 'should not match lone html attributes' do
     Temple::Grammar.should.not.match [:html, :attr, 'id', [:multi]]
     Temple::Grammar.should.not.match [:html, :attrs]
+  end
+
+  it 'should support extended grammars' do
+    ExtendedGrammar.should.match [:extended, [:extended, [:multi]]]
+    Temple::Grammar.should.not.match [:multi, [:extended, [:multi]]]
+    Temple::Grammar.should.not.match [:extended, [:extended, [:multi]]]
   end
 end
