@@ -75,7 +75,7 @@ module Temple
       end
 
       def match(exp, &block)
-        return false if exp.empty?
+        return false unless Array === exp && !exp.empty?
         head, *tail = exp
         @rule.match(head, &block) && super(tail, &block)
       end
@@ -125,7 +125,7 @@ module Temple
       case rule
       when Rule
         rule
-      when Symbol, Class, true, false
+      when Symbol, Class, true, false, nil
         Value(rule)
       when Array
         start = Or.new(self)
