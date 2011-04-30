@@ -1,89 +1,104 @@
 module Temple
   module GrammarDSL
     class Rule
-      include GrammarDSL
-
-      def |(rule)
-        Or.new(self, rule)
+      def initialize(grammar)
+        @grammar = grammar
       end
 
-      def match(grammar, exp, &block)
+      def |(rule)
+        Or.new(@grammar, self, rule)
+      end
+
+      def match(exp, &block)
         false
+      end
+
+      def copy_to(grammar)
+        copy = dup.instance_eval { @grammar = grammar; self }
+        copy.after_copy(self) if copy.respond_to?(:after_copy)
+        copy
       end
     end
 
     class Or < Rule
-      def initialize(*rules)
-        @rules = rules.map {|r| Rule(r) }
+      def initialize(grammar, *children)
+        super(grammar)
+        @children = children.map {|rule| @grammar.Rule(rule) }
       end
 
       def <<(rule)
-        @rules << Rule(rule)
+        @children << @grammar.Rule(rule)
         self
       end
 
       alias | <<
 
-      def match(grammar, exp, &block)
-        @rules.any? {|r| r.match(grammar, exp, &block) }
+      def match(exp, &block)
+        @children.any? {|rule| rule.match(exp, &block) }
+      end
+
+      def after_copy(source)
+        @children = @children.map do |child|
+          child == source ? self : child.copy_to(@grammar)
+        end
       end
     end
 
     class Root < Or
-      attr_reader :name, :rules
-
-      def initialize(name, *rules)
-        super(*rules)
+      def initialize(grammar, name)
+        super(grammar)
         @name = name.to_sym
       end
 
-      def match(grammar, exp)
+      def match(exp)
         success = super
         yield(@name, exp, success) if block_given?
         success
       end
 
-      def validate!(grammar, exp)
+      def validate!(exp)
         require 'pp'
         error = nil
-        match(grammar, exp) do |rule, subexp, success|
-          error ||= PP.pp(subexp, "#{grammar}::#{rule} did not match\n") unless success
+        match(exp) do |rule, subexp, success|
+          error ||= PP.pp(subexp, "#{@grammar}::#{rule} did not match\n") unless success
         end || raise(InvalidExpression, error)
       end
-    end
 
-    class Name < Rule
-      def initialize(name)
-        @name = name
+      def copy_to(grammar)
+        grammar.const_defined?(@name) ? grammar.const_get(@name) : super
       end
 
-      def match(grammar, exp, &block)
-        raise "Rule not found '#{@name}'" unless grammar.const_defined?(@name)
-        rule = grammar.const_get(@name)
-        raise "Invalid rule '#{@name}'" unless Rule === rule
-        rule.match(grammar, exp, &block)
+      def after_copy(source)
+        @grammar.const_set(@name, self)
+        super
       end
     end
 
     class Element < Or
-      def initialize(rule)
-        super()
-        @rule = Rule(rule)
+      def initialize(grammar, rule)
+        super(grammar)
+        @rule = grammar.Rule(rule)
       end
 
-      def match(grammar, exp, &block)
+      def match(exp, &block)
         return false if exp.empty?
         head, *tail = exp
-        @rule.match(grammar, head, &block) && super(grammar, tail, &block)
+        @rule.match(head, &block) && super(tail, &block)
+      end
+
+      def after_copy(source)
+        super
+        @rule = @rule.copy_to(@grammar)
       end
     end
 
     class Value < Rule
-      def initialize(value)
+      def initialize(grammar, value)
+        super(grammar)
         @value = value
       end
 
-      def match(grammar, value)
+      def match(value)
         @value === value
       end
     end
@@ -91,23 +106,23 @@ module Temple
     def extended(mod)
       mod.extend GrammarDSL
       constants.each do |name|
-        mod.const_set(name, const_get(name)) if Rule === const_get(name)
+        const_get(name).copy_to(mod) if Rule === const_get(name)
       end
     end
 
     def match?(exp)
-      const_get(:Expression).match(self, exp)
+      const_get(:Expression).match(exp)
     end
 
     def validate!(exp)
-      const_get(:Expression).validate!(self, exp)
+      const_get(:Expression).validate!(exp)
     end
 
     alias === match?
     alias =~ match?
 
     def Value(value)
-      Value.new(value)
+      Value.new(self, value)
     end
 
     def Rule(rule)
@@ -117,20 +132,20 @@ module Temple
       when Symbol, Class, true, false
         Value(rule)
       when Array
-        start = Or.new
+        start = Or.new(self)
         curr = [start]
         rule.each do |elem|
           case elem
           when /^(.*)\*$/
-            elem = Element.new($1)
+            elem = Element.new(self, const_get($1))
             curr << elem
             curr.each {|c| c << elem }
           when /^(.*)\?$/
-            elem = Element.new($1)
+            elem = Element.new(self, const_get($1))
             curr.each {|c| c << elem }
             curr << elem
           else
-            elem = Element.new(elem)
+            elem = Element.new(self, elem)
             curr.each {|c| c << elem }
             curr = [elem]
           end
@@ -138,15 +153,13 @@ module Temple
         elem = Value([])
         curr.each {|c| c << elem }
         start
-      when String
-        Name.new(rule)
       else
         raise "Invalid grammar rule '#{rule.inspect}'"
       end
     end
 
     def const_missing(name)
-      const_set(name, Root.new(name))
+      const_set(name, Root.new(self, name))
     end
   end
 end
