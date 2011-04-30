@@ -47,12 +47,8 @@ module Temple
         require 'pp'
         error = nil
         match(grammar, exp) do |rule, subexp, success|
-          if !success && rule == :Expression
-            error = PP.pp(subexp, "#{grammar} - No match found\n")
-            break
-          end
-        end
-        raise InvalidExpression, error if error
+          error ||= PP.pp(subexp, "#{grammar}::#{rule} did not match\n") unless success
+        end || raise(InvalidExpression, error)
       end
     end
 
