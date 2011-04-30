@@ -6,11 +6,18 @@ module Temple
   autoload :Generators,        'temple/generators'
   autoload :Engine,            'temple/engine'
   autoload :Utils,             'temple/utils'
-  autoload :Mixins,            'temple/mixins'
   autoload :Filter,            'temple/filter'
   autoload :Templates,         'temple/templates'
   autoload :Grammar,           'temple/grammar'
-  autoload :GrammarDSL,        'temple/grammar_dsl'
+
+  module Mixins
+    autoload :Dispatcher,      'temple/mixins/dispatcher'
+    autoload :EngineDSL,       'temple/mixins/engine_dsl'
+    autoload :GrammarDSL,      'temple/mixins/grammar_dsl'
+    autoload :Options,         'temple/mixins/options'
+    autoload :DefaultOptions,  'temple/mixins/options'
+    autoload :Template,        'temple/mixins/template'
+  end
 
   module ERB
     autoload :Engine,          'temple/erb/engine'

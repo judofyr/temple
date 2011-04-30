@@ -1,7 +1,7 @@
 require 'helper'
 
 module BasicGrammar
-  extend Temple::GrammarDSL
+  extend Temple::Mixins::GrammarDSL
 
   Expression <<
     Symbol |
@@ -21,7 +21,7 @@ module ExtendedGrammar
   Expression << [:extended, Expression]
 end
 
-describe Temple::GrammarDSL do
+describe Temple::Mixins::GrammarDSL do
   it 'should support class types' do
     BasicGrammar.should.match :symbol
     BasicGrammar.should.not.match 'string'

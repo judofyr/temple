@@ -1,6 +1,6 @@
 module Temple
   module Grammar
-    extend GrammarDSL
+    extend Mixins::GrammarDSL
 
     Expression <<
       # Core expressions
