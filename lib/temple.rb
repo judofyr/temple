@@ -24,7 +24,6 @@ module Temple
     autoload :StaticMerger,    'temple/filters/static_merger'
     autoload :DynamicInliner,  'temple/filters/dynamic_inliner'
     autoload :Escapable,       'temple/filters/escapable'
-    autoload :Debugger,        'temple/filters/debugger'
     autoload :Eraser,          'temple/filters/eraser'
     autoload :Validator,       'temple/filters/validator'
   end
