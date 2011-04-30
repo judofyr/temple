@@ -57,7 +57,7 @@ module Temple
         case filter
         when Class
           filtered_options = Hash[*option_filter.select {|k| options.include?(k) }.map {|k| [k, options[k]] }.flatten]
-          filter.new(Utils::ImmutableHash.new(local_options, filtered_options))
+          filter.new(ImmutableHash.new(local_options, filtered_options))
         when UnboundMethod
           filter.bind(self)
         else

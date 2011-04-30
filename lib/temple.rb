@@ -9,6 +9,8 @@ module Temple
   autoload :Filter,            'temple/filter'
   autoload :Templates,         'temple/templates'
   autoload :Grammar,           'temple/grammar'
+  autoload :ImmutableHash,     'temple/hash'
+  autoload :MutableHash,       'temple/hash'
 
   module Mixins
     autoload :Dispatcher,      'temple/mixins/dispatcher'

@@ -10,7 +10,7 @@ describe Temple::Filter do
   it 'should support options' do
     Temple::Filter.should.respond_to :default_options
     Temple::Filter.should.respond_to :set_default_options
-    Temple::Filter.new.options.should.be.instance_of Temple::Utils::ImmutableHash
+    Temple::Filter.new.options.should.be.instance_of Temple::ImmutableHash
     Temple::Filter.new(:key => 3).options[:key].should.equal 3
   end
 

@@ -6,8 +6,8 @@ module Temple
       end
 
       def default_options
-        @default_options ||= Utils::MutableHash.new(superclass.respond_to?(:default_options) ?
-                                                    superclass.default_options : nil)
+        @default_options ||= MutableHash.new(superclass.respond_to?(:default_options) ?
+                                             superclass.default_options : nil)
       end
     end
 
@@ -19,7 +19,7 @@ module Temple
       attr_reader :options
 
       def initialize(options = {})
-        @options = Utils::ImmutableHash.new(options, self.class.default_options)
+        @options = ImmutableHash.new(options, self.class.default_options)
       end
     end
   end
