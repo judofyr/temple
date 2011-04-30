@@ -9,10 +9,6 @@ module Temple
         Or.new(@grammar, self, rule)
       end
 
-      def match(exp, &block)
-        false
-      end
-
       def copy_to(grammar)
         copy = dup.instance_eval { @grammar = grammar; self }
         copy.after_copy(self) if copy.respond_to?(:after_copy)
@@ -38,9 +34,7 @@ module Temple
       end
 
       def after_copy(source)
-        @children = @children.map do |child|
-          child == source ? self : child.copy_to(@grammar)
-        end
+        @children = @children.map {|child| child.copy_to(@grammar) }
       end
     end
 
@@ -87,7 +81,9 @@ module Temple
       end
 
       def after_copy(source)
-        super
+        @children = @children.map do |child|
+          child == source ? self : child.copy_to(@grammar)
+        end
         @rule = @rule.copy_to(@grammar)
       end
     end
