@@ -131,11 +131,11 @@ module Temple
         start = Or.new(self)
         curr = [start]
         rule.each do |elem|
-          if elem =~ /^(.*)(\*|\?)$/
+          if elem =~ /^(.*)(\*|\?|\+)$/
             elem = Element.new(self, const_get($1))
-            elem << elem if $2 == '*'
             curr.each {|c| c << elem }
-            curr << elem
+            elem << elem if $2 != '?'
+            curr = $2 == '+' ? [elem] : (curr << elem)
           else
             elem = Element.new(self, elem)
             curr.each {|c| c << elem }
