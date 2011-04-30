@@ -220,6 +220,13 @@ Installation
 
     $ gem install temple
 
+Engines using Temple
+--------------------
+
+* Temple ERB example implementation (Temple::ERB::Engine)
+* [Slim](http://github.com/stonean/slim)
+* [Sal](http://github.com/stonean/sal.rb)
+* [Temple-Mustache (Example implementation)](https://github.com/minad/temple-mustache)
 
 Acknowledgements
 ----------------
