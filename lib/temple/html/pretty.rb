@@ -56,7 +56,7 @@ module Temple
         return super unless @pretty
 
         closed ||= options[:autoclose].include?(name)
-        raise "Closed tag #{name} has content" if closed && !empty_exp?(content)
+        raise(InvalidExpression, "Closed tag #{name} has content") if closed && !empty_exp?(content)
 
         @pretty = false
         result = [:multi, [:static, "#{tag_indent(name)}<#{name}"], compile(attrs)]

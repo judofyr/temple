@@ -1,4 +1,7 @@
 module Temple
+  class InvalidExpression < RuntimeError
+  end
+
   # == The Core Abstraction
   #
   # The core abstraction is what every template evetually should be compiled
@@ -82,7 +85,7 @@ module Temple
       if respond_to?("on_#{type}")
         send("on_#{type}", *args)
       else
-        raise "Generator supports only core expressions - found #{exp.inspect}"
+        raise InvalidExpression, "Generator supports only core expressions - found #{exp.inspect}"
       end
     end
 

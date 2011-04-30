@@ -73,7 +73,7 @@ module Temple
 
       def on_html_tag(name, attrs, closed, content)
         closed ||= options[:autoclose].include?(name)
-        raise "Closed tag #{name} has content" if closed && !empty_exp?(content)
+        raise(InvalidExpression, "Closed tag #{name} has content") if closed && !empty_exp?(content)
         result = [:multi, [:static, "<#{name}"], compile(attrs)]
         result << [:static, (closed && xhtml? ? ' /' : '') + '>'] << compile(content)
         result << [:static, "</#{name}>"] if !closed
@@ -83,7 +83,7 @@ module Temple
       def on_html_attrs(*attrs)
         result = {}
         attrs.each do |attr|
-          raise 'Attribute is not a html attr' if attr[0] != :html || attr[1] != :attr
+          raise(InvalidExpression, 'Attribute is not a html attr') if attr[0] != :html || attr[1] != :attr
           name, value = attr[2].to_s, attr[3]
           next if empty_exp?(value)
           if result[name]
