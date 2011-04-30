@@ -72,6 +72,7 @@ module Temple
       end
 
       def on_html_tag(name, attrs, closed, content)
+        name = name.to_s
         closed ||= options[:autoclose].include?(name)
         raise(InvalidExpression, "Closed tag #{name} has content") if closed && !empty_exp?(content)
         result = [:multi, [:static, "<#{name}"], compile(attrs)]
