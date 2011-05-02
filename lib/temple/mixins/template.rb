@@ -11,9 +11,7 @@ module Temple
       def build_engine(*options)
         raise 'No engine configured' unless engine
         options << default_options
-        engine.new(ImmutableHash.new(*options)) do |e|
-          chain.each {|block| e.instance_eval(&block) }
-        end
+        engine.new(ImmutableHash.new(*options))
       end
 
       def chain(&block)

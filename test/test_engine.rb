@@ -50,86 +50,94 @@ describe Temple::Engine do
   end
 
   it 'should instantiate chain' do
-    e = TestEngine.new
-    e.chain[0].should.be.instance_of Method
-    e.chain[1].should.be.instance_of Method
-    e.chain[2].should.be.instance_of Method
-    e.chain[3].should.be.instance_of Temple::HTML::Pretty
-    e.chain[4].should.be.instance_of Temple::Filters::MultiFlattener
-    e.chain[5].should.be.instance_of Temple::Generators::ArrayBuffer
-    e.chain[6].should.be.instance_of OtherCallable
+    call_chain = TestEngine.new.send(:call_chain)
+    call_chain[0].should.be.instance_of Method
+    call_chain[1].should.be.instance_of Method
+    call_chain[2].should.be.instance_of Method
+    call_chain[3].should.be.instance_of Temple::HTML::Pretty
+    call_chain[4].should.be.instance_of Temple::Filters::MultiFlattener
+    call_chain[5].should.be.instance_of Temple::Generators::ArrayBuffer
+    call_chain[6].should.be.instance_of OtherCallable
   end
 
   it 'should have #append' do
-    e = TestEngine.new do |engine|
-      engine.append :MyFilter3 do |exp|
-        exp
-      end
-      engine.chain.size.should.equal 8
-      engine.chain[7].first.should.equal :MyFilter3
-      engine.chain[7].size.should.equal 2
-      engine.chain[7].last.should.be.instance_of Method
+    engine = TestEngine.new
+    call_chain = engine.send(:call_chain)
+    call_chain.size.should.equal 7
+
+    engine.append :MyFilter3 do |exp|
+      exp
     end
-    e.chain.size.should.equal 8
-    e.chain[7].should.be.instance_of Method
+
+    TestEngine.chain.size.should.equal 7
+    engine.chain.size.should.equal 8
+    engine.chain[7].first.should.equal :MyFilter3
+    engine.chain[7].size.should.equal 2
+    engine.chain[7].last.should.be.instance_of Method
+
+    call_chain = engine.send(:call_chain)
+    call_chain.size.should.equal 8
+    call_chain[7].should.be.instance_of Method
   end
 
   it 'should have #prepend' do
-    e = TestEngine.new do |engine|
-      engine.prepend :MyFilter0 do |exp|
-        exp
-      end
-      engine.chain.size.should.equal 8
-      engine.chain[0].first.should.equal :MyFilter0
-      engine.chain[0].size.should.equal 2
-      engine.chain[0].last.should.be.instance_of Method
-      engine.chain[1].first.should.equal :Parser
+    engine = TestEngine.new
+    call_chain = engine.send(:call_chain)
+    call_chain.size.should.equal 7
+
+    engine.prepend :MyFilter0 do |exp|
+      exp
     end
-    e.chain.size.should.equal 8
-    e.chain[0].should.be.instance_of Method
+
+    TestEngine.chain.size.should.equal 7
+    engine.chain.size.should.equal 8
+    engine.chain[0].first.should.equal :MyFilter0
+    engine.chain[0].size.should.equal 2
+    engine.chain[0].last.should.be.instance_of Method
+    engine.chain[1].first.should.equal :Parser
+
+    call_chain = engine.send(:call_chain)
+    call_chain.size.should.equal 8
+    call_chain[0].should.be.instance_of Method
   end
 
   it 'should have #after' do
-    e = TestEngine.new do |engine|
-      engine.after :Parser, :MyFilter0 do |exp|
-        exp
-      end
-      engine.chain.size.should.equal 8
-      engine.chain[0].first.should.equal :Parser
-      engine.chain[1].first.should.equal :MyFilter0
-      engine.chain[2].first.should.equal :MyFilter1
+    engine = TestEngine.new
+    engine.after :Parser, :MyFilter0 do |exp|
+      exp
     end
+    engine.chain.size.should.equal 8
+    engine.chain[0].first.should.equal :Parser
+    engine.chain[1].first.should.equal :MyFilter0
+    engine.chain[2].first.should.equal :MyFilter1
   end
 
   it 'should have #before' do
-    e = TestEngine.new do |engine|
-      engine.before :MyFilter1, :MyFilter0 do |exp|
-        exp
-      end
-      engine.chain.size.should.equal 8
-      engine.chain[0].first.should.equal :Parser
-      engine.chain[1].first.should.equal :MyFilter0
-      engine.chain[2].first.should.equal :MyFilter1
+    engine = TestEngine.new
+    engine.before :MyFilter1, :MyFilter0 do |exp|
+      exp
     end
+    engine.chain.size.should.equal 8
+    engine.chain[0].first.should.equal :Parser
+    engine.chain[1].first.should.equal :MyFilter0
+    engine.chain[2].first.should.equal :MyFilter1
   end
 
   it 'should have #remove' do
-    e = TestEngine.new do |engine|
-      engine.remove :MyFilter1
-      engine.chain.size.should.equal 6
-      engine.chain[0].first.should.equal :Parser
-      engine.chain[1].first.should.equal :MyFilter2
-    end
+    engine = TestEngine.new
+    engine.remove :MyFilter1
+    engine.chain.size.should.equal 6
+    engine.chain[0].first.should.equal :Parser
+    engine.chain[1].first.should.equal :MyFilter2
   end
 
   it 'should have #replace' do
-    e = TestEngine.new do |engine|
-      engine.before :Parser, :MyParser do |exp|
-        exp
-      end
-      engine.chain.size.should.equal 8
-      engine.chain[0].first.should.equal :MyParser
+    engine = TestEngine.new
+    engine.before :Parser, :MyParser do |exp|
+      exp
     end
+    engine.chain.size.should.equal 8
+    engine.chain[0].first.should.equal :MyParser
   end
 
   it 'should work with inheritance' do
@@ -140,5 +148,13 @@ describe Temple::Engine do
     end
     inherited_engine.chain.size.should.equal 8
     TestEngine.chain.size.should.equal 7
+  end
+
+  it 'should support chain option' do
+    engine = TestEngine.new(:chain => proc {|e| e.remove :MyFilter1 })
+    TestEngine.chain.size.should.equal 7
+    engine.chain.size.should.equal 6
+    engine.chain[0].first.should.equal :Parser
+    engine.chain[1].first.should.equal :MyFilter2
   end
 end

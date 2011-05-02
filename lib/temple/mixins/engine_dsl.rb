@@ -1,12 +1,17 @@
 module Temple
   module Mixins
     module EngineDSL
+      def chain_modified!
+      end
+
       def append(*args, &block)
         chain << element(args, block)
+        chain_modified!
       end
 
       def prepend(*args, &block)
         chain.unshift(element(args, block))
+        chain_modified!
       end
 
       def remove(name)
@@ -17,6 +22,7 @@ module Temple
           equal
         end
         raise "#{name} not found" unless found
+        chain_modified!
       end
 
       alias use append
@@ -36,6 +42,7 @@ module Temple
           end
         end
         raise "#{name} not found" unless found
+        chain_modified!
       end
 
       def after(name, *args, &block)
@@ -52,6 +59,7 @@ module Temple
           i += 1
         end
         raise "#{name} not found" unless found
+        chain_modified!
       end
 
       def replace(name, *args, &block)
@@ -66,6 +74,7 @@ module Temple
           end
         end
         raise "#{name} not found" unless found
+        chain_modified!
       end
 
       def filter(name, *options, &block)

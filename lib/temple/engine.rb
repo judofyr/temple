@@ -40,19 +40,21 @@ module Temple
     def initialize(o = {})
       super
       @chain = self.class.chain.dup
-      yield(self) if block_given?
       [*options[:chain]].compact.each {|block| block.call(self) }
-      @chain = build_chain
     end
 
     def call(input)
-      chain.inject(input) {|m, e| e.call(m) }
+      call_chain.inject(input) {|m, e| e.call(m) }
     end
 
     protected
 
-    def build_chain
-      chain.map do |e|
+    def chain_modified!
+      @call_chain = nil
+    end
+
+    def call_chain
+      @call_chain ||= @chain.map do |e|
         name, filter, option_filter, local_options = e
         case filter
         when Class
