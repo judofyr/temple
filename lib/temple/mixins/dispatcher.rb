@@ -53,8 +53,9 @@ module Temple
 
       def compile(exp)
         type, *args = exp
-        if respond_to?("on_#{type}")
-          send("on_#{type}", *args)
+        method = "on_#{type}"
+        if respond_to?(method)
+          send(method, *args)
         else
           exp
         end
@@ -64,8 +65,9 @@ module Temple
         def dispatch(*bases)
           bases.each do |base|
             class_eval %{def on_#{base}(type, *args)
-              if respond_to?("on_" #{base.to_s.inspect} "_\#{type}")
-                send("on_" #{base.to_s.inspect} "_\#{type}", *args)
+              method = "on_#{base}_\#{type}"
+              if respond_to?(method)
+                send(method, *args)
               else
                 [:#{base}, type, *args]
               end
