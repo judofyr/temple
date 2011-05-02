@@ -60,7 +60,7 @@ module Temple
           unmatched = []
           unless match(exp, unmatched)
             require 'pp'
-            rule, exp = unmatched.sort_by {|x| [*x.last].flatten.size }.first
+            rule, exp = unmatched.sort_by {|r,e| [*e].flatten.size }.first
             raise(InvalidExpression, PP.pp(exp, "#{@grammar}::#{rule} did not match\n"))
           end
         end

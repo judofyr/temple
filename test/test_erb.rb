@@ -2,14 +2,7 @@ require 'helper'
 require 'erb'
 require 'tilt'
 
-class Bacon::Context
-  def erb(src, options = {})
-    Temple::Templates::Tilt(Temple::ERB::Engine).new(options) { src }.render
-  end
-end
-
 describe Temple::ERB::Engine do
-
   it 'should compile erb' do
     src = %q{
 %% hi
