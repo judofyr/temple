@@ -7,6 +7,7 @@ module Temple
       template = Class.new(const_get(name))
       template.engine(engine)
       template.register_as(options[:register_as]) if options[:register_as]
+      template.default_options.update(options)
       template
     end
   end
