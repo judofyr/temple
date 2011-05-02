@@ -55,7 +55,7 @@ describe Temple::Mixins::GrammarDSL do
 
   it 'should support extended grammars' do
     ExtendedGrammar.should.match [:extended, [:extended, 42]]
-    BasicGrammar.should.not.match [:multi, [:extended, nil]]
+    BasicGrammar.should.not.match [:zero_or_more, [:extended, nil]]
     BasicGrammar.should.not.match [:extended, [:extended, 42]]
   end
 end

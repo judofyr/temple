@@ -30,8 +30,9 @@ module Temple
 
         alias | <<
 
-        def match(exp, &block)
-          @children.any? {|rule| rule.match(exp, &block) }
+        def match(exp, unmatched)
+          tmp = []
+          @children.any? {|rule| rule.match(exp, tmp) } || (unmatched.push(*tmp) && false)
         end
 
         def after_copy(source)
@@ -45,18 +46,23 @@ module Temple
           @name = name.to_sym
         end
 
-        def match(exp)
+        def match(exp, unmatched)
           success = super
-          yield(@name, exp, success) if block_given?
+          unmatched << [@name, exp] unless success
           success
         end
 
+        def match?(exp)
+          match(exp, [])
+        end
+
         def validate!(exp)
-          require 'pp'
-          error = nil
-          match(exp) do |rule, subexp, success|
-            error ||= PP.pp(subexp, "#{@grammar}::#{rule} did not match\n") unless success
-          end || raise(InvalidExpression, error)
+          unmatched = []
+          unless match(exp, unmatched)
+            require 'pp'
+            rule, exp = unmatched.sort_by {|x| [*x.last].flatten.size }.first
+            raise(InvalidExpression, PP.pp(exp, "#{@grammar}::#{rule} did not match\n"))
+          end
         end
 
         def copy_to(grammar)
@@ -75,10 +81,10 @@ module Temple
           @rule = grammar.Rule(rule)
         end
 
-        def match(exp, &block)
+        def match(exp, unmatched)
           return false unless Array === exp && !exp.empty?
           head, *tail = exp
-          @rule.match(head, &block) && super(tail, &block)
+          @rule.match(head, unmatched) && super(tail, unmatched)
         end
 
         def after_copy(source)
@@ -95,8 +101,8 @@ module Temple
           @value = value
         end
 
-        def match(value)
-          @value === value
+        def match(exp, unmatched)
+          @value === exp
         end
       end
 
@@ -108,7 +114,7 @@ module Temple
       end
 
       def match?(exp)
-        const_get(:Expression).match(exp)
+        const_get(:Expression).match?(exp)
       end
 
       def validate!(exp)
