@@ -1,6 +1,8 @@
 module Temple
   module Filters
     # Erase expressions with a certain type
+    #
+    # @api public
     class Eraser < Filter
       # [] is the empty type => keep all
       default_options[:keep] = [[]]

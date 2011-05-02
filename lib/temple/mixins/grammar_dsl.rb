@@ -1,5 +1,6 @@
 module Temple
   module Mixins
+    # @api private
     module GrammarDSL
       class Rule
         def initialize(grammar)

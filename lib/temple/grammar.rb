@@ -1,4 +1,6 @@
 module Temple
+  # Temple expression grammar
+  # @api public
   module Grammar
     extend Mixins::GrammarDSL
 

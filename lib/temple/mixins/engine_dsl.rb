@@ -1,5 +1,6 @@
 module Temple
   module Mixins
+    # @api private
     module EngineDSL
       def chain_modified!
       end

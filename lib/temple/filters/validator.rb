@@ -1,5 +1,8 @@
 module Temple
   module Filters
+    # Validates temple expression with given grammar
+    #
+    # @api public
     class Validator < Filter
       default_options[:grammar] = Temple::Grammar
 

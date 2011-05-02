@@ -4,6 +4,8 @@ module Temple
     # This filter must be used after Temple::HTML::* and before the generators.
     # It can be enclosed with Temple::Filters::DynamicInliner filters to
     # reduce calls to Temple::Utils#escape_html.
+    #
+    # @api public
     class Escapable < Filter
       # Activate the usage of html_safe? if it is available (for Rails 3 for example)
       default_options[:use_html_safe] = ''.respond_to?(:html_safe?)

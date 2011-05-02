@@ -1,4 +1,6 @@
 module Temple
+  # Immutable hash class which supports hash merging
+  # @api public
   class ImmutableHash
     include Enumerable
 
@@ -28,6 +30,8 @@ module Temple
     end
   end
 
+  # Mutable hash class which supports hash merging
+  # @api public
   class MutableHash < ImmutableHash
     def initialize(*hash)
       super({}, *hash)

@@ -1,5 +1,6 @@
 module Temple
   module HTML
+    # @api public
     class Pretty < Fast
       set_default_options :indent => '  ',
                           :pretty => true,

@@ -26,6 +26,7 @@ module Temple
   #   engine = MyEngine.new(:strict => "For MyParser")
   #   engine.call(something)
   #
+  # @api public
   class Engine
     include Mixins::Options
     include Mixins::EngineDSL

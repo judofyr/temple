@@ -4,6 +4,8 @@ module Temple
     # Set option :trim_mode to
     #    <> - omit newline for lines starting with <% and ending in %>
     #    >  - omit newline for lines ending in %>
+    #
+    # @api public
     class Trimming < Filter
       def on_multi(*exps)
         case options[:trim_mode]

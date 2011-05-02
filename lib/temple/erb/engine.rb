@@ -1,5 +1,7 @@
 module Temple
   module ERB
+    # Example ERB engine implementation
+    # @api public
     class Engine < Temple::Engine
       use Temple::ERB::Parser, :auto_escape
       use Temple::ERB::Trimming, :trim_mode

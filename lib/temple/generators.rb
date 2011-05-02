@@ -1,4 +1,6 @@
 module Temple
+  # Exception raised if invalid temple expression is found
+  # @api public
   class InvalidExpression < RuntimeError
   end
 
@@ -71,6 +73,8 @@ module Temple
   #   _buf << "Some content"
   #   foo = "More content"
   #   _buf << foo.downcase
+  #
+  # @api public
   class Generator
     include Mixins::Options
 
@@ -131,6 +135,8 @@ module Temple
     #   _buf << "static"
     #   _buf << dynamic
     #   _buf.join
+    #
+    # @api public
     class Array < Generator
       def preamble
         "#{buffer} = []"
@@ -142,6 +148,7 @@ module Temple
     end
 
     # Just like Array, but calls #join on the array.
+    # @api public
     class ArrayBuffer < Array
       def postamble
         "#{buffer} = #{buffer}.join"
@@ -154,6 +161,8 @@ module Temple
     #   _buf << "static"
     #   _buf << dynamic.to_s
     #   _buf
+    #
+    # @api public
     class StringBuffer < Array
       def preamble
         "#{buffer} = ''"
@@ -170,6 +179,8 @@ module Temple
     #   @output_buffer.safe_concat "static"
     #   @output_buffer.safe_concat dynamic.to_s
     #   @output_buffer
+    #
+    # @api public
     class RailsOutputBuffer < StringBuffer
       set_default_options :buffer_class => 'ActionView::OutputBuffer',
                           :buffer => '@output_buffer',

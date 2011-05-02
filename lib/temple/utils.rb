@@ -53,13 +53,20 @@ module Temple
 
     # Generate unique variable name
     #
+    # @param prefix [String] Variable name prefix
     # @return [String] Variable name
+    # @api public
     def unique_name(prefix = nil)
       @unique_name ||= 0
       prefix ||= (@unique_prefix ||= self.class.name.gsub('::', '_').downcase)
       "_#{prefix}#{@unique_name += 1}"
     end
 
+    # Check if expression is empty
+    #
+    # @param exp [Array] Temple expression
+    # @return true if expression is empty
+    # @api public
     def empty_exp?(exp)
       case exp[0]
       when :multi

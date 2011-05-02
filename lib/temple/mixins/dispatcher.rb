@@ -1,5 +1,6 @@
 module Temple
   module Mixins
+    # @api private
     module CoreDispatcher
       def on_multi(*exps)
         [:multi, *exps.map {|exp| compile(exp) }]
@@ -10,12 +11,14 @@ module Temple
       end
     end
 
+    # @api private
     module EscapeDispatcher
       def on_escape(flag, exp)
         [:escape, flag, compile(exp)]
       end
     end
 
+    # @api private
     module ControlFlowDispatcher
       def on_if(condition, *cases)
         [:if, condition, *cases.compact.map {|e| compile(e) }]
@@ -34,6 +37,7 @@ module Temple
       end
     end
 
+    # @api private
     module Dispatcher
       include CoreDispatcher
       include EscapeDispatcher

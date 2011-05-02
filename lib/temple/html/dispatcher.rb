@@ -1,5 +1,6 @@
 module Temple
   module HTML
+    # @api private
     module Dispatcher
       def on_html_attrs(*attrs)
         [:html, :attrs, *attrs.map {|a| compile(a) }]

@@ -1,5 +1,8 @@
 module Temple
   module Filters
+    # Flattens nested multi expressions
+    #
+    # @api public
     class MultiFlattener < Filter
       def on_multi(*exps)
         # If the multi contains a single element, just return the element
