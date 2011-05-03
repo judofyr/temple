@@ -3,8 +3,6 @@ require 'helper'
 class FilterWithDispatcherMixin
   include Temple::Mixins::Dispatcher
 
-  dispatch :second
-
   def on_test(arg)
     [:on_test, arg]
   end

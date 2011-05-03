@@ -3,7 +3,9 @@ module Temple
     # @api private
     module CoreDispatcher
       def on_multi(*exps)
-        [:multi, *exps.map {|exp| compile(exp) }]
+        multi = [:multi]
+        exps.each {|exp| multi << compile(exp) }
+        multi
       end
 
       def on_capture(name, exp)
@@ -38,43 +40,64 @@ module Temple
     end
 
     # @api private
-    module Dispatcher
-      include CoreDispatcher
-      include EscapeDispatcher
-      include ControlFlowDispatcher
-
-      def self.included(base)
-        base.class_eval { extend ClassMethods }
-      end
-
+    module CompiledDispatcher
       def call(exp)
         compile(exp)
       end
 
       def compile(exp)
-        type, *args = exp
-        method = "on_#{type}"
-        if respond_to?(method)
-          send(method, *args)
-        else
-          exp
-        end
+        dispatcher(exp)
       end
 
-      module ClassMethods
-        def dispatch(*bases)
-          bases.each do |base|
-            class_eval %{def on_#{base}(type, *args)
-              method = "on_#{base}_\#{type}"
-              if respond_to?(method)
-                send(method, *args)
-              else
-                [:#{base}, type, *args]
-              end
-            end}
+      private
+
+      def case_statement(types)
+        code = "type, *args = args\ncase type\n"
+        types.each do |name, method|
+          code << "when #{name.to_sym.inspect}\n" <<
+            (Hash === method ? case_statement(method) : "#{method}(*args)\n")
+        end
+        code << "else\nexp\nend\n"
+      end
+
+      def dispatcher(exp)
+        replace_dispatcher(exp)
+      end
+
+      def replace_dispatcher(exp)
+        types = {}
+        self.class.instance_methods.each do |method|
+          next if method.to_s !~ /^on_(.*)$/
+          method_types = $1.split('_')
+          (0...method_types.size).inject(types) do |tmp, i|
+            raise "Invalid temple dispatcher #{method}" unless Hash === tmp
+            if i == method_types.size - 1
+              tmp[method_types[i]] = method
+            else
+              tmp[method_types[i]] ||= {}
+            end
           end
         end
+        self.class.class_eval %{
+          def dispatcher(exp)
+            if self.class == #{self.class}
+              args = exp
+              #{case_statement(types)}
+            else
+              replace_dispatcher(exp)
+            end
+          end
+        }
+        dispatcher(exp)
       end
+    end
+
+    # @api private
+    module Dispatcher
+      include CompiledDispatcher
+      include CoreDispatcher
+      include EscapeDispatcher
+      include ControlFlowDispatcher
     end
   end
 end

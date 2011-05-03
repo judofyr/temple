@@ -14,10 +14,6 @@ describe Temple::Filter do
     Temple::Filter.new(:key => 3).options[:key].should.equal 3
   end
 
-  it 'should have class-level method dispatch' do
-    Temple::Filter.should.respond_to :dispatch
-  end
-
   it 'should implement call' do
     Temple::Filter.new.call([:exp]).should.equal [:exp]
   end
