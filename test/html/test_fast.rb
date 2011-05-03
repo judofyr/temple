@@ -17,7 +17,7 @@ describe Temple::HTML::Fast do
   end
 
   it 'should compile html comment' do
-    @html.call([:html, :comment, 'test']).should.equal [:multi, [:static, "<!--"], "test", [:static, "-->"]]
+    @html.call([:html, :comment, [:static, 'test']]).should.equal [:multi, [:static, "<!--"], [:static, "test"], [:static, "-->"]]
   end
 
   it 'should compile autoclosed html tag' do
