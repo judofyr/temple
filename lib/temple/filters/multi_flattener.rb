@@ -6,7 +6,7 @@ module Temple
     class MultiFlattener < Filter
       def on_multi(*exps)
         # If the multi contains a single element, just return the element
-        return compile(exps.first) if exps.length == 1
+        return compile(exps.first) if exps.size == 1
         result = [:multi]
 
         exps.each do |exp|

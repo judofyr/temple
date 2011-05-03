@@ -27,7 +27,7 @@ module Temple
             when '#'
               code.count("\n").times { result << [:newline] }
             when /=/
-              result << [:escape, indicator.length <= 1 && options[:auto_escape], [:dynamic, code]]
+              result << [:escape, indicator.size <= 1 && options[:auto_escape], [:dynamic, code]]
             else
               result << [:code, code]
             end
