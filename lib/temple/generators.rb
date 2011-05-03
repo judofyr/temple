@@ -86,8 +86,9 @@ module Temple
 
     def compile(exp)
       type, *args = exp
-      if respond_to?("on_#{type}")
-        send("on_#{type}", *args)
+      method = "on_#{type}"
+      if respond_to?(method)
+        send(method, *args)
       else
         raise InvalidExpression, "Generator supports only core expressions - found #{exp.inspect}"
       end
