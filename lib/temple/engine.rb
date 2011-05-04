@@ -20,7 +20,8 @@ module Temple
   #
   #   class SpecialEngine < MyEngine
   #     append MyCodeOptimizer
-  #     replace Temple::Generators::ArrayBuffer, Temple::Generators::RailsOutputBuffer
+  #     before :ArrayBuffer, Temple::Filters::Validator
+  #     replace :ArrayBuffer, Temple::Generators::RailsOutputBuffer
   #   end
   #
   #   engine = MyEngine.new(:strict => "For MyParser")
