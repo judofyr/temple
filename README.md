@@ -18,7 +18,9 @@ Meta
 * Home: <http://github.com/judofyr/temple>
 * Bugs: <http://github.com/judofyr/temple/issues>
 * List: <http://groups.google.com/group/guardians-of-the-temple>
-
+* API documentation:
+    * Latest Gem: <http://rubydoc.info/gems/temple/frames>
+    * GitHub master: <http://rubydoc.info/github/judofyr/temple/master/frames>
 
 Overview
 --------
