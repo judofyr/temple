@@ -91,7 +91,7 @@ So what's an abstraction? An abstraction is when you introduce a new types:
     [:static, "<strong>Use the force</strong>"]
 
     # You use:
-    [:html, :tag, "strong", [:static, "Use the force"]]
+    [:html, :tag, "strong", [:multi], false, [:static, "Use the force"]]
 
 ### Why are abstractions so important?
 

@@ -72,13 +72,70 @@ is the same as:
 Control flow abstraction
 ------------------------
 
+Control flow abstractions can be used to write common ruby control flow constructs.
+These expressions are compiled to [:code, ruby] by Temple::Filters::ControlFlow
+
 ### [:if, condition, if-sexp, optional-else-sexp]
+
+Example:
+
+    [:if,
+     "1+1 == 2",
+     [:static, "Yes"],
+     [:static, "No"]]
+is the same as:
+    if 1+1 == 2
+      _buf << "Yes"
+    else
+      _buf << "No"
+    end
 
 ### [:block, ruby, sexp]
 
+Example:
+
+    [:block,
+     '10.times do',
+     [:static, 'Hello']]
+is the same as:
+    10.times do
+      _buf << 'Hello'
+    end
+
 ### [:case, argument, [condition, sexp], [condition, sexp], ...]
 
+Example:
+
+    [:case,
+     'value',
+     ["1",   "value is 1"],
+     ["2",   "value is 2"],
+     [:else, "don't know"]]
+is the same as:
+    case value
+    when 1
+      _buf << "value is 1"
+    when 2
+      _buf << "value is 2"
+    else
+      _buf << "don't know"
+    end
+
 ### [:cond, [condition, sexp], [condition, sexp], ...]
+
+    [:cond,
+     ["a",   "a is true"],
+     ["b",   "b is true"],
+     [:else, "a and b are false"]]
+is the same as:
+    case
+    when a
+      _buf << "a is true"
+    when b
+      _buf << "b is true"
+    else
+      _buf << "a and b are false"
+    end
 
 Escape abstraction
 ------------------
@@ -92,4 +149,8 @@ HTML abstraction
 
 ### [:html, :comment, sexp]
 
-### [:html, :tag, identifier, attributes, bool, sexp]
+### [:html, :tag, identifier, attributes, closed-bool, sexp]
+
+### [:html, :attrs, attributes]
+
+### [:html, :attr, identifier, sexp]
