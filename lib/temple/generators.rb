@@ -1,9 +1,14 @@
 module Temple
   # Exception raised if invalid temple expression is found
+  #
   # @api public
   class InvalidExpression < RuntimeError
   end
 
+  # Abstract generator base class
+  # Generators should inherit this class and
+  # compile the Core Abstraction to ruby code.
+  #
   # @api public
   class Generator
     include Mixins::Options

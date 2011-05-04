@@ -1,6 +1,7 @@
 module Temple
   module ERB
     # Example ERB parser
+    #
     # @api public
     class Parser
       include Mixins::Options

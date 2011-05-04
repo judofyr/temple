@@ -225,7 +225,7 @@ Installation
 Engines using Temple
 --------------------
 
-* Temple ERB example implementation (Temple::ERB::Engine)
+* Temple ERB example implementation (Temple::ERB::Template)
 * [Slim](http://github.com/stonean/slim)
 * [Sal](http://github.com/stonean/sal.rb)
 * [Temple-Mustache (Example implementation)](https://github.com/minad/temple-mustache)

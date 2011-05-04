@@ -1,4 +1,5 @@
 module Temple
+  # @api public
   module Templates
     autoload :Tilt,  'temple/templates/tilt'
     autoload :Rails, 'temple/templates/rails'

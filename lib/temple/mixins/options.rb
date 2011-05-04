@@ -1,5 +1,6 @@
 module Temple
   module Mixins
+    # @api public
     module DefaultOptions
       def set_default_options(options)
         default_options.update(options)
@@ -11,6 +12,7 @@ module Temple
       end
     end
 
+    # @api public
     module Options
       def self.included(base)
         base.class_eval { extend DefaultOptions }

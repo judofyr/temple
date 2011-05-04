@@ -1,4 +1,5 @@
 module Temple
+  # @api public
   module Utils
     extend self
 
@@ -7,7 +8,6 @@ module Temple
     #
     # @param html [String] The string to escape
     # @return [String] The escaped string
-    # @api public
     def escape_html_safe(html)
       html.html_safe? ? html : escape_html(html)
     end
@@ -17,7 +17,6 @@ module Temple
       #
       # @param html [String] The string to escape
       # @return [String] The escaped string
-      # @api public
       def escape_html(html)
         EscapeUtils.escape_html(html.to_s)
       end
@@ -36,7 +35,6 @@ module Temple
       #
       # @param html [String] The string to escape
       # @return [String] The escaped string
-      # @api public
       def escape_html(html)
         html.to_s.gsub(/[&\"<>\/]/, ESCAPE_HTML)
       end
@@ -45,7 +43,6 @@ module Temple
       #
       # @param html [String] The string to escape
       # @return [String] The escaped string
-      # @api public
       def escape_html(html)
         html.to_s.gsub(/&/n, '&amp;').gsub(/\"/n, '&quot;').gsub(/>/n, '&gt;').gsub(/</n, '&lt;').gsub(/\//, '&#47;')
       end
@@ -55,7 +52,6 @@ module Temple
     #
     # @param prefix [String] Variable name prefix
     # @return [String] Variable name
-    # @api public
     def unique_name(prefix = nil)
       @unique_name ||= 0
       prefix ||= (@unique_prefix ||= self.class.name.gsub('::', '_').downcase)
@@ -66,7 +62,6 @@ module Temple
     #
     # @param exp [Array] Temple expression
     # @return true if expression is empty
-    # @api public
     def empty_exp?(exp)
       case exp[0]
       when :multi
