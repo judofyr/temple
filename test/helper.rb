@@ -14,7 +14,7 @@ module TestHelper
   end
 
   def erb(src, options = {})
-    Temple::Templates::Tilt(Temple::ERB::Engine).new(options) { src }.render
+    Temple::ERB::Template.new(options) { src }.render
   end
 end
 

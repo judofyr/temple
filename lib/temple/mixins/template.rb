@@ -1,5 +1,6 @@
 module Temple
   module Mixins
+    # @api private
     module Template
       include DefaultOptions
 

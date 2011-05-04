@@ -25,6 +25,7 @@ module Temple
     autoload :Engine,          'temple/erb/engine'
     autoload :Parser,          'temple/erb/parser'
     autoload :Trimming,        'temple/erb/trimming'
+    autoload :Template,        'temple/erb/template'
   end
 
   module Filters
