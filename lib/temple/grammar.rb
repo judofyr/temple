@@ -5,21 +5,21 @@ module Temple
     extend Mixins::GrammarDSL
 
     Expression <<
-      # Core expressions
+      # Core abstraction
       [:multi, 'Expression*']                  |
       [:static, String]                        |
       [:dynamic, String]                       |
       [:code, String]                          |
       [:capture, String, Expression]           |
       [:newline]                               |
-      # Control flow expressions
+      # Control flow abstraction
       [:if, String, Expression, 'Expression?'] |
       [:block, String, Expression]             |
       [:case, String, 'Case*']                 |
       [:cond, 'Case*']                         |
-      # Escape expression
+      # Escape abstraction
       [:escape, Bool, Expression]              |
-      # HTML expressions
+      # HTML abstraction
       [:html, :doctype, String]                |
       [:html, :comment, Expression]            |
       [:html, :tag, HTMLIdentifier, HTMLAttrs, 'Expression?']

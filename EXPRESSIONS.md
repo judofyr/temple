@@ -1,13 +1,18 @@
 Temple expression documentation
 ===============================
 
-See the [Expression grammar](https://github.com/judofyr/temple/blob/master/lib/temple/grammar.rb) for a formal specification.
+Temple uses S-expressions to represent the parsed template code. The S-expressions
+are passed from filter to filter until the generator. The generator transforms
+the S-expression to a ruby code string. See the {file:README.md README} for an introduction.
+
+In this document we documented all the expressions which are used by Temple. There is also
+a formal grammar which can validate expressions.
 
 The Core Abstraction
 --------------------
 
 The core abstraction is what every template evetually should be compiled
-to. Currently it consists of four essential and two convenient types:
+to. Currently it consists of six types:
 multi, static, dynamic, code, newline and capture.
 
 When compiling, there's two different strings we'll have to think about.
@@ -49,10 +54,18 @@ appended to the result.
 The Ruby code must be a complete expression in the sense that you can pass
 it to eval() and it would not raise SyntaxError.
 
+Example:
+
+     [:dynamic, 'Math::PI * r**2']
+
 ### [:code, ruby]
 
 Code indicates that the given Ruby code should be evaluated, and may
 change the control flow. Any \n causes a newline in the generated code.
+
+Example:
+
+     [:code, 'area = Math::PI * r**2']
 
 ### [:newline]
 
@@ -179,14 +192,16 @@ generates
 
 Supported doctypes:
 
-* 1.1:          <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
-* 5:            <!DOCTYPE html>
-* html:         <!DOCTYPE html>
-* strict:       <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-* frameset:     <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Frameset//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd">
-* mobile:       <!DOCTYPE html PUBLIC "-//WAPFORUM//DTD XHTML Mobile 1.2//EN" "http://www.openmobilealliance.org/tech/DTD/xhtml-mobile12.dtd">
-* basic:        <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML Basic 1.1//EN" "http://www.w3.org/TR/xhtml-basic/xhtml-basic11.dtd">
-* transitional: <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<table>
+<tr><td><b>Name</b></td><td><b>Generated doctype</b></td></tr>
+<tr><td>1.1</td><td>&lt;!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd"&gt;</td></tr>
+<tr><td>html, 5</td><td>&lt;!DOCTYPE html></td></tr>
+<tr><td>strict</td><td>&lt;!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"&gt;</td></tr>
+<tr><td>frameset</td><td>&lt;!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Frameset//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd"&gt;</td></tr>
+<tr><td>mobile</td><td>&lt;!DOCTYPE html PUBLIC "-//WAPFORUM//DTD XHTML Mobile 1.2//EN" "http://www.openmobilealliance.org/tech/DTD/xhtml-mobile12.dtd"&gt;</td></tr>
+<tr><td>basic</td><td>&lt;!DOCTYPE html PUBLIC "-//W3C//DTD XHTML Basic 1.1//EN" "http://www.w3.org/TR/xhtml-basic/xhtml-basic11.dtd"&gt;</td></tr>
+<tr><td>transitional</td><td>&lt;!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"&gt;</td></tr>
+</table>
 
 ### [:html, :comment, sexp]
 
@@ -215,3 +230,21 @@ List of html attributes [:html, :attr, identifier, sexp]
 ### [:html, :attr, identifier, sexp]
 
 HTML attribute abstraction. Identifier can be a String or a Symbol.
+
+Formal grammar
+--------------
+
+Validate expressions with Temple::Grammar.match? and Temple::Grammar.validate!
+
+    Temple::Grammar.match? [:multi, [:static, 'Valid Temple Expression']]
+    Temple::Grammar.validate! [:multi, 'Invalid Temple Expression']
+
+The formal grammar is given in a Ruby DSL similar to EBNF and should be easy to understand if you know EBNF. Repeated tokens
+are given by appending ?, * or + as in regular expressions.
+
+* ? means zero or one occurence
+* \* means zero or more occurences
+* \+ means one or more occurences
+
+<!-- Find a better way to include the grammar -->
+<script src="http://gist-it.appspot.com/github/judofyr/temple/raw/master/lib/temple/grammar.rb"></script>

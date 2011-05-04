@@ -12,12 +12,12 @@ we'll try to do our best. In fact, it doesn't have to be related to Temple at
 all. As long as it has something to do with template languages, we're
 interested: <http://groups.google.com/group/guardians-of-the-temple>.
 
-Meta
-----
+Links
+-----
 
-* Home: <http://github.com/judofyr/temple>
-* Bugs: <http://github.com/judofyr/temple/issues>
-* List: <http://groups.google.com/group/guardians-of-the-temple>
+* Source: <http://github.com/judofyr/temple>
+* Bugs:   <http://github.com/judofyr/temple/issues>
+* List:   <http://groups.google.com/group/guardians-of-the-temple>
 * API documentation:
     * Latest Gem: <http://rubydoc.info/gems/temple/frames>
     * GitHub master: <http://rubydoc.info/github/judofyr/temple/master/frames>
@@ -113,6 +113,7 @@ continue to use the HTML abstraction. Maybe you even want to write your
 compiler in another language? Sexps are easily serialized and if you don't
 mind working across processes, it's not a problem at all.
 
+All abstractions used by Temple are documented in {file:EXPRESSIONS.md EXPRESSIONS}.
 
 Compilers
 ---------
@@ -216,9 +217,11 @@ Rails.
     Tilt.new('example.ext').render     # => Render a file
     MyTemplate.new { "String" }.render # => Render a string
 
-
 Installation
 ------------
+
+You need Ruby 1.8.7 or Ruby 1.9.2 to work with Temple. Temple is published as a Ruby Gem which can be installed
+as following:
 
     $ gem install temple
 
