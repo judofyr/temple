@@ -1,5 +1,12 @@
 module Temple
-  # Temple expression grammar
+  # Temple expression grammar which can be used to validate Temple expressions.
+  #
+  # Example:
+  #   Temple::Grammar.match? [:static, 'Valid Temple Expression']
+  #   Temple::Grammar.validate! [:multi, 'Invalid Temple Expression']
+  #
+  # See {file:EXPRESSIONS.md Expression documentation}.
+  #
   # @api public
   module Grammar
     extend Mixins::GrammarDSL
