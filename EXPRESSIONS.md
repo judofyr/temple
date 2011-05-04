@@ -1,3 +1,8 @@
+Temple expression documentation
+===============================
+
+See the [Expression grammar](https://github.com/judofyr/temple/blob/master/lib/temple/grammar.rb) for a formal specification.
+
 The Core Abstraction
 --------------------
 
