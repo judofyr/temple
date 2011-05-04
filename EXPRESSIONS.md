@@ -148,16 +148,17 @@ The boolean flag switches escaping on or off for the content sexp. Dynamic and s
 expressions are manipulated.
 
 Example:
-   [:escape, true,
+
+    [:escape, true,
+     [:multi,
+      [:dynamic, "code"],
+      [:static, "<"],
+      [:escape, false, [:static, ">"]]]]
+is transformed to
     [:multi,
-     [:dynamic "code"],
-     [:static, "<"],
-     [:escape, false, [:static, ">"]]]]
-is compiled to
-   [:multi,
-    [:dynamic, 'escape_html(code)'],
-    [:static, '&lt;'],
-    [:static, '>']]
+     [:dynamic, 'escape_html(code)'],
+     [:static, '&lt;'],
+     [:static, '>']]
 
 HTML abstraction
 ----------------
