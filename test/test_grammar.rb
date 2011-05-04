@@ -24,8 +24,10 @@ describe Temple::Grammar do
     Temple::Grammar.should.match [:if, 'Condition', [:multi]]
     Temple::Grammar.should.match [:if, 'Condition', [:multi], [:multi]]
     Temple::Grammar.should.match [:block, 'Loop', [:multi]]
-    Temple::Grammar.should.match [:case, 'Arg', ['Cond1', [:multi]], ['Cond1', [:multi]]]
-    Temple::Grammar.should.match [:cond, ['Cond1', [:multi]], ['Cond2', [:multi]]]
+    Temple::Grammar.should.match [:case, 'Arg', ['Cond1', [:multi]], ['Cond1', [:multi]], [:else, [:multi]]]
+    Temple::Grammar.should.not.match [:case, 'Arg', [:sym, [:multi]]]
+    Temple::Grammar.should.match [:cond, ['Cond1', [:multi]], ['Cond2', [:multi]], [:else, [:multi]]]
+    Temple::Grammar.should.not.match [:cond, [:sym, [:multi]]]
   end
 
   it 'should match escape expression' do
