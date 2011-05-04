@@ -23,38 +23,26 @@ describe Temple::HTML::Fast do
   it 'should compile autoclosed html tag' do
     @html.call([:html, :tag,
       'img', [:attrs],
-      false, [:multi]
+      [:multi, [:newline]]
     ]).should.equal [:multi,
                      [:static, "<img"],
                      [:attrs],
                      [:static, " />"],
-                     [:multi]]
+                     [:multi, [:newline]]]
   end
 
   it 'should compile explicitly closed html tag' do
     @html.call([:html, :tag,
-      'closed', [:attrs],
-       true, [:multi]
+      'closed', [:attrs]
     ]).should.equal [:multi,
                      [:static, "<closed"],
                      [:attrs],
-                     [:static, " />"],
-                     [:multi]]
-  end
-
-  it 'should raise error on closed tag with content' do
-    lambda {
-      @html.call([:html, :tag,
-                     'img', [:attrs],
-                     false, [:content]
-                    ])
-    }.should.raise(RuntimeError).message.should.equal 'Closed tag img has content'
+                     [:static, " />"]]
   end
 
   it 'should compile html with content' do
     @html.call([:html, :tag,
-      'div', [:attrs],
-      false, [:content]
+      'div', [:attrs], [:content]
     ]).should.equal [:multi,
                      [:static, "<div"],
                      [:attrs],
@@ -69,7 +57,7 @@ describe Temple::HTML::Fast do
       [:html, :attrs,
        [:html, :attr, 'id', [:static, 'test']],
        [:html, :attr, 'class', [:dynamic, 'block']]],
-       false, [:content]
+       [:content]
     ]).should.equal [:multi,
                      [:static,
                       "<div"],
@@ -93,8 +81,9 @@ describe Temple::HTML::Fast do
 
   it 'should compile html with merged ids' do
     @html.call([:html, :tag,
-      'div', [:html, :attrs, [:html, :attr, 'id', [:static, 'a']], [:html, :attr, 'id', [:dynamic, 'b']]],
-      false, [:content]
+      'div',
+      [:html, :attrs, [:html, :attr, 'id', [:static, 'a']], [:html, :attr, 'id', [:dynamic, 'b']]],
+      [:content]
     ]).should.equal [:multi,
                      [:static, "<div"],
                      [:multi,
@@ -116,8 +105,9 @@ describe Temple::HTML::Fast do
 
   it 'should compile html with merged classes' do
     @html.call([:html, :tag,
-      'div', [:html, :attrs, [:html, :attr, 'class', [:static, 'a']], [:html, :attr, 'class', [:dynamic, 'b']]],
-      false, [:content]
+      'div',
+      [:html, :attrs, [:html, :attr, 'class', [:static, 'a']], [:html, :attr, 'class', [:dynamic, 'b']]],
+      [:content]
     ]).should.equal [:multi,
                      [:static, "<div"],
                      [:multi,

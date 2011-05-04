@@ -6,24 +6,23 @@ module Temple
 
     Expression <<
       # Core expressions
-      [:multi, 'Expression*']                                   |
-      [:static, String]                                         |
-      [:dynamic, String]                                        |
-      [:code, String]                                           |
-      [:capture, String, Expression]                            |
-      [:newline]                                                |
+      [:multi, 'Expression*']                  |
+      [:static, String]                        |
+      [:dynamic, String]                       |
+      [:code, String]                          |
+      [:capture, String, Expression]           |
+      [:newline]                               |
       # Control flow expressions
-      [:if, String, Expression, 'Expression?']                  |
-      [:block, String, Expression]                              |
-      [:case, String, 'Case*']                                  |
-      [:cond, 'Case*']                                          |
+      [:if, String, Expression, 'Expression?'] |
+      [:block, String, Expression]             |
+      [:case, String, 'Case*']                 |
+      [:cond, 'Case*']                         |
       # Escape expression
-      [:escape, Bool, Expression]                               |
+      [:escape, Bool, Expression]              |
       # HTML expressions
-      [:html, :doctype, String]                                 |
-      [:html, :comment, Expression]                             |
-      [:html, :tag, HTMLIdentifier, HTMLAttrs, true,  EmptyExp] |
-      [:html, :tag, HTMLIdentifier, HTMLAttrs, false, Expression]
+      [:html, :doctype, String]                |
+      [:html, :comment, Expression]            |
+      [:html, :tag, HTMLIdentifier, HTMLAttrs, 'Expression?']
 
     EmptyExp <<
       [:newline] | [:multi, 'EmptyExp*']

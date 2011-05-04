@@ -38,10 +38,11 @@ describe Temple::Grammar do
   it 'should match html expressions' do
     Temple::Grammar.should.match [:html, :doctype, 'Doctype']
     Temple::Grammar.should.match [:html, :comment, [:multi]]
-    Temple::Grammar.should.match [:html, :tag, 'Tag', [:multi], true, [:newline]]
-    Temple::Grammar.should.match [:html, :tag, 'Tag', [:multi], false, [:static, 'Text']]
+    Temple::Grammar.should.match [:html, :tag, 'Tag', [:multi]]
+    Temple::Grammar.should.match [:html, :tag, 'Tag', [:multi], [:multi]]
+    Temple::Grammar.should.match [:html, :tag, 'Tag', [:multi], [:static, 'Text']]
     Temple::Grammar.should.match [:html, :tag, 'Tag', [:html, :attrs, [:html, :attr, 'id',
-                                  [:static, 'val']]], false, [:static, 'Text']]
+                                  [:static, 'val']]], [:static, 'Text']]
   end
 
   it 'should not match lone html attributes' do

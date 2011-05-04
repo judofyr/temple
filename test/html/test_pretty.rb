@@ -6,8 +6,8 @@ describe Temple::HTML::Pretty do
   end
 
   it 'should indent nested tags' do
-    @html.call([:html, :tag, 'div', [:multi], false,
-      [:html, :tag, 'p', [:multi], false, [:multi, [:static, 'text'], [:dynamic, 'code']]]
+    @html.call([:html, :tag, 'div', [:multi],
+      [:html, :tag, 'p', [:multi], [:multi, [:static, 'text'], [:dynamic, 'code']]]
     ]).should.equal [:multi,
                      [:code, "_temple_html_pretty1 = /<code|<pre|<textarea/"],
                      [:multi,
@@ -30,8 +30,8 @@ describe Temple::HTML::Pretty do
 
 
   it 'should not indent preformatted tags' do
-    @html.call([:html, :tag, 'pre', [:multi], false,
-      [:html, :tag, 'p', [:multi], false, [:static, 'text']]
+    @html.call([:html, :tag, 'pre', [:multi],
+      [:html, :tag, 'p', [:multi], [:static, 'text']]
     ]).should.equal [:multi,
                      [:code, "_temple_html_pretty1 = /<code|<pre|<textarea/"],
                      [:multi,

@@ -72,12 +72,12 @@ module Temple
           [:static, '-->']]
       end
 
-      def on_html_tag(name, attrs, closed, content)
+      def on_html_tag(name, attrs, content = nil)
         name = name.to_s
-        closed ||= options[:autoclose].include?(name)
-        raise(InvalidExpression, "Closed tag #{name} has content") if closed && !empty_exp?(content)
+        closed = !content || (empty_exp?(content) && options[:autoclose].include?(name))
         result = [:multi, [:static, "<#{name}"], compile(attrs)]
-        result << [:static, (closed && xhtml? ? ' /' : '') + '>'] << compile(content)
+        result << [:static, (closed && xhtml? ? ' /' : '') + '>']
+        result << compile(content) if content
         result << [:static, "</#{name}>"] if !closed
         result
       end

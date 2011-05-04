@@ -53,21 +53,22 @@ module Temple
         [:multi, [:static, indent], super]
       end
 
-      def on_html_tag(name, attrs, closed, content)
+      def on_html_tag(name, attrs, content = nil)
         return super unless @pretty
 
         name = name.to_s
-        closed ||= options[:autoclose].include?(name)
-        raise(InvalidExpression, "Closed tag #{name} has content") if closed && !empty_exp?(content)
+        closed = !content || (empty_exp?(content) && options[:autoclose].include?(name))
 
         @pretty = false
         result = [:multi, [:static, "#{tag_indent(name)}<#{name}"], compile(attrs)]
         result << [:static, (closed && xhtml? ? ' /' : '') + '>']
 
         @pretty = !options[:pre_tags].include?(name)
-        @indent += 1
-        result << compile(content)
-        @indent -= 1
+        if content
+          @indent += 1
+          result << compile(content)
+          @indent -= 1
+        end
 
         result << [:static, "#{tag_indent(name)}</#{name}>"] if !closed
         @pretty = true

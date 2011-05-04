@@ -14,8 +14,9 @@ module Temple
         [:html, :comment, compile(content)]
       end
 
-      def on_html_tag(name, attrs, closed, content)
-        [:html, :tag, name, compile(attrs), closed, compile(content)]
+      def on_html_tag(name, attrs, content = nil)
+        result = [:html, :tag, name, compile(attrs)]
+        content ? (result << compile(content)) : result
       end
     end
   end

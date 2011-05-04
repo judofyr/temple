@@ -73,7 +73,7 @@ Some examples:
       [:static, "Hello "],
       [:dynamic, "@world"]]
 
-    [:html, :tag, "em", "Hey hey"]
+    [:html, :tag, "em", [:html, :attrs], [:static, "Hey hey"]]
 
 *NOTE:* SexpProcessor, a library written by Ryan Davis, includes a `Sexp`
 class. While you can use this class (since it's a subclass of Array), it's not
@@ -93,7 +93,7 @@ So what's an abstraction? An abstraction is when you introduce a new types:
     [:static, "<strong>Use the force</strong>"]
 
     # You use:
-    [:html, :tag, "strong", [:multi], false, [:static, "Use the force"]]
+    [:html, :tag, "strong", [:html, :attrs], [:static, "Use the force"]]
 
 ### Why are abstractions so important?
 

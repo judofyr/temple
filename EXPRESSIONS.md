@@ -195,14 +195,18 @@ Example:
 generates:
     <!--comment-->
 
-### [:html, :tag, identifier, attributes, closed-bool, sexp]
+### [:html, :tag, identifier, attributes, optional-sexp]
 
-HTML tag abstraction. Identifier can be a String or a Symbol.
+HTML tag abstraction. Identifier can be a String or a Symbol. If the optional content Sexp is omitted
+the tag is closed (e.g. <br/> <img/>). The tag is also closed if the content Sexp is empty
+(consists only of :multi and :newline expressions) and the tag is registered as auto-closing.
 
 Example:
-    [:html, :tag, 'img', [:html, :attrs, [:html, :attr, 'src', 'image.png']], true, [:multi]]
+    [:html, :tag, 'img', [:html, :attrs, [:html, :attr, 'src', 'image.png']]]
+    [:html, :tag, 'p', [:multi], [:static, 'Content']]
 generates:
     <img src="image.png"/>
+    <p>Content</p>
 
 ### [:html, :attrs, attributes]
 
