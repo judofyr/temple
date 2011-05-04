@@ -140,17 +140,68 @@ is the same as:
 Escape abstraction
 ------------------
 
+The Escape abstraction is processed by Temple::Filters::Escapable.
+
 ### [:escape, bool, sexp]
+
+The boolean flag switches escaping on or off for the content sexp. Dynamic and static
+expressions are manipulated.
+
+Example:
+   [:escape, true,
+    [:multi,
+     [:dynamic "code"],
+     [:static, "<"],
+     [:escape, false, [:static, ">"]]]]
+is compiled to
+   [:multi,
+    [:dynamic, 'escape_html(code)'],
+    [:static, '&lt;'],
+    [:static, '>']]
 
 HTML abstraction
 ----------------
 
+The HTML abstraction is processed by the html filters (Temple::HTML::Fast and Temple::HTML::Pretty).
+
 ### [:html, :doctype, string]
+
+Example:
+    [:html, :doctype, '5']
+generates
+    <!DOCTYPE html5>
+
+Supported doctypes:
+
+* 1.1:          <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+* 5:            <!DOCTYPE html>
+* html:         <!DOCTYPE html>
+* strict:       <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+* frameset:     <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Frameset//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd">
+* mobile:       <!DOCTYPE html PUBLIC "-//WAPFORUM//DTD XHTML Mobile 1.2//EN" "http://www.openmobilealliance.org/tech/DTD/xhtml-mobile12.dtd">
+* basic:        <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML Basic 1.1//EN" "http://www.w3.org/TR/xhtml-basic/xhtml-basic11.dtd">
+* transitional: <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 ### [:html, :comment, sexp]
 
+Example:
+    [:html, :comment, [:static, 'comment']]
+generates:
+    <!--comment-->
+
 ### [:html, :tag, identifier, attributes, closed-bool, sexp]
+
+HTML tag abstraction. Identifier can be a String or a Symbol.
+
+Example:
+    [:html, :tag, 'img', [:html, :attrs, [:html, :attr, 'src', 'image.png']], true, [:multi]]
+generates:
+    <img src="image.png"/>
 
 ### [:html, :attrs, attributes]
 
+List of html attributes [:html, :attr, identifier, sexp]
+
 ### [:html, :attr, identifier, sexp]
+
+HTML attribute abstraction. Identifier can be a String or a Symbol.
