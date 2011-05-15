@@ -1,5 +1,7 @@
 master
 
+0.3.0
+
   * Compiled expression dispatching
   * Method temple_dispatch is obsolete
   * EscapeHTML renamed to Escapable
