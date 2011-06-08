@@ -22,7 +22,7 @@ describe Temple::HTML::Pretty do
                         [:static, "text"],
                         [:multi,
                          [:code, "_temple_html_pretty2 = (code).to_s"],
-                         [:code, '_temple_html_pretty2.gsub!("\n", "\n    ") if _temple_html_pretty1 !~ _temple_html_pretty2'],
+                         [:code, '_temple_html_pretty2 = _temple_html_pretty2.gsub("\n", "\n    ") if _temple_html_pretty1 !~ _temple_html_pretty2'],
                          [:dynamic, "_temple_html_pretty2"]]],
                        [:static, "</p>"]],
                       [:static, "\n</div>"]]]

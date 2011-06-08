@@ -23,8 +23,13 @@ module Temple
 
       def on_static(content)
         if @pretty
-          content.gsub!("\n", indent) if @pre_tags !~ content
-          @last = content.sub!(/\r?\n\s*$/, ' ') ? nil : :noindent
+          content = content.gsub("\n", indent) if @pre_tags !~ content
+          if content =~ /\r?\n\s*$/
+            content = $` + ' '
+            @last = nil
+          else
+            @last = :noindent
+          end
         end
         [:static, content]
       end
@@ -35,7 +40,7 @@ module Temple
           tmp = unique_name
           [:multi,
            [:code, "#{tmp} = (#{code}).to_s"],
-           [:code, "#{tmp}.gsub!(\"\\n\", #{indent.inspect}) if #{@pre_tags_name} !~ #{tmp}"],
+           [:code, "#{tmp} = #{tmp}.gsub(\"\\n\", #{indent.inspect}) if #{@pre_tags_name} !~ #{tmp}"],
            [:dynamic, tmp]]
         else
           [:dynamic, code]
