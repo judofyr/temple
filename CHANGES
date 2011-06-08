@@ -1,5 +1,8 @@
 master
 
+  * Don't modify strings destructively with gsub! in HTML::Pretty.
+    This doesn't work with Rails safe buffers in version >= 3.0.8.
+
 0.3.0
 
   * Compiled expression dispatching
