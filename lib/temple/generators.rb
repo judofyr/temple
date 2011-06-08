@@ -118,7 +118,7 @@ module Temple
     #
     # @api public
     class RailsOutputBuffer < StringBuffer
-      set_default_options :buffer_class => 'ActionView::OutputBuffer',
+      set_default_options :buffer_class => 'ActiveSupport::SafeBuffer',
                           :buffer => '@output_buffer',
                           :capture_generator => RailsOutputBuffer
 
