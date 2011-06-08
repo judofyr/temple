@@ -23,13 +23,8 @@ module Temple
 
       def on_static(content)
         if @pretty
-          content = content.gsub("\n", indent) if @pre_tags !~ content
-          if content =~ /\r?\n\s*$/
-            content = $` + ' '
-            @last = nil
-          else
-            @last = :noindent
-          end
+          content.gsub!("\n", indent) if @pre_tags !~ content
+          @last = content.sub!(/\r?\n\s*$/, ' ') ? nil : :noindent
         end
         [:static, content]
       end
