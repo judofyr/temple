@@ -35,7 +35,7 @@ module Temple
           tmp = unique_name
           [:multi,
            [:code, "#{tmp} = (#{code}).to_s"],
-           [:code, "#{tmp} = #{tmp}.gsub(\"\\n\", #{indent.inspect}) if #{@pre_tags_name} !~ #{tmp}"],
+           [:code, "#{tmp} = #{tmp}.to_str.gsub(\"\\n\", #{indent.inspect}) if #{@pre_tags_name} !~ #{tmp}"],
            [:dynamic, tmp]]
         else
           [:dynamic, code]
