@@ -33,9 +33,14 @@ module Temple
         if @pretty
           @last = :noindent
           tmp = unique_name
+          gsub_code = if ''.respond_to?(:html_safe?)
+                        "#{tmp} = #{tmp}.html_safe? ? #{tmp}.to_str.gsub(\"\\n\", #{indent.inspect}).html_safe : #{tmp}.to_str.gsub(\"\\n\", #{indent.inspect})"
+                      else
+                        "#{tmp}.gsub!(\"\\n\", #{indent.inspect})"
+                      end
           [:multi,
            [:code, "#{tmp} = (#{code}).to_s"],
-           [:code, "#{tmp} = #{tmp}.to_str.gsub(\"\\n\", #{indent.inspect}) if #{@pre_tags_name} !~ #{tmp}"],
+           [:code, "if #{@pre_tags_name} !~ #{tmp}; #{gsub_code}; end"],
            [:dynamic, tmp]]
         else
           [:dynamic, code]
