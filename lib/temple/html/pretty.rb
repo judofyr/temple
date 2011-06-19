@@ -34,7 +34,7 @@ module Temple
           @last = :noindent
           tmp = unique_name
           gsub_code = if ''.respond_to?(:html_safe?)
-                        "#{tmp} = #{tmp}.html_safe? ? #{tmp}.to_str.gsub(\"\\n\", #{indent.inspect}).html_safe : #{tmp}.to_str.gsub(\"\\n\", #{indent.inspect})"
+                        "#{tmp} = #{tmp}.html_safe? ? #{tmp}.gsub(\"\\n\", #{indent.inspect}).html_safe : #{tmp}.gsub(\"\\n\", #{indent.inspect})"
                       else
                         "#{tmp}.gsub!(\"\\n\", #{indent.inspect})"
                       end
