@@ -4,9 +4,11 @@ module Temple
     class Pretty < Fast
       set_default_options :indent => '  ',
                           :pretty => true,
-                          :indent_tags => %w(base body dd div dl dt fieldset form head h1 h2 h3
-                                             h4 h5 h6 hr html img input li link meta ol p script
-                                             style table tbody td tfoot th thead title tr ul).freeze,
+                          :indent_tags => %w(article aside audio base body datalist dd div dl dt
+                                             fieldset figure footer form head h1 h2 h3 h4 h5 h6
+                                             header hgroup hr html img input li link meta nav ol p
+                                             rp rt ruby section script style table tbody td tfoot
+                                             th thead title tr ul video).freeze,
                           :pre_tags => %w(code pre textarea).freeze
 
       def initialize(opts = {})
