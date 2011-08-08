@@ -10,7 +10,7 @@ module Temple
         extend Mixins::Template
 
         def compile(template)
-          self.class.build_engine.call(template.source)
+          self.class.build_engine(:file => template.identifier).call(template.source)
         end
 
         def self.register_as(name)
@@ -22,7 +22,7 @@ module Temple
         extend Mixins::Template
 
         def self.call(template)
-          build_engine.call(template.source)
+          build_engine(:file => template.identifier).call(template.source)
         end
 
         def self.register_as(name)
