@@ -1,3 +1,7 @@
+unless Object.const_defined?(:Rails)
+  raise "Rails is not loaded - Temple::Templates::Rails cannot be used"
+end
+
 if ::Rails::VERSION::MAJOR < 3
   raise "Temple supports only Rails 3.x and greater, your Rails version is #{::Rails::VERSION::STRING}"
 end
@@ -10,7 +14,8 @@ module Temple
         extend Mixins::Template
 
         def compile(template)
-          self.class.build_engine(:file => template.identifier).call(template.source)
+          self.class.build_engine(:streaming => false, # Overwrite option: No streaming support in Rails < 3.1
+                                  :file => template.identifier).call(template.source)
         end
 
         def self.register_as(name)
@@ -21,12 +26,16 @@ module Temple
       class Rails
         extend Mixins::Template
 
-        def self.call(template)
-          build_engine(:file => template.identifier).call(template.source)
+        def call(template)
+          self.class.build_engine(:file => template.identifier).call(template.source)
+        end
+
+        def supports_streaming?
+          self.class.default_options[:streaming]
         end
 
         def self.register_as(name)
-          ActionView::Template.register_template_handler name.to_sym, self
+          ActionView::Template.register_template_handler name.to_sym, new
         end
       end
     end

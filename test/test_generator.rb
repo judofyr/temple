@@ -105,11 +105,11 @@ end
 describe Temple::Generators::RailsOutputBuffer do
   it 'should compile simple expressions' do
     gen = Temple::Generators::RailsOutputBuffer.new
-    gen.call([:static,  'test']).should.equal '@output_buffer = ActiveSupport::SafeBuffer.new; ' +
+    gen.call([:static,  'test']).should.equal '@output_buffer = output_buffer || ActiveSupport::SafeBuffer.new; ' +
       '@output_buffer.safe_concat(("test")); @output_buffer'
-    gen.call([:dynamic, 'test']).should.equal '@output_buffer = ActiveSupport::SafeBuffer.new; ' +
+    gen.call([:dynamic, 'test']).should.equal '@output_buffer = output_buffer || ActiveSupport::SafeBuffer.new; ' +
       '@output_buffer.safe_concat(((test).to_s)); @output_buffer'
-    gen.call([:code,    'test']).should.equal '@output_buffer = ActiveSupport::SafeBuffer.new; ' +
+    gen.call([:code,    'test']).should.equal '@output_buffer = output_buffer || ActiveSupport::SafeBuffer.new; ' +
       'test; @output_buffer'
   end
 end

@@ -1,5 +1,9 @@
 master
 
+  * Support for rails 3.1 streaming
+
+0.3.1, 0.3.2
+
   * Don't modify strings destructively with gsub! in HTML::Pretty.
     This doesn't work with Rails safe buffers in version >= 3.0.8.
 

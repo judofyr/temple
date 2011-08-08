@@ -6,9 +6,9 @@ module Temple
 
     def self.method_missing(name, engine, options = {})
       template = Class.new(const_get(name))
-      template.engine(engine)
-      template.register_as(options[:register_as]) if options[:register_as]
+      template.default_options[:engine] = engine
       template.default_options.update(options)
+      template.register_as(options[:register_as]) if options[:register_as]
       template
     end
   end

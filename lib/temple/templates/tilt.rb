@@ -11,7 +11,8 @@ module Temple
       #
       # @return [void]
       def prepare
-        @src = self.class.build_engine({ :file => eval_file }, options).call(data)
+        @src = self.class.build_engine({ :streaming => false, # Overwrite option: No streaming support in Tilt
+                                         :file => eval_file }, options).call(data)
       end
 
       # A string containing the (Ruby) source code for the template.

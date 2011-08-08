@@ -118,12 +118,13 @@ module Temple
     #
     # @api public
     class RailsOutputBuffer < StringBuffer
-      set_default_options :buffer_class => 'ActiveSupport::SafeBuffer',
-                          :buffer => '@output_buffer',
+      set_default_options :buffer => '@output_buffer',
+                           # output_buffer is needed for Rails 3.1 Streaming support
+                          :buffer_initializer => 'output_buffer || ActiveSupport::SafeBuffer.new',
                           :capture_generator => RailsOutputBuffer
 
       def preamble
-        "#{buffer} = #{options[:buffer_class]}.new"
+        "#{buffer} = #{options[:buffer_initializer]}"
       end
 
       def concat(str)
