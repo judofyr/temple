@@ -38,7 +38,7 @@ module Temple
     end
 
     def on_capture(name, exp)
-      options[:capture_generator].new(:buffer => name).call(exp)
+      options[:capture_generator].new(:buffer => name, :capture => true).call(exp)
     end
 
     def on_static(text)
@@ -118,13 +118,17 @@ module Temple
     #
     # @api public
     class RailsOutputBuffer < StringBuffer
-      set_default_options :buffer => '@output_buffer',
+      set_default_options :buffer_class => 'ActiveSupport::SafeBuffer',
+                          :buffer => '@output_buffer',
                            # output_buffer is needed for Rails 3.1 Streaming support
-                          :buffer_initializer => 'output_buffer || ActiveSupport::SafeBuffer.new',
                           :capture_generator => RailsOutputBuffer
 
       def preamble
-        "#{buffer} = #{options[:buffer_initializer]}"
+        if options[:streaming] && !options[:capture]
+          "#{buffer} = output_buffer || #{options[:buffer_class]}.new"
+        else
+          "#{buffer} = #{options[:buffer_class]}.new"
+        end
       end
 
       def concat(str)
