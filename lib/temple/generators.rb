@@ -38,7 +38,7 @@ module Temple
     end
 
     def on_capture(name, exp)
-      options[:capture_generator].new(:buffer => name, :capture => true).call(exp)
+      options[:capture_generator].new(:buffer => name).call(exp)
     end
 
     def on_static(text)
@@ -124,7 +124,7 @@ module Temple
                           :capture_generator => RailsOutputBuffer
 
       def preamble
-        if options[:streaming] && !options[:capture]
+        if options[:streaming] && options[:buffer] == '@output_buffer'
           "#{buffer} = output_buffer || #{options[:buffer_class]}.new"
         else
           "#{buffer} = #{options[:buffer_class]}.new"
