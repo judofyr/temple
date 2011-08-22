@@ -13,7 +13,9 @@ module Temple
         'transitional' => '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">',
       }.freeze
 
-      HTML4_DOCTYPES = {
+      HTML_DOCTYPES = {
+        '5'            => '<!DOCTYPE html>',
+        'html'         => '<!DOCTYPE html>',
         'strict'       => '<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">',
         'frameset'     => '<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN" "http://www.w3.org/TR/html4/frameset.dtd">',
         'transitional' => '<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">',
@@ -26,9 +28,7 @@ module Temple
 
       def initialize(opts = {})
         super
-        # html5 is now called html only
-        options[:format] = :html5 if options[:format] == :html
-        unless [:xhtml, :html4, :html5].include?(options[:format])
+        unless [:xhtml, :html].include?(options[:format])
           raise "Invalid format #{options[:format].inspect}"
         end
       end
@@ -38,7 +38,7 @@ module Temple
       end
 
       def html?
-        options[:format] == :html5 || options[:format] == :html4
+        options[:format] == :html
       end
 
       def on_html_doctype(type)
@@ -50,19 +50,13 @@ module Temple
           raise 'Invalid xml directive in html mode' if html?
           wrapper = options[:attr_wrapper]
           str = "<?xml version=#{wrapper}1.0#{wrapper} encoding=#{wrapper}#{text.split(' ')[1] || "utf-8"}#{wrapper} ?>"
+        elsif options[:format] == :html
+          str = HTML_DOCTYPES[text] || raise("Invalid html doctype #{text}")
         else
-          case options[:format]
-          when :html5
-            str = '<!DOCTYPE html>'
-          when :html4
-            str = HTML4_DOCTYPES[text] || HTML4_DOCTYPES['transitional']
-          when :xhtml
-            str = XHTML_DOCTYPES[text] || XHTML_DOCTYPES['transitional']
-          end
+          str = XHTML_DOCTYPES[text] || raise("Invalid xhtml doctype #{text}")
         end
 
-        str << trailing_newlines
-        [:static, str]
+        [:static, str << trailing_newlines]
       end
 
       def on_html_comment(content)
