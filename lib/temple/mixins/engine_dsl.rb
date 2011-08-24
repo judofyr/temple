@@ -86,7 +86,23 @@ module Temple
         use(name, Temple::Generators.const_get(name), *options, &block)
       end
 
+      def wildcard(name, &block)
+        raise(ArgumentError, 'Block must have arity 0') unless block.arity == 0
+        chain << [name, define_chain_method("WILDCARD #{name}", block)]
+        chain_modified!
+      end
+
       private
+
+      def define_chain_method(name, proc)
+        if Class === self
+          define_method(name, &proc)
+          instance_method(name)
+        else
+          (class << self; self; end).class_eval { define_method(name, &proc) }
+          method(name)
+        end
+      end
 
       def element(args, block)
         name = args.shift
@@ -110,14 +126,7 @@ module Temple
           # The proc can then access the option hash of the engine.
           raise(ArgumentError, 'Too many arguments') unless args.empty?
           raise(ArgumentError, 'Proc or blocks must have arity 1') unless filter.arity == 1
-          method_name = "FILTER #{name}"
-          if Class === self
-            define_method(method_name, &filter)
-            [name, instance_method(method_name)]
-          else
-            (class << self; self; end).class_eval { define_method(method_name, &filter) }
-            [name, method(method_name)]
-          end
+          [name, define_chain_method("FILTER #{name}", filter)]
         when Class
           # Class argument (e.g Filter class)
           # The options are passed to the classes constructor.
@@ -127,6 +136,7 @@ module Temple
         else
           # Other callable argument (e.g. Object of class which implements #call or Method)
           # The callable has no access to the option hash of the engine.
+          raise(ArgumentError, 'Too many arguments') unless args.empty?
           raise(ArgumentError, 'Class or callable argument is required') unless filter.respond_to?(:call)
           [name, filter]
         end

@@ -63,11 +63,12 @@ module Temple
           filtered_options = Hash[*option_filter.select {|k| options.include?(k) }.map {|k| [k, options[k]] }.flatten]
           filter.new(ImmutableHash.new(local_options, filtered_options))
         when UnboundMethod
-          filter.bind(self)
+          filter = filter.bind(self)
+          filter.arity == 0 ? filter.call : filter
         else
           filter
         end
-      end
+      end.compact
     end
   end
 end
