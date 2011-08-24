@@ -21,4 +21,5 @@ Gem::Specification.new do |s|
   # can be used without it.
   s.add_development_dependency('tilt')
   s.add_development_dependency('bacon')
+  s.add_development_dependency('rake')
 end
