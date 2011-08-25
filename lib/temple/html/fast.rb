@@ -75,6 +75,10 @@ module Temple
         result
       end
 
+      def on_html_attrs(*attrs)
+        [:multi, *attrs.map {|attr| compile(attr) }]
+      end
+
       def on_html_attr(name, value)
         [:multi,
          [:static, " #{name}=#{options[:attr_wrapper]}"],

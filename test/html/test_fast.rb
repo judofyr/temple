@@ -54,7 +54,7 @@ describe Temple::HTML::Fast do
   it 'should compile html with attrs' do
     @html.call([:html, :tag,
       'div',
-      [:multi,
+      [:html, :attrs,
        [:html, :attr, 'id', [:static, 'test']],
        [:html, :attr, 'class', [:dynamic, 'block']]],
        [:content]
