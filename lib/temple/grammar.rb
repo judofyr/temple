@@ -29,7 +29,8 @@ module Temple
       # HTML abstraction
       [:html, :doctype, String]                |
       [:html, :comment, Expression]            |
-      [:html, :tag, HTMLIdentifier, HTMLAttrs, 'Expression?']
+      [:html, :tag, HTMLIdentifier, HTMLAttrs, 'Expression?'] |
+      HTMLAttr
 
     EmptyExp <<
       [:newline] | [:multi, 'EmptyExp*']

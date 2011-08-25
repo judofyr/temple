@@ -46,7 +46,6 @@ describe Temple::Grammar do
   end
 
   it 'should not match lone html attributes' do
-    Temple::Grammar.should.not.match [:html, :attr, 'id', [:multi]]
     Temple::Grammar.should.not.match [:html, :attrs]
   end
 end

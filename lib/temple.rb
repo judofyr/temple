@@ -43,5 +43,6 @@ module Temple
     autoload :Filter,          'temple/html/filter'
     autoload :Fast,            'temple/html/fast'
     autoload :Pretty,          'temple/html/pretty'
+    autoload :AttributeMerger, 'temple/html/attribute_merger'
   end
 end

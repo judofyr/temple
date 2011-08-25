@@ -23,8 +23,7 @@ module Temple
 
       set_default_options :format => :xhtml,
                           :attr_wrapper => "'",
-                          :autoclose => %w[meta img link br hr input area param col base],
-                          :attr_delimiter => {'id' => '_', 'class' => ' '}
+                          :autoclose => %w[meta img link br hr input area param col base]
 
       def initialize(opts = {})
         super
@@ -76,73 +75,11 @@ module Temple
         result
       end
 
-      def on_html_attrs(*attrs)
-        result = {}
-        attrs.each do |attr|
-          raise(InvalidExpression, 'Attribute is not a html attr') if attr[0] != :html || attr[1] != :attr
-          name, value = attr[2].to_s, attr[3]
-          next if empty_exp?(value)
-          if result[name]
-            delimiter = options[:attr_delimiter][name]
-            raise "Multiple #{name} attributes specified" unless delimiter
-            if contains_static?(value)
-              result[name] = [:html, :attr, name,
-                              [:multi,
-                               result[name][3],
-                               [:static, delimiter],
-                               value]]
-            else
-              tmp = unique_name
-              result[name] = [:html, :attr, name,
-                              [:multi,
-                               result[name][3],
-                               [:capture, tmp, value],
-                               [:if, "!#{tmp}.empty?",
-                                [:multi,
-                                 [:static, delimiter],
-                                 [:dynamic, tmp]]]]]
-            end
-          else
-            result[name] = attr
-          end
-        end
-        [:multi, *result.sort.map {|name,attr| compile(attr) }]
-      end
-
       def on_html_attr(name, value)
-        if empty_exp?(value)
-          compile(value)
-        elsif contains_static?(value)
-          attribute(name, value)
-        else
-          tmp = unique_name
-          [:multi,
-           [:capture, tmp, compile(value)],
-           [:if, "!#{tmp}.empty?",
-            attribute(name, [:dynamic, tmp])]]
-        end
-      end
-
-      protected
-
-      def attribute(name, value)
         [:multi,
          [:static, " #{name}=#{options[:attr_wrapper]}"],
          compile(value),
          [:static, options[:attr_wrapper]]]
-      end
-
-      def contains_static?(exp)
-        case exp[0]
-        when :multi
-          exp[1..-1].any? {|e| contains_static?(e) }
-        when :escape
-          contains_static?(exp[2])
-        when :static
-          true
-        else
-          false
-        end
       end
     end
   end

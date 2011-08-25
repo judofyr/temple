@@ -51,77 +51,18 @@ describe Temple::HTML::Fast do
                      [:static, "</div>"]]
   end
 
-  it 'should compile html with static attrs' do
+  it 'should compile html with attrs' do
     @html.call([:html, :tag,
       'div',
-      [:html, :attrs,
+      [:multi,
        [:html, :attr, 'id', [:static, 'test']],
        [:html, :attr, 'class', [:dynamic, 'block']]],
        [:content]
     ]).should.equal [:multi,
-                     [:static,
-                      "<div"],
-                     [:multi,
-                      [:multi,
-                       [:capture, "_temple_html_fast1",
-                        [:dynamic, "block"]],
-                       [:if, "!_temple_html_fast1.empty?",
-                        [:multi,
-                         [:static, " class='"],
-                         [:dynamic, "_temple_html_fast1"],
-                         [:static, "'"]]]],
-                      [:multi,
-                       [:static, " id='"],
-                       [:static, "test"],
-                       [:static, "'"]]],
-                     [:static, ">"],
-                     [:content],
-                     [:static, "</div>"]]
-  end
-
-  it 'should compile html with merged ids' do
-    @html.call([:html, :tag,
-      'div',
-      [:html, :attrs, [:html, :attr, 'id', [:static, 'a']], [:html, :attr, 'id', [:dynamic, 'b']]],
-      [:content]
-    ]).should.equal [:multi,
                      [:static, "<div"],
                      [:multi,
-                      [:multi,
-                       [:static, " id='"],
-                       [:multi,
-                        [:static, "a"],
-                        [:capture, "_temple_html_fast1",
-                         [:dynamic, "b"]],
-                        [:if, "!_temple_html_fast1.empty?",
-                         [:multi,
-                          [:static, "_"],
-                          [:dynamic, "_temple_html_fast1"]]]],
-                       [:static, "'"]]],
-                     [:static, ">"],
-                     [:content],
-                     [:static, "</div>"]]
-  end
-
-  it 'should compile html with merged classes' do
-    @html.call([:html, :tag,
-      'div',
-      [:html, :attrs, [:html, :attr, 'class', [:static, 'a']], [:html, :attr, 'class', [:dynamic, 'b']]],
-      [:content]
-    ]).should.equal [:multi,
-                     [:static, "<div"],
-                     [:multi,
-                      [:multi,
-                       [:static, " class='"],
-                       [:multi,
-                        [:static, "a"],
-                        [:capture, "_temple_html_fast1",
-                         [:dynamic, "b"]],
-                        [:if, "!_temple_html_fast1.empty?",
-                         [:multi,
-                          [:static, " "],
-                          [:dynamic, "_temple_html_fast1"]]]],
-                       [:static, "'"]]],
+                      [:multi, [:static, " id='"], [:static, "test"], [:static, "'"]],
+                      [:multi, [:static, " class='"], [:dynamic, "block"], [:static, "'"]]],
                      [:static, ">"],
                      [:content],
                      [:static, "</div>"]]
