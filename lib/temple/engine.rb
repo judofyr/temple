@@ -64,7 +64,7 @@ module Temple
           filter.new(ImmutableHash.new(local_options, filtered_options))
         when UnboundMethod
           filter = filter.bind(self)
-          filter.arity == 0 ? filter.call : filter
+          filter.arity == 1 ? filter : filter.call
         else
           filter
         end

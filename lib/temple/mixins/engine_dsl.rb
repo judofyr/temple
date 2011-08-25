@@ -87,7 +87,7 @@ module Temple
       end
 
       def wildcard(name, &block)
-        raise(ArgumentError, 'Block must have arity 0') unless block.arity == 0
+        raise(ArgumentError, 'Block must have arity 0') unless block.arity <= 0
         chain << [name, define_chain_method("WILDCARD #{name}", block)]
         chain_modified!
       end
