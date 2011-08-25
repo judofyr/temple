@@ -44,8 +44,4 @@ describe Temple::Grammar do
     Temple::Grammar.should.match [:html, :tag, 'Tag', [:html, :attrs, [:html, :attr, 'id',
                                   [:static, 'val']]], [:static, 'Text']]
   end
-
-  it 'should not match lone html attributes' do
-    Temple::Grammar.should.not.match [:html, :attrs]
-  end
 end
