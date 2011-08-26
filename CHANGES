@@ -1,5 +1,7 @@
 master
 
+0.3.3
+
   * Support for rails 3.1 streaming
   * Add EngineDSL#wildcard
   * HTML::Fast/Pretty supports only :xhtml and :html formats from now on
