@@ -18,7 +18,7 @@ describe Temple::Filters::Escapable do
                    [:dynamic, "ruby_method"]]
     ]).should.equal [:multi,
       [:static, "a &lt; b"],
-      [:dynamic, "Temple::Utils.escape_html((ruby_method))"],
+      [:dynamic, "::Temple::Utils.escape_html((ruby_method))"],
     ]
   end
 

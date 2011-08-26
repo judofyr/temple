@@ -14,7 +14,7 @@ module Temple
       def initialize(opts = {})
         super
         @escape_code = options[:escape_code] ||
-          "Temple::Utils.escape_html#{options[:use_html_safe] ? '_safe' : ''}((%s))"
+          "::Temple::Utils.escape_html#{options[:use_html_safe] ? '_safe' : ''}((%s))"
         @escaper = eval("proc {|v| #{@escape_code % 'v'} }")
         @escape = false
       end
