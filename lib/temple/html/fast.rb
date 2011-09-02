@@ -25,9 +25,11 @@ module Temple
                           :attr_wrapper => "'",
                           :autoclose => %w[meta img link br hr input area param col base]
 
+      HTML = [:html, :html4, :html5]
+
       def initialize(opts = {})
         super
-        unless [:xhtml, :html].include?(options[:format])
+        unless [:xhtml, *HTML].include?(options[:format])
           raise "Invalid format #{options[:format].inspect}"
         end
       end
@@ -37,7 +39,7 @@ module Temple
       end
 
       def html?
-        options[:format] == :html
+        HTML.include?(options[:format])
       end
 
       def on_html_doctype(type)
@@ -49,7 +51,7 @@ module Temple
           raise 'Invalid xml directive in html mode' if html?
           wrapper = options[:attr_wrapper]
           str = "<?xml version=#{wrapper}1.0#{wrapper} encoding=#{wrapper}#{text.split(' ')[1] || "utf-8"}#{wrapper} ?>"
-        elsif options[:format] == :html
+        elsif html?
           str = HTML_DOCTYPES[text] || raise("Invalid html doctype #{text}")
         else
           str = XHTML_DOCTYPES[text] || raise("Invalid xhtml doctype #{text}")
