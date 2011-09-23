@@ -35,23 +35,27 @@ Temple is built on a theory that every template consists of three elements:
 The goal of a template engine is to take the template and eventually compile
 it into *the core abstraction*:
 
-    [:multi,
-      [:static, "Hello "],
-      [:dynamic, "@user.name"],
-      [:static, "!\n"],
-      [:code, "if @user.birthday == Date.today"],
-      [:static, "Happy birthday!"],
-      [:code, "end"]]
+```ruby
+ [:multi,
+   [:static, "Hello "],
+   [:dynamic, "@user.name"],
+   [:static, "!\n"],
+   [:code, "if @user.birthday == Date.today"],
+   [:static, "Happy birthday!"],
+   [:code, "end"]]
+```
 
 Then you can apply some optimizations, feed it to Temple and it generates fast
 Ruby code for you:
 
-    _buf = []
-    _buf << ("Hello #{@user.name}!\n")
-    if @user.birthday == Date.today
-      _buf << "Happy birthday!"
-    end
-    _buf.join
+```ruby
+ _buf = []
+ _buf << ("Hello #{@user.name}!\n")
+ if @user.birthday == Date.today
+   _buf << "Happy birthday!"
+ end
+ _buf.join
+```
 
 S-expression
 ------------
@@ -67,13 +71,15 @@ manipulated by computers.
 
 Some examples:
 
-    [:static, "Hello World!"]
+```ruby
+ [:static, "Hello World!"]
 
-    [:multi,
-      [:static, "Hello "],
-      [:dynamic, "@world"]]
+ [:multi,
+   [:static, "Hello "],
+   [:dynamic, "@world"]]
 
-    [:html, :tag, "em", [:html, :attrs], [:static, "Hey hey"]]
+ [:html, :tag, "em", [:html, :attrs], [:static, "Hey hey"]]
+```
 
 *NOTE:* SexpProcessor, a library written by Ryan Davis, includes a `Sexp`
 class. While you can use this class (since it's a subclass of Array), it's not
@@ -89,11 +95,13 @@ do one thing at every step.
 
 So what's an abstraction? An abstraction is when you introduce a new types:
 
-    # Instead of:
-    [:static, "<strong>Use the force</strong>"]
+```ruby
+ # Instead of:
+ [:static, "<strong>Use the force</strong>"]
 
-    # You use:
-    [:html, :tag, "strong", [:html, :attrs], [:static, "Use the force"]]
+ # You use:
+ [:html, :tag, "strong", [:html, :attrs], [:static, "Use the force"]]
+```
 
 ### Why are abstractions so important?
 
@@ -126,15 +134,17 @@ the argument, and it should be possible to use the same instance several times
 While a compiler can be any object, you very often want to structure it as a
 class. Temple then assumes the initializer takes an optional option hash:
 
-    class MyCompiler
-      def initialize(options = {})
-        @options = options
-      end
+```ruby
+ class MyCompiler
+   def initialize(options = {})
+     @options = options
+   end
 
-      def call(exp)
-        # do stuff
-      end
-    end
+   def call(exp)
+     # do stuff
+   end
+ end
+```
 
 ### Parsers
 
@@ -181,24 +191,26 @@ Engines
 
 When you have a chain of a parsers, some filters and a generator you can finally create your *engine*. Temple provides {Temple::Engine} which makes this very easy:
 
-    class MyEngine < Temple::Engine
-      # First run MyParser, passing the :strict option
-      use MyParser, :strict
+```ruby
+ class MyEngine < Temple::Engine
+   # First run MyParser, passing the :strict option
+   use MyParser, :strict
 
-      # Then a custom filter
-      use MyFilter
+   # Then a custom filter
+   use MyFilter
 
-      # Then some general optimizations filters
-      filter :MultiFlattener
-      filter :StaticMerger
-      filter :DynamicInliner
+   # Then some general optimizations filters
+   filter :MultiFlattener
+   filter :StaticMerger
+   filter :DynamicInliner
 
-      # Finally the generator
-      generator :ArrayBuffer, :buffer
-    end
+   # Finally the generator
+   generator :ArrayBuffer, :buffer
+ end
 
-    engine = MyEngine.new(:strict => "For MyParser")
-    engine.call(something)
+ engine = MyEngine.new(:strict => "For MyParser")
+ engine.call(something)
+```
 
 And then?
 ---------
@@ -209,13 +221,15 @@ generator. What happens next?
 Temple provides helpers to create template classes for [Tilt](http://github.com/rtomayko/tilt) and
 Rails.
 
-    require 'tilt'
+```ruby
+ require 'tilt'
 
-    # Create template class MyTemplate and register your file extension
-    MyTemplate = Temple::Templates::Tilt(MyEngine, :register_as => 'ext')
+ # Create template class MyTemplate and register your file extension
+ MyTemplate = Temple::Templates::Tilt(MyEngine, :register_as => 'ext')
 
-    Tilt.new('example.ext').render     # => Render a file
-    MyTemplate.new { "String" }.render # => Render a string
+ Tilt.new('example.ext').render     # => Render a file
+ MyTemplate.new { "String" }.render # => Render a string
+```
 
 Installation
 ------------
@@ -223,7 +237,9 @@ Installation
 You need Ruby 1.8.7 or Ruby 1.9.2 to work with Temple. Temple is published as a Ruby Gem which can be installed
 as following:
 
-    $ gem install temple
+```bash
+ $ gem install temple
+```
 
 Engines using Temple
 --------------------
