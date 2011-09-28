@@ -9,7 +9,6 @@ module Temple
         attrs.each do |attr|
           raise(InvalidExpression, 'Attribute is not a html attr') if attr[0] != :html || attr[1] != :attr
           name, value = attr[2].to_s, attr[3]
-          next if empty_exp?(value)
           if result[name]
             delimiter = options[:attr_delimiter][name]
             raise "Multiple #{name} attributes specified" unless delimiter
