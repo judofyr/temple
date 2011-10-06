@@ -56,8 +56,9 @@ module Temple
 
       def on_html_comment(content)
         return super unless @pretty
+        result = [:multi, [:static, tag_indent(nil)], super]
         @last = nil
-        [:multi, [:static, indent], super]
+        result
       end
 
       def on_html_tag(name, attrs, content = nil)
@@ -76,8 +77,11 @@ module Temple
           result << compile(content)
           @indent -= 1
         end
+        unless closed
+          result << [:static, tag_indent(name)] if content && !empty_exp?(content)
+          result << [:static, "</#{name}>"]
+        end
 
-        result << [:static, "#{tag_indent(name)}</#{name}>"] if !closed
         @pretty = true
         result
       end
