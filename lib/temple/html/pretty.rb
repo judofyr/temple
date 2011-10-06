@@ -77,10 +77,7 @@ module Temple
           result << compile(content)
           @indent -= 1
         end
-        unless closed
-          result << [:static, tag_indent(name)] if content && !empty_exp?(content)
-          result << [:static, "</#{name}>"]
-        end
+        result << [:static, "#{content && !empty_exp?(content) ? tag_indent(name) : ''}</#{name}>"] unless closed
 
         @pretty = true
         result
