@@ -10,18 +10,17 @@ module Temple
       def on_multi(*exps)
         case options[:trim_mode]
         when '>'
-          exps.each_cons(2) do |a, b|
-            if code?(a) && static?(b)
-              b[1].gsub!(/^\n/, '')
-            end
+          i = 0
+          while i < exps.size
+            exps.delete_at(i + 1) if code?(exps[i]) && exps[i+1] == [:static, "\n"]
+            i += 1
           end
         when '<>'
-          exps.each_with_index do |exp, i|
-            if code?(exp) &&
-                (!exps[i-1] || static?(exps[i-1]) && exps[i-1][1] =~ /\n$/) &&
-                (exps[i+1] && static?(exps[i+1]) && exps[i+1][1] =~ /^\n/)
-              exps[i+1][1].gsub!(/^\n/, '') if exps[i+1]
-            end
+          i = 0
+          while i < exps.size
+            exps.delete_at(i + 1) if code?(exps[i]) && exps[i+1] == [:static, "\n"] &&
+                                     (!exps[i-1] || (exps[i-1] == [:newline]))
+            i += 1
           end
         end
         [:multi, *exps]
@@ -31,10 +30,6 @@ module Temple
 
       def code?(exp)
         exp[0] == :escape || exp[0] == :code
-      end
-
-      def static?(exp)
-        exp[0] == :static
       end
     end
   end
