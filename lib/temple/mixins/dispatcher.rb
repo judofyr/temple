@@ -51,11 +51,11 @@ module Temple
 
       private
 
-      def case_statement(types)
-        code = "type, *args = args\ncase type\n"
+      def case_statement(types, level)
+        code = "case exp[#{level}]\n"
         types.each do |name, method|
           code << "when #{name.to_sym.inspect}\n" <<
-            (Hash === method ? case_statement(method) : "#{method}(*args)\n")
+            (Hash === method ? case_statement(method, level + 1) : "#{method}(*(exp[#{level+1}..-1]))\n")
         end
         code << "else\nexp\nend\n"
       end
@@ -84,8 +84,7 @@ module Temple
         self.class.class_eval %{
           def dispatcher(exp)
             if self.class == #{self.class}
-              args = exp
-              #{case_statement(types)}
+              #{case_statement(types, 0)}
             else
               replace_dispatcher(exp)
             end
