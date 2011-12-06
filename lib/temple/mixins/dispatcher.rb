@@ -70,7 +70,10 @@ module Temple
           next if method.to_s !~ /^on_(.*)$/
           method_types = $1.split('_')
           (0...method_types.size).inject(types) do |tmp, i|
-            raise "Invalid temple dispatcher #{method}" unless Hash === tmp
+            unless Hash === tmp
+              conflict = method_types[0...i].join('_')
+              raise "Temple dispatcher '#{method}' conflicts with 'on_#{conflict}'"
+            end
             if i == method_types.size - 1
               tmp[method_types[i]] = method
             else
