@@ -38,7 +38,7 @@ module Temple
             result[name] = attr
           end
         end
-        [:multi, *result.sort.map {|name,attr| compile(attr) }]
+        [:multi, *result.map {|name,attr| compile(attr) }]
       end
 
       def on_html_attr(name, value)
