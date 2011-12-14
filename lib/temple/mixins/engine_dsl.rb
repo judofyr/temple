@@ -28,6 +28,16 @@ module Temple
 
       alias use append
 
+      # DEPRECATED!
+      #
+      #    wildcard(:FilterName) { FilterClass.new(options) }
+      #
+      # is replaced by
+      #
+      #    use(:FilterName) { FilterClass.new(options) }
+      #
+      alias wildcard use
+
       def before(name, *args, &block)
         name = Class === name ? name.name.to_sym : name
         raise(ArgumentError, 'First argument must be Class or Symbol') unless Symbol === name
@@ -86,12 +96,6 @@ module Temple
         use(name, Temple::Generators.const_get(name), *options)
       end
 
-      def wildcard(name, &block)
-        raise(ArgumentError, 'Block must have arity 0') unless block.arity <= 0
-        chain << [name, define_chain_method("WILDCARD #{name}", block)]
-        chain_modified!
-      end
-
       private
 
       def define_chain_method(name, proc)
@@ -125,7 +129,7 @@ module Temple
           # The proc is converted to a method of the engine class.
           # The proc can then access the option hash of the engine.
           raise(ArgumentError, 'Too many arguments') unless args.empty?
-          raise(ArgumentError, 'Proc or blocks must have arity 1') unless filter.arity == 1
+          raise(ArgumentError, 'Proc or blocks must have arity 0 or 1') if filter.arity != 1 && filter.arity != 0
           [name, define_chain_method("FILTER #{name}", filter)]
         when Class
           # Class argument (e.g Filter class)

@@ -23,7 +23,7 @@ class TestEngine < Temple::Engine
   filter :MultiFlattener
   generator :ArrayBuffer
   use :BeforeLast, Callable1.new
-  wildcard(:Last) { Callable2.new }
+  use(:Last) { Callable2.new }
 end
 
 describe Temple::Engine do
