@@ -3,6 +3,7 @@ require 'helper'
 describe Temple::HTML::AttributeMerger do
   before do
     @merger = Temple::HTML::AttributeMerger.new
+    @ordered_merger = Temple::HTML::AttributeMerger.new :sort_attrs => false
   end
 
   it 'should pass static attributes through' do
@@ -14,6 +15,46 @@ describe Temple::HTML::AttributeMerger do
                      [:multi,
                       [:html, :attr, "class", [:static, "b"]]],
                      [:content]]
+  end
+
+  it 'should sort html attributes by name by default, when :sort_attrs is true' do
+    @merger.call([:html, :tag,
+      'meta',
+      [:html, :attrs, [:html, :attr, 'c', [:static, '1']],
+                      [:html, :attr, 'd', [:static, '2']],
+                      [:html, :attr, 'a', [:static, '3']],
+                      [:html, :attr, 'b', [:static, '4']]]
+    ]).should.equal [:html, :tag, 'meta',
+                     [:multi,
+                      [:html, :attr, 'a', [:static, '3']],
+                      [:html, :attr, 'b', [:static, '4']],
+                      [:html, :attr, 'c', [:static, '1']],
+                      [:html, :attr, 'd', [:static, '2']]]]
+  end
+
+  it 'should preserve the order of html attributes when :sort_attrs is false' do
+    @ordered_merger.call([:html, :tag,
+      'meta',
+      [:html, :attrs, [:html, :attr, 'c', [:static, '1']],
+                      [:html, :attr, 'd', [:static, '2']],
+                      [:html, :attr, 'a', [:static, '3']],
+                      [:html, :attr, 'b', [:static, '4']]]
+    ]).should.equal [:html, :tag, 'meta',
+                     [:multi,
+                      [:html, :attr, 'c', [:static, '1']],
+                      [:html, :attr, 'd', [:static, '2']],
+                      [:html, :attr, 'a', [:static, '3']],
+                      [:html, :attr, 'b', [:static, '4']]]]
+
+    # Use case:
+    @ordered_merger.call([:html, :tag,
+      'meta',
+      [:html, :attrs, [:html, :attr, 'http-equiv', [:static, 'Content-Type']],
+                      [:html, :attr, 'content', [:static, '']]]
+    ]).should.equal [:html, :tag, 'meta',
+                     [:multi,
+                      [:html, :attr, 'http-equiv', [:static, 'Content-Type']],
+                      [:html, :attr, 'content', [:static, '']]]]
   end
 
   it 'should check for empty dynamic attribute' do
