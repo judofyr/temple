@@ -78,12 +78,12 @@ module Temple
         chain_modified!
       end
 
-      def filter(name, *options, &block)
-        use(name, Temple::Filters.const_get(name), *options, &block)
+      def filter(name, *options)
+        use(name, Temple::Filters.const_get(name), *options)
       end
 
-      def generator(name, *options, &block)
-        use(name, Temple::Generators.const_get(name), *options, &block)
+      def generator(name, *options)
+        use(name, Temple::Generators.const_get(name), *options)
       end
 
       def wildcard(name, &block)
