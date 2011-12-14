@@ -1,6 +1,8 @@
 master
 
   * Temple::HTML::Pretty improved
+  * :sort_attrs option (default: true) added to HTML::AttributeMerger;
+    if set to false, the attributes will appear in the insertion order
 
 0.3.3
 
