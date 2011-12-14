@@ -6,10 +6,12 @@ module Temple
       default_options[:sort_attrs] = true
 
       def on_html_attrs(*attrs)
-        result = (options[:sort_attrs] ? SortedHash : OrderedHash).new
+        names = []
+        result = {}
         attrs.each do |attr|
           raise(InvalidExpression, 'Attribute is not a html attr') if attr[0] != :html || attr[1] != :attr
           name, value = attr[2].to_s, attr[3]
+          names << name unless result.include?(name)
           if result[name]
             delimiter = options[:attr_delimiter][name]
             raise "Multiple #{name} attributes specified" unless delimiter
@@ -39,6 +41,8 @@ module Temple
             result[name] = attr
           end
         end
+        result = options[:sort_attrs] ? result.sort :
+                 RUBY_VERSION > '1.9' ? result : names.map {|k| [k, result[k]] }
         [:multi, *result.map {|name,attr| compile(attr) }]
       end
 
