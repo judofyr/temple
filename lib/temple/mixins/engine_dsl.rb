@@ -129,7 +129,7 @@ module Temple
           # The proc is converted to a method of the engine class.
           # The proc can then access the option hash of the engine.
           raise(ArgumentError, 'Too many arguments') unless args.empty?
-          raise(ArgumentError, 'Proc or blocks must have arity 0 or 1') if filter.arity != 1 && filter.arity != 0
+          raise(ArgumentError, 'Proc or blocks must have arity 0 or 1') if filter.arity > 1
           [name, define_chain_method("FILTER #{name}", filter)]
         when Class
           # Class argument (e.g Filter class)
