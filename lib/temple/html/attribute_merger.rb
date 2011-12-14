@@ -3,9 +3,10 @@ module Temple
     # @api public
     class AttributeMerger < Filter
       default_options[:attr_delimiter] = {'id' => '_', 'class' => ' '}
+      default_options[:sort_attrs] = true
 
       def on_html_attrs(*attrs)
-        result = {}
+        result = (options[:sort_attrs] ? SortedHash : OrderedHash).new
         attrs.each do |attr|
           raise(InvalidExpression, 'Attribute is not a html attr') if attr[0] != :html || attr[1] != :attr
           name, value = attr[2].to_s, attr[3]
@@ -38,7 +39,7 @@ module Temple
             result[name] = attr
           end
         end
-        [:multi, *result.sort.map {|name,attr| compile(attr) }]
+        [:multi, *result.map {|name,attr| compile(attr) }]
       end
 
       def on_html_attr(name, value)
