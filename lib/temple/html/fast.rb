@@ -43,21 +43,19 @@ module Temple
       end
 
       def on_html_doctype(type)
-        type = type.to_s
-        trailing_newlines = type[/(\A|[^\r])(\n+)\Z/, 2].to_s
-        text = type.downcase.strip
+        type = type.to_s.downcase
 
-        if text =~ /^xml/
+        if type =~ /^xml(\s+(.+))?$/
           raise 'Invalid xml directive in html mode' if html?
-          wrapper = options[:attr_wrapper]
-          str = "<?xml version=#{wrapper}1.0#{wrapper} encoding=#{wrapper}#{text.split(' ')[1] || "utf-8"}#{wrapper} ?>"
+          w = options[:attr_wrapper]
+          str = "<?xml version=#{w}1.0#{w} encoding=#{w}#{$2 || 'utf-8'}#{w} ?>"
         elsif html?
-          str = HTML_DOCTYPES[text] || raise("Invalid html doctype #{text}")
+          str = HTML_DOCTYPES[type] || raise("Invalid html doctype #{type}")
         else
-          str = XHTML_DOCTYPES[text] || raise("Invalid xhtml doctype #{text}")
+          str = XHTML_DOCTYPES[type] || raise("Invalid xhtml doctype #{type}")
         end
 
-        [:static, str << trailing_newlines]
+        [:static, str]
       end
 
       def on_html_comment(content)
