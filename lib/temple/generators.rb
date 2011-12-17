@@ -11,6 +11,7 @@ module Temple
   #
   # @api public
   class Generator
+    include Mixins::CompiledDispatcher
     include Mixins::Options
 
     default_options[:buffer] = '_buf'
@@ -19,14 +20,8 @@ module Temple
       [preamble, compile(exp), postamble].join('; ')
     end
 
-    def compile(exp)
-      type, *args = exp
-      method = "on_#{type}"
-      if respond_to?(method)
-        send(method, *args)
-      else
-        raise InvalidExpression, "Generator supports only core expressions - found #{exp.inspect}"
-      end
+    def on(*exp)
+      raise InvalidExpression, "Generator supports only core expressions - found #{exp.inspect}"
     end
 
     def on_multi(*exp)
