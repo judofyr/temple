@@ -1,7 +1,6 @@
 module Temple
   module Filters
-    
-    
+
     # A filter which tries to ensure, that
     # the correct number of newlines is used.
     # You can use this whenever you exchange 
@@ -25,12 +24,10 @@ module Temple
                           :on_problem         => :warn
 
       def call(expression)
-      
         if expression.nil?
           # If nothing was supplied, the solution is trivial:
           return ([[:newline]] * options[:newlines]).unshift( :multi ) 
         end
-        
         os = NewlineCounter.new
         os.call(expression)
         if os.newlines >= options[:newlines]
@@ -75,7 +72,6 @@ module Temple
       end
 
     protected
-    
       def problem
         case( options[:on_problem] )
           when :warn  then warn yield
