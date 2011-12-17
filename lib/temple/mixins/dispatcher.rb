@@ -51,13 +51,17 @@ module Temple
 
       private
 
-      def case_statement(types, level)
+      def case_statement(types, level, on_unknown = nil)
         code = "case exp[#{level}]\n"
         types.each do |name, method|
           code << "when #{name.to_sym.inspect}\n" <<
-            (Hash === method ? case_statement(method, level + 1) : "#{method}(*(exp[#{level+1}..-1]))\n")
+            (Hash === method ? case_statement(method, level + 1, on_unknown) : "#{method}(*(exp[#{level+1}..-1]))\n")
         end
-        code << "else\nexp\nend\n"
+        if on_unknown
+          code << "else\n#{on_unknown}(*exp)\nend\n"
+        else
+          code << "else\nexp\nend\n"
+        end
       end
 
       def dispatcher(exp)
@@ -81,10 +85,11 @@ module Temple
             end
           end
         end
+        on_unknown = self.respond_to?(:on_unknown) ? 'on_unknown' : nil
         self.class.class_eval %{
           def dispatcher(exp)
             if self.class == #{self.class}
-              #{case_statement(types, 0)}
+              #{case_statement(types, 0, on_unknown)}
             else
               replace_dispatcher(exp)
             end
