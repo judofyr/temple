@@ -36,6 +36,8 @@ module Temple
     autoload :Escapable,       'temple/filters/escapable'
     autoload :Eraser,          'temple/filters/eraser'
     autoload :Validator,       'temple/filters/validator'
+    autoload :NewlineAdjuster, 'temple/filters/newline_adjuster'
+    autoload :NewlineCounter,  'temple/filters/newline_counter'
   end
 
   module HTML
