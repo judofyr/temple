@@ -25,7 +25,7 @@ module Temple
 
       def on_static(content)
         if @pretty
-          content.gsub!("\n", indent) if @pre_tags !~ content
+          content = content.gsub("\n", indent) if @pre_tags !~ content
           @last = content.sub!(/\r?\n\s*$/, ' ') ? nil : :noindent
         end
         [:static, content]
@@ -38,7 +38,7 @@ module Temple
           gsub_code = if ''.respond_to?(:html_safe?)
                         "#{tmp} = #{tmp}.html_safe? ? #{tmp}.gsub(\"\\n\", #{indent.inspect}).html_safe : #{tmp}.gsub(\"\\n\", #{indent.inspect})"
                       else
-                        "#{tmp}.gsub!(\"\\n\", #{indent.inspect})"
+                        "#{tmp} = #{tmp}.gsub(\"\\n\", #{indent.inspect})"
                       end
           [:multi,
            [:code, "#{tmp} = (#{code}).to_s"],
