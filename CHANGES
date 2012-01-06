@@ -1,8 +1,18 @@
 master
 
+0.3.5
+
   * Temple::HTML::Pretty improved
   * :sort_attrs option (default: true) added to HTML::AttributeMerger;
     if set to false, the attributes will appear in the insertion order
+  * Temple::Mixins::EngineDSL api changed ("wildcard" is deprecated, use "use" instead)
+  * Temple::Mixins::CompiledDispatcher supports arbitrary levels now
+  * Don't use gsub! on incoming strings (#57)
+  * Fix newlines in erb parser (#46)
+
+0.3.4
+
+  * Bugfix release (0.3.3 was yanked)
 
 0.3.3
 
