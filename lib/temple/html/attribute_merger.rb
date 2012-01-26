@@ -1,11 +1,16 @@
 module Temple
   module HTML
     # @api public
-    class AttributeMerger < Filter
+    # --
+    # TODO: Inherit from Filter instead; to sort attributes Temple users
+    # should explicitly use AttributeSorter in the filter chain instead.
+    # Since this breaks backward compatibility, it must wait until the
+    # next major version.
+    class AttributeMerger < AttributeSorter
       default_options[:attr_delimiter] = {'id' => '_', 'class' => ' '}
-      default_options[:sort_attrs] = true
 
       def on_html_attrs(*attrs)
+        attrs = super[2..-1]
         names = []
         result = {}
         attrs.each do |attr|
@@ -41,8 +46,7 @@ module Temple
             names << name
           end
         end
-        result = options[:sort_attrs] ? result.sort : names.map {|k| [k, result[k]] }
-        [:multi, *result.map {|name,attr| compile(attr) }]
+        [:multi, *names.map {|name| compile(result[name]) }]
       end
 
       def on_html_attr(name, value)
