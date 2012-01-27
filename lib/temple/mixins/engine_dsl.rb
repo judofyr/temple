@@ -88,12 +88,13 @@ module Temple
         chain_modified!
       end
 
-      def filter(name, *options)
-        use(name, Temple::Filters.const_get(name), *options)
-      end
-
-      def generator(name, *options)
-        use(name, Temple::Generators.const_get(name), *options)
+      # Shortcuts to access namespaces
+      { :filter    => Temple::Filters,
+        :generator => Temple::Generators,
+        :html      => Temple::HTML }.each do |method, mod|
+        define_method(method) do |name, *options|
+          use(name, mod.const_get(name), *options)
+        end
       end
 
       private
@@ -113,8 +114,9 @@ module Temple
         if Class === name
           filter = name
           name = filter.name.to_sym
+        else
+          raise(ArgumentError, 'First argument must be Class or Symbol') unless Symbol === name
         end
-        raise(ArgumentError, 'First argument must be Class or Symbol') unless Symbol === name
 
         if block
           raise(ArgumentError, 'Class and block argument are not allowed at the same time') if filter
