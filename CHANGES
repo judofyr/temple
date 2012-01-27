@@ -1,5 +1,9 @@
 master
 
+  * Split Temple::HTML::AttributeMerger in AttributeSorter,
+    AttributeMerger and AttributeRemover
+  * Fix issue #58
+
 0.3.5
 
   * Temple::HTML::Pretty improved

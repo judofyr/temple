@@ -1,5 +1,6 @@
 module Temple
   module HTML
+    # This filter sorts html attributes.
     # @api public
     class AttributeSorter < Filter
       default_options[:sort_attrs] = true
