@@ -118,6 +118,7 @@ describe Temple::Engine do
     engine.after :Parser, :MyFilter0 do |exp|
       exp
     end
+    TestEngine.chain.size.should.equal 8
     engine.chain.size.should.equal 9
     engine.chain[0].first.should.equal :Parser
     engine.chain[1].first.should.equal :MyFilter0
@@ -129,6 +130,7 @@ describe Temple::Engine do
     engine.before :MyFilter1, :MyFilter0 do |exp|
       exp
     end
+    TestEngine.chain.size.should.equal 8
     engine.chain.size.should.equal 9
     engine.chain[0].first.should.equal :Parser
     engine.chain[1].first.should.equal :MyFilter0
@@ -138,6 +140,7 @@ describe Temple::Engine do
   it 'should have #remove' do
     engine = TestEngine.new
     engine.remove :MyFilter1
+    TestEngine.chain.size.should.equal 8
     engine.chain.size.should.equal 7
     engine.chain[0].first.should.equal :Parser
     engine.chain[1].first.should.equal :MyFilter2
@@ -145,10 +148,10 @@ describe Temple::Engine do
 
   it 'should have #replace' do
     engine = TestEngine.new
-    engine.before :Parser, :MyParser do |exp|
+    engine.replace :Parser, :MyParser do |exp|
       exp
     end
-    engine.chain.size.should.equal 9
+    engine.chain.size.should.equal 8
     engine.chain[0].first.should.equal :MyParser
   end
 
