@@ -1,4 +1,4 @@
-master
+0.4.0
 
   * Split Temple::HTML::AttributeMerger in AttributeSorter,
     AttributeMerger and AttributeRemover
