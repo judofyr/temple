@@ -5,6 +5,8 @@ module Temple
     class Tilt < ::Tilt::Template
       extend Mixins::Template
 
+      self.default_mime_type = 'text/html'
+
       # Prepare Temple template
       #
       # Called immediately after template data is loaded.
