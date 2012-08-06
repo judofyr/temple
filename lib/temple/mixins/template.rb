@@ -9,6 +9,23 @@ module Temple
         default_options[:engine]
       end
 
+      def init
+        # Overwrite this for class initialization
+      end
+
+      def register_as(name)
+        raise NotImplementedError
+      end
+
+      def create(engine, options)
+        template = Class.new(self)
+        template.default_options[:engine] = engine
+        template.default_options.update(options)
+        template.init
+        template.register_as(options[:register_as]) if options[:register_as]
+        template
+      end
+
       def build_engine(*options)
         raise 'No engine configured' unless engine
         options << default_options

@@ -23,6 +23,10 @@ module Temple
         @src
       end
 
+      def self.init
+        self.default_mime_type = default_options[:mime_type] || 'text/html'
+      end
+
       def self.register_as(name)
         ::Tilt.register name.to_s, self
       end
