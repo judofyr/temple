@@ -1,3 +1,7 @@
+master
+
+  * Set tilt template default_mime_type to text/html
+
 0.4.0
 
   * Split Temple::HTML::AttributeMerger in AttributeSorter,
