@@ -28,16 +28,6 @@ module Temple
 
       alias use append
 
-      # DEPRECATED!
-      #
-      #    wildcard(:FilterName) { FilterClass.new(options) }
-      #
-      # is replaced by
-      #
-      #    use(:FilterName) { FilterClass.new(options) }
-      #
-      alias wildcard use
-
       def before(name, *args, &block)
         name = Class === name ? name.name.to_sym : name
         raise(ArgumentError, 'First argument must be Class or Symbol') unless Symbol === name
