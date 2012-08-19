@@ -1,6 +1,8 @@
 Temple
 ======
 
+[![Build Status](https://secure.travis-ci.org/judofyr/temple.png?branch=master)](http://travis-ci.org/judofyr/temple) [![Dependency Status](https://gemnasium.com/judofyr/temple.png?travis)](https://gemnasium.com/judofyr/temple) [![Code Climate](https://codeclimate.com/badge.png)](https://codeclimate.com/github/judofyr/temple)
+
 Temple is an abstraction and a framework for compiling templates to pure Ruby.
 It's all about making it easier to experiment, implement and optimize template
 languages. If you're interested in implementing your own template language, or
