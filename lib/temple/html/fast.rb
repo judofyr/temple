@@ -65,6 +65,13 @@ module Temple
           [:static, '-->']]
       end
 
+      def on_html_condcomment(condition, content)
+        on_html_comment [:multi,
+                         [:static, "[#{condition}]>"],
+                         content,
+                         [:static, '<![endif]']]
+      end
+
       def on_html_tag(name, attrs, content = nil)
         name = name.to_s
         closed = !content || (empty_exp?(content) && options[:autoclose].include?(name))

@@ -1,6 +1,7 @@
 master
 
   * Set tilt template default_mime_type to text/html
+  * HTML: Support conditional comments [:html, :condcomment, ...]
 
 0.4.0
 

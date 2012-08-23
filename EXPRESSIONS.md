@@ -210,6 +210,13 @@ Example:
 generates:
     <!--comment-->
 
+### [:html, :condcomment, condition, sexp]
+
+Example:
+    [:html, :condcomment, 'IE', [:static, 'comment']]
+generates:
+    <!--[if IE]>comment<![endif]-->
+
 ### [:html, :tag, identifier, attributes, optional-sexp]
 
 HTML tag abstraction. Identifier can be a String or a Symbol. If the optional content Sexp is omitted
