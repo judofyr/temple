@@ -33,7 +33,13 @@ module Temple
     end
 
     def on_capture(name, exp)
-      options[:capture_generator].new(:buffer => name).call(exp)
+      if exp.first == :static
+        "#{name} = #{exp.last.inspect}"
+      elsif exp.first == :dynamic
+        "#{name} = #{exp.last}"
+      else
+        options[:capture_generator].new(:buffer => name).call(exp)
+      end
     end
 
     def on_static(text)
