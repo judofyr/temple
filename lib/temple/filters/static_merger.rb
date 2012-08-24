@@ -8,8 +8,7 @@ module Temple
     #
     # Compiles to:
     #
-    #   [:multi,
-    #     [:static, "Hello World!"]]
+    #   [:static, "Hello World!"]
     #
     # @api public
     class StaticMerger < Filter
@@ -31,7 +30,7 @@ module Temple
           end
         end
 
-        result
+        result.size == 2 ? result[1] : result
       end
     end
   end

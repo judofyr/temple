@@ -10,9 +10,7 @@ describe Temple::Filters::StaticMerger do
       [:static, "Hello "],
       [:static, "World, "],
       [:static, "Good night"]
-    ]).should.equal [:multi,
-      [:static, "Hello World, Good night"]
-    ]
+    ]).should.equal [:static, "Hello World, Good night"]
   end
 
   it 'should merge serveral statics around code' do

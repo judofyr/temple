@@ -81,24 +81,33 @@ describe Temple::Generators::Array do
     gen.call([:static,  'test']).should.equal '_buf = []; _buf << ("test"); _buf'
     gen.call([:dynamic, 'test']).should.equal '_buf = []; _buf << (test); _buf'
     gen.call([:code,    'test']).should.equal '_buf = []; test; _buf'
+
+    gen.call([:multi, [:static, 'a'], [:static,  'b']]).should.equal '_buf = []; _buf << ("a"); _buf << ("b"); _buf'
+    gen.call([:multi, [:static, 'a'], [:dynamic, 'b']]).should.equal '_buf = []; _buf << ("a"); _buf << (b); _buf'
   end
 end
 
 describe Temple::Generators::ArrayBuffer do
   it 'should compile simple expressions' do
     gen = Temple::Generators::ArrayBuffer.new
-    gen.call([:static,  'test']).should.equal '_buf = []; _buf << ("test"); _buf = _buf.join'
-    gen.call([:dynamic, 'test']).should.equal '_buf = []; _buf << (test); _buf = _buf.join'
+    gen.call([:static,  'test']).should.equal '_buf = "test"'
+    gen.call([:dynamic, 'test']).should.equal '_buf = (test).to_s'
     gen.call([:code,    'test']).should.equal '_buf = []; test; _buf = _buf.join'
+
+    gen.call([:multi, [:static, 'a'], [:static,  'b']]).should.equal '_buf = []; _buf << ("a"); _buf << ("b"); _buf = _buf.join'
+    gen.call([:multi, [:static, 'a'], [:dynamic, 'b']]).should.equal '_buf = []; _buf << ("a"); _buf << (b); _buf = _buf.join'
   end
 end
 
 describe Temple::Generators::StringBuffer do
   it 'should compile simple expressions' do
     gen = Temple::Generators::StringBuffer.new
-    gen.call([:static,  'test']).should.equal '_buf = \'\'; _buf << ("test"); _buf'
-    gen.call([:dynamic, 'test']).should.equal '_buf = \'\'; _buf << ((test).to_s); _buf'
+    gen.call([:static,  'test']).should.equal '_buf = "test"'
+    gen.call([:dynamic, 'test']).should.equal '_buf = (test).to_s'
     gen.call([:code,    'test']).should.equal '_buf = \'\'; test; _buf'
+
+    gen.call([:multi, [:static, 'a'], [:static,  'b']]).should.equal '_buf = \'\'; _buf << ("a"); _buf << ("b"); _buf'
+    gen.call([:multi, [:static, 'a'], [:dynamic, 'b']]).should.equal '_buf = \'\'; _buf << ("a"); _buf << ((b).to_s); _buf'
   end
 end
 

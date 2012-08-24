@@ -33,13 +33,7 @@ module Temple
     end
 
     def on_capture(name, exp)
-      if exp.first == :static
-        "#{name} = #{exp.last.inspect}"
-      elsif exp.first == :dynamic
-        "#{name} = #{exp.last}"
-      else
-        options[:capture_generator].new(:buffer => name).call(exp)
-      end
+      options[:capture_generator].new(:buffer => name).call(exp)
     end
 
     def on_static(text)
@@ -71,7 +65,7 @@ module Temple
     #   _buf = []
     #   _buf << "static"
     #   _buf << dynamic
-    #   _buf.join
+    #   _buf
     #
     # @api public
     class Array < Generator
@@ -85,8 +79,25 @@ module Temple
     end
 
     # Just like Array, but calls #join on the array.
+    #
+    #   _buf = []
+    #   _buf << "static"
+    #   _buf << dynamic
+    #   _buf.join
+    #
     # @api public
     class ArrayBuffer < Array
+      def call(exp)
+        case exp.first
+        when :static
+          "#{buffer} = #{exp.last.inspect}"
+        when :dynamic
+          "#{buffer} = (#{exp.last}).to_s"
+        else
+          super
+        end
+      end
+
       def postamble
         "#{buffer} = #{buffer}.join"
       end
@@ -100,9 +111,13 @@ module Temple
     #   _buf
     #
     # @api public
-    class StringBuffer < Array
+    class StringBuffer < ArrayBuffer
       def preamble
         "#{buffer} = ''"
+      end
+
+      def postamble
+        buffer
       end
 
       def on_dynamic(code)
@@ -112,7 +127,7 @@ module Temple
 
     # Implements a rails output buffer.
     #
-    #   @output_buffer = ActionView::OutputBuffer
+    #   @output_buffer = ActionView::SafeBuffer
     #   @output_buffer.safe_concat "static"
     #   @output_buffer.safe_concat dynamic.to_s
     #   @output_buffer
@@ -123,6 +138,10 @@ module Temple
                           :buffer => '@output_buffer',
                            # output_buffer is needed for Rails 3.1 Streaming support
                           :capture_generator => RailsOutputBuffer
+
+      def call(exp)
+        [preamble, compile(exp), postamble].join('; ')
+      end
 
       def preamble
         if options[:streaming] && options[:buffer] == '@output_buffer'

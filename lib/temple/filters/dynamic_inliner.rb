@@ -64,7 +64,7 @@ module Temple
           result.concat(prev) if state == :single
         end
 
-        result
+        result.size == 2 ? result[1] : result
       end
     end
   end
