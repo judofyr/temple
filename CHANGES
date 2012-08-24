@@ -1,5 +1,7 @@
 master
 
+  * Generators: produce optimized code
+  * remove deprecated method EngineDSL#wildcard
   * Set tilt template default_mime_type to text/html
   * HTML: Support conditional comments [:html, :condcomment, ...]
 
