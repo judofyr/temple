@@ -60,15 +60,10 @@ module Temple
         dispatched_methods.each do |method|
           method.split('_')[1..-1].inject(tree) {|node, type| node[type.to_sym] }.method = method
         end
-        self.class.class_eval %{
-          def dispatcher(exp)
-            if self.class == #{self.class}
-              #{tree.compile}
-            else
-              replace_dispatcher(exp)
-            end
-          end
-        }
+        self.class.class_eval %{def dispatcher(exp)
+  return replace_dispatcher(exp) if self.class != #{self.class}
+  #{tree.compile.gsub("\n", "\n  ")}
+end}
         dispatcher(exp)
       end
 
@@ -86,31 +81,19 @@ module Temple
           @method = nil
         end
 
-        def compile(level = 0, parent = nil)
+        def compile(level = 0, call_parent = nil)
+          call_method = method ? (level == 0 ? "#{method}(*exp)" :
+                                  "#{method}(*exp[#{level}..-1])") : call_parent
           if empty?
-            if method
-              ('  ' * level) + "#{method}(*exp[#{level}..-1])"
-            elsif !parent
-              'exp'
-            else
-              raise 'Invalid dispatcher node'
-            end
+            raise 'Invalid dispatcher node' unless method
+            call_method
           else
-            code = [('  ' * level) + "case(exp[#{level}])"]
+            code = "case(exp[#{level}])\n"
             each do |key, child|
-              code << ('  ' * level) + "when #{key.inspect}"
-              code << child.compile(level + 1, parent || method)
+              code << "when #{key.inspect}\n  " <<
+                child.compile(level + 1, call_method).gsub("\n", "\n  ") << "\n"
             end
-            if method || !parent
-              code << ('  ' * level) + "else"
-              if method
-                code << ('  ' * level) + "  #{method}(*exp[#{level}..-1])"
-              else
-                code << ('  ' * level) + "  exp"
-              end
-            end
-            code << ('  ' * level) + "end"
-            code.join("\n")
+            code << "else\n  " << (call_method || 'exp') << "\nend"
           end
         end
       end

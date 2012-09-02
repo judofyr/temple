@@ -15,8 +15,16 @@ class FilterWithDispatcherMixin
     [:on_second_test, arg]
   end
 
-  def on_seventh_level_level_level_level_level_test(arg)
-    [:on_seventh_test, arg]
+  def on_a_b(*arg)
+    [:on_ab, *arg]
+  end
+
+  def on_a_b_test(arg)
+    [:on_ab_test, arg]
+  end
+
+  def on_a_b_c_d_test(arg)
+    [:on_abcd_test, arg]
   end
 end
 
@@ -47,8 +55,13 @@ describe Temple::Mixins::Dispatcher do
     @filter.call([:test, :check, 42]).should.equal [:on_check, 42]
   end
 
-  it 'should dispatch seventh level' do
-    @filter.call([:seventh, :level, :level, :level, :level, :level, :test, 42]).should == [:on_seventh_test, 42]
+  it 'should dispatch parent level' do
+    @filter.call([:a, 42]).should == [:a, 42]
+    @filter.call([:a, :b, 42]).should == [:on_ab, 42]
+    @filter.call([:a, :b, :test, 42]).should == [:on_ab_test, 42]
+    @filter.call([:a, :b, :c, 42]).should == [:on_ab, :c, 42]
+    @filter.call([:a, :b, :c, :d, 42]).should == [:on_ab, :c, :d, 42]
+    @filter.call([:a, :b, :c, :d, :test, 42]).should == [:on_abcd_test, 42]
   end
 
   it 'should dispatch zero level' do
