@@ -1,4 +1,4 @@
-master
+0.4.1
 
   * Generators: produce optimized code
   * remove deprecated method EngineDSL#wildcard
