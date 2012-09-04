@@ -56,19 +56,7 @@ module Temple
     end
 
     def call_chain
-      @call_chain ||= @chain.map do |e|
-        name, filter, option_filter, local_options = e
-        case filter
-        when Class
-          filtered_options = Hash[*option_filter.select {|k| options.include?(k) }.map {|k| [k, options[k]] }.flatten]
-          filter.new(ImmutableHash.new(local_options, filtered_options))
-        when UnboundMethod
-          filter = filter.bind(self)
-          filter.arity == 1 ? filter : filter.call
-        else
-          filter
-        end
-      end.compact
+      @call_chain ||= @chain.map {|name, constructor| constructor.call(self) }.compact
     end
   end
 end

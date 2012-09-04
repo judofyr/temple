@@ -32,32 +32,35 @@ describe Temple::Engine do
 
     TestEngine.chain[0].first.should.equal :Parser
     TestEngine.chain[0].size.should.equal 2
-    TestEngine.chain[0].last.should.be.instance_of UnboundMethod
+    TestEngine.chain[0].last.should.be.instance_of Proc
 
     TestEngine.chain[1].first.should.equal :MyFilter1
     TestEngine.chain[1].size.should.equal 2
-    TestEngine.chain[1].last.should.be.instance_of UnboundMethod
+    TestEngine.chain[1].last.should.be.instance_of Proc
 
     TestEngine.chain[2].first.should.equal :MyFilter2
     TestEngine.chain[2].size.should.equal 2
-    TestEngine.chain[2].last.should.be.instance_of UnboundMethod
+    TestEngine.chain[2].last.should.be.instance_of Proc
 
-    TestEngine.chain[3].size.should.equal 4
-    TestEngine.chain[3].should.equal [:'Temple::HTML::Pretty', Temple::HTML::Pretty, [:format], {:pretty => true}]
+    TestEngine.chain[3].first.should.equal :'Temple::HTML::Pretty'
+    TestEngine.chain[3].size.should.equal 2
+    TestEngine.chain[3].last.should.be.instance_of Proc
 
-    TestEngine.chain[4].size.should.equal 4
-    TestEngine.chain[4].should.equal [:MultiFlattener, Temple::Filters::MultiFlattener, [], nil]
+    TestEngine.chain[4].first.should.equal :MultiFlattener
+    TestEngine.chain[4].size.should.equal 2
+    TestEngine.chain[4].last.should.be.instance_of Proc
 
-    TestEngine.chain[5].size.should.equal 4
-    TestEngine.chain[5].should.equal [:ArrayBuffer, Temple::Generators::ArrayBuffer, [], nil]
+    TestEngine.chain[5].first.should.equal :ArrayBuffer
+    TestEngine.chain[5].size.should.equal 2
+    TestEngine.chain[5].last.should.be.instance_of Proc
 
+    TestEngine.chain[6].first.should.equal :BeforeLast
     TestEngine.chain[6].size.should.equal 2
-    TestEngine.chain[6][0].should.equal :BeforeLast
-    TestEngine.chain[6][1].should.be.instance_of Callable1
+    TestEngine.chain[6].last.should.be.instance_of Proc
 
+    TestEngine.chain[7].first.should.equal :Last
     TestEngine.chain[7].size.should.equal 2
-    TestEngine.chain[7][0].should.equal :Last
-    TestEngine.chain[7][1].should.be.instance_of UnboundMethod
+    TestEngine.chain[7].last.should.be.instance_of Proc
   end
 
   it 'should instantiate chain' do
@@ -85,7 +88,7 @@ describe Temple::Engine do
     engine.chain.size.should.equal 9
     engine.chain[8].first.should.equal :MyFilter3
     engine.chain[8].size.should.equal 2
-    engine.chain[8].last.should.be.instance_of Method
+    engine.chain[8].last.should.be.instance_of Proc
 
     call_chain = engine.send(:call_chain)
     call_chain.size.should.equal 9
@@ -105,7 +108,7 @@ describe Temple::Engine do
     engine.chain.size.should.equal 9
     engine.chain[0].first.should.equal :MyFilter0
     engine.chain[0].size.should.equal 2
-    engine.chain[0].last.should.be.instance_of Method
+    engine.chain[0].last.should.be.instance_of Proc
     engine.chain[1].first.should.equal :Parser
 
     call_chain = engine.send(:call_chain)
