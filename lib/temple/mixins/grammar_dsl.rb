@@ -157,7 +157,7 @@ module Temple
           curr.each {|c| c << elem }
           start
         else
-          raise "Invalid grammar rule '#{rule.inspect}'"
+          raise ArgumentError, "Invalid grammar rule '#{rule.inspect}'"
         end
       end
 

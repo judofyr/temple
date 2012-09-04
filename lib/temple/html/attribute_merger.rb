@@ -13,7 +13,7 @@ module Temple
           name, value = attr[2].to_s, attr[3]
           if result[name]
             delimiter = options[:attr_delimiter][name]
-            raise "Multiple #{name} attributes specified" unless delimiter
+            raise(FilterError, "Multiple #{name} attributes specified") unless delimiter
             if empty_exp?(value)
               result[name] = [:html, :attr, name,
                               [:multi,

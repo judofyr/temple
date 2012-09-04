@@ -30,7 +30,7 @@ module Temple
       def initialize(opts = {})
         super
         unless [:xhtml, *HTML].include?(options[:format])
-          raise "Invalid format #{options[:format].inspect}"
+          raise ArgumentError, "Invalid format #{options[:format].inspect}"
         end
       end
 
@@ -46,13 +46,13 @@ module Temple
         type = type.to_s.downcase
 
         if type =~ /^xml(\s+(.+))?$/
-          raise 'Invalid xml directive in html mode' if html?
+          raise(FilterError, 'Invalid xml directive in html mode') if html?
           w = options[:attr_wrapper]
           str = "<?xml version=#{w}1.0#{w} encoding=#{w}#{$2 || 'utf-8'}#{w} ?>"
         elsif html?
-          str = HTML_DOCTYPES[type] || raise("Invalid html doctype #{type}")
+          str = HTML_DOCTYPES[type] || raise(FilterError, "Invalid html doctype #{type}")
         else
-          str = XHTML_DOCTYPES[type] || raise("Invalid xhtml doctype #{type}")
+          str = XHTML_DOCTYPES[type] || raise(FilterError, "Invalid xhtml doctype #{type}")
         end
 
         [:static, str]

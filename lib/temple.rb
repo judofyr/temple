@@ -1,7 +1,8 @@
 require 'temple/version'
 
 module Temple
-  autoload :InvalidExpression,    'temple/generators'
+  autoload :InvalidExpression,    'temple/exceptions'
+  autoload :FilterError,          'temple/exceptions'
   autoload :Generator,            'temple/generators'
   autoload :Generators,           'temple/generators'
   autoload :Engine,               'temple/engine'
