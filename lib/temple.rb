@@ -5,6 +5,7 @@ module Temple
   autoload :FilterError,          'temple/exceptions'
   autoload :Generator,            'temple/generators'
   autoload :Generators,           'temple/generators'
+  autoload :Parser,               'temple/parser'
   autoload :Engine,               'temple/engine'
   autoload :Utils,                'temple/utils'
   autoload :Filter,               'temple/filter'

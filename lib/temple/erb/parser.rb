@@ -3,9 +3,7 @@ module Temple
     # Example ERB parser
     #
     # @api public
-    class Parser
-      include Mixins::Options
-
+    class Parser < Temple::Parser
       ERB_PATTERN = /(\n|<%%|%%>)|<%(==?|\#)?(.*?)?-?%>/m
 
       def call(input)
