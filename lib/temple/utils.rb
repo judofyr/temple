@@ -18,7 +18,7 @@ module Temple
       # @param html [String] The string to escape
       # @return [String] The escaped string
       def escape_html(html)
-        EscapeUtils.escape_html(html.to_s)
+        EscapeUtils.escape_html(html.to_s, false)
       end
     elsif RUBY_VERSION > '1.9'
       # Used by escape_html
@@ -28,7 +28,6 @@ module Temple
         '"' => '&quot;',
         '<' => '&lt;',
         '>' => '&gt;',
-        '/' => '&#47;',
       }.freeze
 
       # Returns an escaped copy of `html`.
@@ -36,7 +35,7 @@ module Temple
       # @param html [String] The string to escape
       # @return [String] The escaped string
       def escape_html(html)
-        html.to_s.gsub(/[&\"<>\/]/, ESCAPE_HTML)
+        html.to_s.gsub(/[&\"<>]/, ESCAPE_HTML)
       end
     else
       # Returns an escaped copy of `html`.
@@ -44,7 +43,7 @@ module Temple
       # @param html [String] The string to escape
       # @return [String] The escaped string
       def escape_html(html)
-        html.to_s.gsub(/&/n, '&amp;').gsub(/\"/n, '&quot;').gsub(/>/n, '&gt;').gsub(/</n, '&lt;').gsub(/\//, '&#47;')
+        html.to_s.gsub(/&/n, '&amp;').gsub(/\"/n, '&quot;').gsub(/>/n, '&gt;').gsub(/</n, '&lt;')
       end
     end
 
