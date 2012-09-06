@@ -37,7 +37,7 @@ describe Temple::HTML::AttributeRemover do
       [:html, :attrs, [:html, :attr, 'class', [:dynamic, 'b']]],
       [:content]
     ]).should.equal [:html, :tag, "div",
-                     [:multi,
+                     [:html, :attrs,
                       [:html, :attr, "class", [:dynamic, "b"]]],
                      [:content]]
   end

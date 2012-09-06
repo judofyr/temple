@@ -5,9 +5,12 @@ module Temple
     class AttributeRemover < Filter
       default_options[:remove_empty_attrs] = true
 
+      def call(exp)
+        options[:remove_empty_attrs] ? super : exp
+      end
+
       def on_html_attrs(*attrs)
-        [:multi, *(options[:remove_empty_attrs] ?
-                   attrs.map {|attr| compile(attr) } : attrs)]
+        [:multi, *attrs.map {|attr| compile(attr) }]
       end
 
       def on_html_attr(name, value)
