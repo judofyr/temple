@@ -2,8 +2,8 @@ module Temple
   module Mixins
     # @api public
     module DefaultOptions
-      def set_default_options(options)
-        default_options.update(options)
+      def set_default_options(opts)
+        default_options.update(opts)
       end
 
       def default_options
@@ -20,8 +20,8 @@ module Temple
 
       attr_reader :options
 
-      def initialize(options = {})
-        @options = ImmutableHash.new(options, self.class.default_options)
+      def initialize(opts = {})
+        @options = ImmutableHash.new(opts, self.class.default_options)
       end
     end
   end

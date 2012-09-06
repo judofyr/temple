@@ -39,7 +39,7 @@ module Temple
       @chain ||= superclass.respond_to?(:chain) ? superclass.chain.dup : []
     end
 
-    def initialize(o = {})
+    def initialize(opts = {})
       super
       @chain = self.class.chain.dup
       [*options[:chain]].compact.each {|block| block.call(self) }
