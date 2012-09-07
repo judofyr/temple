@@ -57,19 +57,6 @@ module Temple
       "_#{prefix}#{@unique_name += 1}"
     end
 
-    def contains_static?(exp)
-      case exp[0]
-      when :multi
-        exp[1..-1].any? {|e| contains_static?(e) }
-      when :escape
-        contains_static?(exp[2])
-      when :static
-        true
-      else
-        false
-      end
-    end
-
     # Check if expression is empty
     #
     # @param exp [Array] Temple expression

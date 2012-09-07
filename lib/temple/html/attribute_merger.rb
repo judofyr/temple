@@ -43,6 +43,22 @@ module Temple
         end
         [:html, :attrs, *names.map {|name| result[name] }]
       end
+
+      private
+
+      # Contains non empty static
+      def contains_static?(exp)
+        case exp.first
+        when :multi
+          exp[1..-1].any? {|e| contains_static?(e) }
+        when :escape
+          contains_static?(exp.last)
+        when :static
+          !exp.last.empty?
+        else
+          false
+        end
+      end
     end
   end
 end
