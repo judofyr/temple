@@ -48,6 +48,5 @@ module Temple
     autoload :Pretty,             'temple/html/pretty'
     autoload :AttributeMerger,    'temple/html/attribute_merger'
     autoload :AttributeSorter,    'temple/html/attribute_sorter'
-    autoload :AttributeRemover,   'temple/html/attribute_remover'
   end
 end
