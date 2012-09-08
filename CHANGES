@@ -1,3 +1,11 @@
+master
+
+  * Added exception Temple::FilterError which should be thrown by filters
+  * Added Temple::Parser as default base class for parsers
+  * escape_html doesn't escape / anymore
+  * HTML::AttributeSorter uses stable sorting now
+  * HTML::AttributeRemover removed (Was too Slim specific)
+
 0.4.1
 
   * Generators: produce optimized code
