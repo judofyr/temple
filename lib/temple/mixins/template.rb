@@ -31,12 +31,6 @@ module Temple
         options << default_options
         engine.new(ImmutableHash.new(*options))
       end
-
-      def chain(&block)
-        chain = (default_options[:chain] ||= [])
-        chain << block if block
-        chain
-      end
     end
   end
 end

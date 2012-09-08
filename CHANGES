@@ -5,6 +5,7 @@ master
   * escape_html doesn't escape / anymore
   * HTML::AttributeSorter uses stable sorting now
   * HTML::AttributeRemover removed (Was too Slim specific)
+  * Engine option :chain removed
 
 0.4.1
 

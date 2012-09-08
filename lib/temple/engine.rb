@@ -42,7 +42,6 @@ module Temple
     def initialize(opts = {})
       super
       @chain = self.class.chain.dup
-      [*options[:chain]].compact.each {|block| block.call(self) }
     end
 
     def call(input)

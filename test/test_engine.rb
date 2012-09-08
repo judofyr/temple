@@ -167,12 +167,4 @@ describe Temple::Engine do
     inherited_engine.chain.size.should.equal 9
     TestEngine.chain.size.should.equal 8
   end
-
-  it 'should support chain option' do
-    engine = TestEngine.new(:chain => proc {|e| e.remove :MyFilter1 })
-    TestEngine.chain.size.should.equal 8
-    engine.chain.size.should.equal 7
-    engine.chain[0].first.should.equal :Parser
-    engine.chain[1].first.should.equal :MyFilter2
-  end
 end
