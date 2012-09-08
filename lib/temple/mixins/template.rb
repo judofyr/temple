@@ -19,6 +19,7 @@ module Temple
 
       def create(engine, options)
         template = Class.new(self)
+        template.disable_option_validator!
         template.default_options[:engine] = engine
         template.default_options.update(options)
         template.init
@@ -29,7 +30,7 @@ module Temple
       def build_engine(*options)
         raise 'No engine configured' unless engine
         options << default_options
-        engine.new(ImmutableHash.new(*options))
+        engine.new(ImmutableHash.new(*options).without(:engine, :register_as))
       end
     end
   end

@@ -5,7 +5,7 @@ module Temple
     # @api public
     class Eraser < Filter
       # [] is the empty type => keep all
-      default_options[:keep] = [[]]
+      define_options :keep => [[]], :erase => nil
 
       def compile(exp)
         exp.first == :multi || (do?(:keep, exp) && !do?(:erase, exp)) ?

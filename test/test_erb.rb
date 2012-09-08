@@ -38,13 +38,13 @@ world}
   it 'should escape automatically' do
     src = '<%= "<" %>'
     ans = '&lt;'
-    erb(src, :auto_escape => true).should.equal ans
+    erb(src).should.equal ans
   end
 
   it 'should support == to disable automatic escape' do
     src = '<%== "<" %>'
     ans = '<'
-    erb(src, :auto_escape => true).should.equal ans
+    erb(src).should.equal ans
   end
 
   it 'should support trim mode' do

@@ -3,7 +3,7 @@ module Temple
     # This filter sorts html attributes.
     # @api public
     class AttributeSorter < Filter
-      default_options[:sort_attrs] = true
+      define_options :sort_attrs => true
 
       def call(exp)
         options[:sort_attrs] ? super : exp

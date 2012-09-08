@@ -14,7 +14,8 @@ module Temple
     include Mixins::CompiledDispatcher
     include Mixins::Options
 
-    default_options[:buffer] = '_buf'
+    define_options :capture_generator,
+                   :buffer => '_buf'
 
     def call(exp)
       [preamble, compile(exp), postamble].join('; ')
@@ -134,10 +135,11 @@ module Temple
     #
     # @api public
     class RailsOutputBuffer < StringBuffer
-      set_default_options :buffer_class => 'ActiveSupport::SafeBuffer',
-                          :buffer => '@output_buffer',
-                           # output_buffer is needed for Rails 3.1 Streaming support
-                          :capture_generator => RailsOutputBuffer
+      define_options :streaming,
+                     :buffer_class => 'ActiveSupport::SafeBuffer',
+                     :buffer => '@output_buffer',
+                     # output_buffer is needed for Rails 3.1 Streaming support
+                     :capture_generator => RailsOutputBuffer
 
       def call(exp)
         [preamble, compile(exp), postamble].join('; ')
@@ -157,5 +159,5 @@ module Temple
     end
   end
 
-  Generator.default_options[:capture_generator] = Temple::Generators::StringBuffer
+  Generator.default_options[:capture_generator] = Generators::StringBuffer
 end

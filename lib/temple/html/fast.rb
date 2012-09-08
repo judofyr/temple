@@ -21,9 +21,9 @@ module Temple
         'transitional' => '<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">',
       }.freeze
 
-      set_default_options :format => :xhtml,
-                          :attr_wrapper => "'",
-                          :autoclose => %w[meta img link br hr input area param col base]
+      define_options :format => :xhtml,
+                     :attr_wrapper => "'",
+                     :autoclose => %w[meta img link br hr input area param col base]
 
       HTML = [:html, :html4, :html5]
 

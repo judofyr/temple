@@ -3,7 +3,7 @@ module Temple
     # This filter merges html attributes (e.g. used for id and class)
     # @api public
     class AttributeMerger < Filter
-      default_options[:attr_delimiter] = {'id' => '_', 'class' => ' '}
+      define_options :attr_delimiter => {'id' => '_', 'class' => ' '}
 
       def on_html_attrs(*attrs)
         names = []

@@ -7,6 +7,8 @@ module Temple
     #
     # @api public
     class Trimming < Filter
+      define_options :trim_mode
+
       def on_multi(*exps)
         case options[:trim_mode]
         when '>'
