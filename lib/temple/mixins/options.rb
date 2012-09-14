@@ -36,6 +36,7 @@ module Temple
       attr_reader :options
 
       def initialize(opts = {})
+        raise ArgumentError, "Options must be given as hash" unless opts.keys
         self.class.default_options.validate_hash!(opts)
         @options = ImmutableHash.new(opts, self.class.default_options)
       end

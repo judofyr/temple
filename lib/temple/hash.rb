@@ -81,6 +81,10 @@ module Temple
       super
     end
 
+    def valid_keys
+      keys.concat(@valid.keys).uniq
+    end
+
     def add(*keys)
       keys.flatten.each { |key| @valid[key] = true }
     end
