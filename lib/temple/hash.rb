@@ -67,8 +67,9 @@ module Temple
   class OptionHash < MutableHash
     def initialize(*hash, &block)
       super(*hash)
-      @invalid = block
+      @handler = block
       @valid = {}
+      @deprecated = {}
     end
 
     def []=(key, value)
@@ -85,8 +86,12 @@ module Temple
       keys.concat(@valid.keys).uniq
     end
 
-    def add(*keys)
+    def add_valid_keys(*keys)
       keys.flatten.each { |key| @valid[key] = true }
+    end
+
+    def add_deprecated_keys(*keys)
+      keys.flatten.each { |key| @valid[key] = @deprecated[key] = true }
     end
 
     def validate_hash!(hash)
@@ -94,7 +99,13 @@ module Temple
     end
 
     def validate_key!(key)
-      @invalid.call(self, key) unless valid_key?(key)
+      @handler.call(self, key, true) if deprecated_key?(key)
+      @handler.call(self, key, false) unless valid_key?(key)
+    end
+
+    def deprecated_key?(key)
+      @deprecated.include?(key) ||
+        @hash.any? {|h| h.deprecated_key?(key) if h.respond_to?(:deprecated_key?) }
     end
 
     def valid_key?(key)

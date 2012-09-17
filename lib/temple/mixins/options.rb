@@ -8,18 +8,33 @@ module Temple
 
       def default_options
         @default_options ||= OptionHash.new(superclass.respond_to?(:default_options) ?
-                                            superclass.default_options : nil) do |hash, key|
-          raise ArgumentError, "Option #{key.inspect} is not supported by #{self}" unless @option_validator_disabled
+                                            superclass.default_options : nil) do |hash, key, deprecated|
+          unless @option_validator_disabled
+            if deprecated
+              puts "Option #{key.inspect} is deprecated by #{self}"
+            else
+              raise ArgumentError, "Option #{key.inspect} is not supported by #{self}"
+            end
+          end
         end
       end
 
       def define_options(*opts)
         if opts.last.respond_to?(:keys)
           hash = opts.pop
-          default_options.add(hash.keys)
+          default_options.add_valid_keys(hash.keys)
           default_options.update(hash)
         end
-        default_options.add(opts)
+        default_options.add_valid_keys(opts)
+      end
+
+      def deprecated_options(*opts)
+        if opts.last.respond_to?(:keys)
+          hash = opts.pop
+          default_options.add_deprecated_keys(hash.keys)
+          default_options.update(hash)
+        end
+        default_options.add_deprecated_keys(opts)
       end
 
       def disable_option_validator!
