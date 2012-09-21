@@ -95,6 +95,7 @@ module Temple
     end
 
     def validate_hash!(hash)
+      raise ArgumentError, "Not a hash" unless hash.respond_to?(:keys)
       hash.keys.each {|key| validate_key!(key) }
     end
 

@@ -7,6 +7,7 @@ master
   * HTML::AttributeRemover removed (Was too Slim specific)
   * Engine option :chain removed
   * Option validation implemented (Use define_options in your filters)
+  * ThreadOptions added, Method #with_options
 
 0.4.1
 

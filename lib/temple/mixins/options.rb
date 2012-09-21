@@ -42,18 +42,38 @@ module Temple
       end
     end
 
+    module ThreadOptions
+      def thread_options_key
+        @thread_options_key ||= "#{self.name}-thread-options".to_sym
+      end
+
+      def with_options(opts)
+        Thread.current[thread_options_key] = opts
+        yield
+      ensure
+        Thread.current[thread_options_key] = nil
+      end
+
+      def thread_options
+        Thread.current[thread_options_key]
+      end
+    end
+
     # @api public
     module Options
       def self.included(base)
-        base.class_eval { extend DefaultOptions }
+        base.class_eval do
+          extend DefaultOptions
+          extend ThreadOptions
+        end
       end
 
       attr_reader :options
 
       def initialize(opts = {})
-        raise ArgumentError, "Options must be given as hash" unless opts.keys
         self.class.default_options.validate_hash!(opts)
-        @options = ImmutableHash.new(opts, self.class.default_options)
+        self.class.default_options.validate_hash!(self.class.thread_options) if self.class.thread_options
+        @options = ImmutableHash.new(opts, self.class.thread_options, self.class.default_options)
       end
     end
   end
