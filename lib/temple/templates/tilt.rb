@@ -11,8 +11,9 @@ module Temple
       #
       # @return [void]
       def prepare
-        @src = self.class.build_engine({ :streaming => false, # Overwrite option: No streaming support in Tilt
-                                         :file => eval_file }, options).call(data)
+        @src = self.class.compile(data,
+                                  ImmutableHash.new({ :file => eval_file, :streaming => false }, # Overwrite option: No streaming support in Tilt
+                                                    options, self.class.default_options).without(:mime_type, :engine, :register_as))
       end
 
       # A string containing the (Ruby) source code for the template.

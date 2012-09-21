@@ -4,9 +4,9 @@ module Temple
     module Template
       include DefaultOptions
 
-      def engine(engine = nil)
-        default_options[:engine] = engine if engine
-        default_options[:engine]
+      def compile(code, options)
+        raise 'No engine configured' unless default_options[:engine]
+        default_options[:engine].new(options).call(code)
       end
 
       def init
@@ -25,12 +25,6 @@ module Temple
         template.init
         template.register_as(options[:register_as]) if options[:register_as]
         template
-      end
-
-      def build_engine(*options)
-        raise 'No engine configured' unless engine
-        options << default_options
-        engine.new(ImmutableHash.new(*options).without(:engine, :register_as))
       end
     end
   end
