@@ -28,7 +28,7 @@ module Temple
         default_options.add_valid_keys(opts)
       end
 
-      def deprecated_options(*opts)
+      def define_deprecated_options(*opts)
         if opts.last.respond_to?(:keys)
           hash = opts.pop
           default_options.add_deprecated_keys(hash.keys)
@@ -43,19 +43,22 @@ module Temple
     end
 
     module ThreadOptions
-      def thread_options_key
-        @thread_options_key ||= "#{self.name}-thread-options".to_sym
-      end
-
-      def with_options(opts)
-        Thread.current[thread_options_key] = opts
+      def with_options(options)
+        old_options = thread_options
+        Thread.current[thread_options_key] = ImmutableHash.new(options, thread_options)
         yield
       ensure
-        Thread.current[thread_options_key] = nil
+        Thread.current[thread_options_key] = old_options
       end
 
       def thread_options
         Thread.current[thread_options_key]
+      end
+
+      protected
+
+      def thread_options_key
+        @thread_options_key ||= "#{self.name}-thread-options".to_sym
       end
     end
 
