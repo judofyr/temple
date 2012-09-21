@@ -9,21 +9,17 @@ module Temple
         default_options[:engine].new(options).call(code)
       end
 
-      def init
-        # Overwrite this for class initialization
-      end
-
-      def register_as(name)
+      def register_as(*names)
         raise NotImplementedError
       end
 
       def create(engine, options)
+        register_as = options.delete(:register_as)
         template = Class.new(self)
         template.disable_option_validator!
         template.default_options[:engine] = engine
         template.default_options.update(options)
-        template.init
-        template.register_as(options[:register_as]) if options[:register_as]
+        template.register_as(*register_as) if register_as
         template
       end
     end
