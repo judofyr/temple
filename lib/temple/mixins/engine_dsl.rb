@@ -98,7 +98,7 @@ module Temple
       def chain_class_constructor(filter, option_filter)
         local_options = Hash === option_filter.last ? option_filter.pop : nil
         raise(ArgumentError, 'Only symbols allowed in option filter') unless option_filter.all? {|o| Symbol === o }
-        default_options.add_valid_keys(option_filter) if respond_to?(:default_options)
+        define_options(*option_filter) if respond_to?(:define_options)
         proc do |engine|
           filter.new(ImmutableHash.new(local_options, engine.options.only(option_filter)))
         end
