@@ -22,8 +22,9 @@ module Temple
       # @return [void]
       def prepare
         # Overwrite option: No streaming support in Tilt
-        @src = self.class.compile(data, ImmutableHash.new({ :file => eval_file, :streaming => false },
-                                  options, self.class.default_options).without(:mime_type, :engine))
+        opts = {}.update(self.class.default_options).update(options).update(:file => eval_file, :streaming => false)
+        opts.delete(:mime_type)
+        @src = self.class.compile(data, opts)
       end
 
       # A string containing the (Ruby) source code for the template.

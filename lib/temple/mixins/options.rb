@@ -76,7 +76,7 @@ module Temple
       def initialize(opts = {})
         self.class.default_options.validate_hash!(opts)
         self.class.default_options.validate_hash!(self.class.thread_options) if self.class.thread_options
-        @options = ImmutableHash.new(opts, self.class.thread_options, self.class.default_options)
+        @options = ImmutableHash.new({}.update(self.class.default_options).update(self.class.thread_options || {}).update(opts))
       end
     end
   end

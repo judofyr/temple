@@ -29,21 +29,9 @@ module Temple
       keys.map {|k| self[k] }
     end
 
-    def only(*filter)
+    def to_hash
       result = {}
-      filter = filter.flatten
-      each do |k,v|
-        result[k] = v if filter.include?(k)
-      end
-      result
-    end
-
-    def without(*filter)
-      result = {}
-      filter = filter.flatten
-      each do |k,v|
-        result[k] = v unless filter.include?(k)
-      end
+      each {|k, v| result[k] = v }
       result
     end
   end
@@ -95,8 +83,7 @@ module Temple
     end
 
     def validate_hash!(hash)
-      raise ArgumentError, "Not a hash" unless hash.respond_to?(:keys)
-      hash.keys.each {|key| validate_key!(key) }
+      hash.to_hash.keys.each {|key| validate_key!(key) }
     end
 
     def validate_key!(key)

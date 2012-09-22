@@ -15,8 +15,8 @@ module Temple
 
         def compile(template)
           # Overwrite option: No streaming support in Rails < 3.1
-          self.class.compile(template.source, ImmutableHash.new({ :file => template.identifier, :streaming => false },
-                             self.class.default_options).without(:engine))
+          opts = {}.update(self.class.default_options).update(:file => template.identifier, :streaming => false)
+          self.class.compile(template.source, opts)
         end
 
         def self.register_as(*names)
@@ -30,8 +30,8 @@ module Temple
         extend Mixins::Template
 
         def call(template)
-          self.class.compile(template.source, ImmutableHash.new({ :file => template.identifier },
-                             self.class.default_options).without(:engine))
+          opts = {}.update(self.class.default_options).update(:file => template.identifier)
+          self.class.compile(template.source, opts)
         end
 
         def supports_streaming?

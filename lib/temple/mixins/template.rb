@@ -5,8 +5,9 @@ module Temple
       include DefaultOptions
 
       def compile(code, options)
-        raise 'No engine configured' unless default_options[:engine]
-        default_options[:engine].new(options).call(code)
+        engine = options.delete(:engine)
+        raise 'No engine configured' unless engine
+        engine.new(options).call(code)
       end
 
       def register_as(*names)
