@@ -20,8 +20,8 @@ module Temple
       end
 
       def define_options(*opts)
-        if opts.last.respond_to?(:keys)
-          hash = opts.pop
+        if opts.last.respond_to?(:to_hash)
+          hash = opts.pop.to_hash
           default_options.add_valid_keys(hash.keys)
           default_options.update(hash)
         end
@@ -29,8 +29,8 @@ module Temple
       end
 
       def define_deprecated_options(*opts)
-        if opts.last.respond_to?(:keys)
-          hash = opts.pop
+        if opts.last.respond_to?(:to_hash)
+          hash = opts.pop.to_hash
           default_options.add_deprecated_keys(hash.keys)
           default_options.update(hash)
         end

@@ -96,7 +96,7 @@ module Temple
       end
 
       def chain_class_constructor(filter, option_filter)
-        local_options = Hash === option_filter.last ? option_filter.pop : {}
+        local_options = option_filter.last.respond_to?(:to_hash) ? option_filter.pop.to_hash : {}
         raise(ArgumentError, 'Only symbols allowed in option filter') unless option_filter.all? {|o| Symbol === o }
         define_options(*option_filter) if respond_to?(:define_options)
         proc do |engine|
