@@ -100,7 +100,7 @@ module Temple
         raise(ArgumentError, 'Only symbols allowed in option filter') unless option_filter.all? {|o| Symbol === o }
         define_options(*option_filter) if respond_to?(:define_options)
         proc do |engine|
-          filter.new({}.update(engine.options).delete_if {|k| !option_filter.include?(k) }.update(local_options))
+          filter.new({}.update(engine.options).delete_if {|k,v| !option_filter.include?(k) }.update(local_options))
         end
       end
 
