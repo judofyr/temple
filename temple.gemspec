@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.authors       = ['Magnus Holm', 'Daniel Mendler']
   s.email         = ['judofyr@gmail.com', 'mail@daniel-mendler.de']
-  s.homepage      = 'http://dojo.rubyforge.org/'
+  s.homepage      = 'https://github.com/judofyr/temple'
   s.summary       = 'Template compilation framework in Ruby'
 
   s.require_paths = %w(lib)
