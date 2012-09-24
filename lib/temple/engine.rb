@@ -33,7 +33,7 @@ module Temple
     include Mixins::EngineDSL
     extend  Mixins::EngineDSL
 
-    define_options :file, :streaming
+    define_options :file, :streaming, :buffer
 
     attr_reader :chain
 
