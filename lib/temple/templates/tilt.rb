@@ -24,7 +24,10 @@ module Temple
         # Overwrite option: No streaming support in Tilt
         opts = {}.update(self.class.default_options).update(options).update(:file => eval_file, :streaming => false)
         opts.delete(:mime_type)
-        opts[:buffer] ||= opts.delete(:outvar) # Sinatra sets the :outvar option
+        outvar = opts.delete(:outvar)
+        if outvar
+          opts[:buffer] ||= outvar # Sinatra sets the :outvar option
+        end
         @src = self.class.compile(data, opts)
       end
 
