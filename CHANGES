@@ -1,3 +1,7 @@
+0.5.1
+
+  * Support Sinatra :outvar option in Tilt template
+
 0.5.0
 
   * Added exception Temple::FilterError which should be thrown by filters
