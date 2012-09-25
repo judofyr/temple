@@ -13,7 +13,9 @@ module Temple
             if deprecated
               puts "Option #{key.inspect} is deprecated by #{self}"
             else
-              raise ArgumentError, "Option #{key.inspect} is not supported by #{self}"
+              # TODO: This will raise an exception in the future!
+              # raise ArgumentError, "Option #{key.inspect} is not supported by #{self}"
+              puts "Option #{key.inspect} is not supported by #{self}"
             end
           end
         end

@@ -1,3 +1,8 @@
+0.5.3
+
+  * Only print an message if invalid options are passed to Temple filters or engines
+    since many libraries seem to use Slim and Temple in an incorrect way
+
 0.5.2
 
   * Fix the :outvar problem really
