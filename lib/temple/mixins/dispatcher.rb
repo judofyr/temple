@@ -27,7 +27,7 @@ module Temple
       end
 
       def on_case(arg, *cases)
-        [:case, arg, *cases.map {|condition, exp| [condition, compile(exp)] }]
+        [:case, arg, *cases.map {|condition, *exps| [condition, *exps.map {|e| compile(e) }] }]
       end
 
       def on_block(code, content)
