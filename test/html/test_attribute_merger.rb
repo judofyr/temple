@@ -50,13 +50,10 @@ describe Temple::HTML::AttributeMerger do
                      [:html, :attrs,
                       [:html, :attr, "id",
                        [:multi,
-                        [:dynamic, "a"],
-                        [:capture, "_temple_html_attributemerger1",
-                         [:dynamic, "b"]],
-                        [:if, "!_temple_html_attributemerger1.empty?",
-                         [:multi,
-                          [:static, "_"],
-                          [:dynamic, "_temple_html_attributemerger1"]]]]]],
+                        [:code, "_temple_html_attributemerger1 = []"],
+                        [:capture, "_temple_html_attributemerger1[0]", [:dynamic, "a"]],
+                        [:capture, "_temple_html_attributemerger1[1]", [:dynamic, "b"]],
+                        [:dynamic, "_temple_html_attributemerger1.reject(&:empty?).join(\"_\")"]]]],
                      [:content]]
   end
 
@@ -69,13 +66,10 @@ describe Temple::HTML::AttributeMerger do
                      [:html, :attrs,
                       [:html, :attr, "class",
                        [:multi,
-                        [:static, "a"],
-                        [:capture, "_temple_html_attributemerger1",
-                         [:dynamic, "b"]],
-                        [:if, "!_temple_html_attributemerger1.empty?",
-                         [:multi,
-                          [:static, " "],
-                          [:dynamic, "_temple_html_attributemerger1"]]]]]],
+                        [:code, "_temple_html_attributemerger1 = []"],
+                        [:capture, "_temple_html_attributemerger1[0]", [:static, "a"]],
+                        [:capture, "_temple_html_attributemerger1[1]", [:dynamic, "b"]],
+                        [:dynamic, "_temple_html_attributemerger1.reject(&:empty?).join(\" \")"]]]],
                      [:content]]
   end
 end

@@ -7,57 +7,40 @@ module Temple
 
       def on_html_attrs(*attrs)
         names = []
-        result = {}
+        values = {}
+
         attrs.each do |attr|
-          raise(InvalidExpression, 'Attribute is not a html attr') if attr[0] != :html || attr[1] != :attr
           name, value = attr[2].to_s, attr[3]
-          if result[name]
-            delimiter = options[:attr_delimiter][name]
-            raise(FilterError, "Multiple #{name} attributes specified") unless delimiter
-            if empty_exp?(value)
-              result[name] = [:html, :attr, name,
-                              [:multi,
-                               result[name][3],
-                               value]]
-            elsif contains_static?(value)
-              result[name] = [:html, :attr, name,
-                              [:multi,
-                               result[name][3],
-                               [:static, delimiter],
-                               value]]
-            else
-              tmp = unique_name
-              result[name] = [:html, :attr, name,
-                              [:multi,
-                               result[name][3],
-                               [:capture, tmp, value],
-                               [:if, "!#{tmp}.empty?",
-                                [:multi,
-                                 [:static, delimiter],
-                                 [:dynamic, tmp]]]]]
-            end
+          if values[name]
+            raise(FilterError, "Multiple #{name} attributes specified") unless options[:attr_delimiter][name]
+            values[name] << value
           else
-            result[name] = attr
+            values[name] = [value]
             names << name
           end
         end
-        [:html, :attrs, *names.map {|name| result[name] }]
-      end
 
-      private
-
-      # Contains non empty static
-      def contains_static?(exp)
-        case exp.first
-        when :multi
-          exp[1..-1].any? {|e| contains_static?(e) }
-        when :escape
-          contains_static?(exp.last)
-        when :static
-          !exp.last.empty?
-        else
-          false
+        attrs = names.map do |name|
+          value = values[name]
+          if (delimiter = options[:attr_delimiter][name]) && value.size > 1
+            exp = [:multi]
+            if value.all? {|v| contains_nonempty_static?(v) }
+              exp << value.first
+              value[1..-1].each {|v| exp << [:static, delimiter] << v }
+              [:html, :attr, name, exp]
+            else
+              captures = unique_name
+              exp << [:code, "#{captures} = []"]
+              value.each_with_index {|v, i| exp << [:capture, "#{captures}[#{i}]", v] }
+              exp << [:dynamic, "#{captures}.reject(&:empty?).join(#{delimiter.inspect})"]
+            end
+            [:html, :attr, name, exp]
+          else
+            [:html, :attr, name, value.first]
+          end
         end
+
+        [:html, :attrs, *attrs]
       end
     end
   end
