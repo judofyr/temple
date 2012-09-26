@@ -1,6 +1,9 @@
 master
 
-  * Fix [:case] dispatcher (wasn't consistent with grammar)
+  * HTML::AttributeMerger fixed, it didn't remove first empty attribute values
+  * Add HTML::AttributeRemover back, :remove_empty_attrs must be an Array of Strings now
+    of the attributes to be removed if empty
+  * Simplify [:case] expression grammar
 
 0.5.3
 
