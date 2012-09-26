@@ -1,3 +1,7 @@
+master
+
+  * Fix [:case] dispatcher (wasn't consistent with grammar)
+
 0.5.3
 
   * Only print an message if invalid options are passed to Temple filters or engines
