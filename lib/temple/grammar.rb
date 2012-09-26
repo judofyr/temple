@@ -44,7 +44,7 @@ module Temple
       Symbol | String
 
     Case <<
-      [Condition, 'Expression*']
+      [Condition, Expression]
 
     Condition <<
       String | :else

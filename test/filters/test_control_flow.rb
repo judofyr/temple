@@ -56,14 +56,13 @@ describe Temple::Filters::ControlFlow do
 
   it 'should process cond' do
     @filter.call([:cond,
-      ['cond1', [:exp11], [:exp12]],
+      ['cond1', [:exp1]],
       ['cond2', [:exp2]],
       [:else,   [:exp3]],
     ]).should.equal [:multi,
       [:code, 'case'],
       [:code, 'when cond1'],
-      [:exp11],
-      [:exp12],
+      [:exp1],
       [:code, 'when cond2'],
       [:exp2],
       [:code, 'else'],
@@ -74,14 +73,13 @@ describe Temple::Filters::ControlFlow do
 
   it 'should process case' do
     @filter.call([:case, 'var',
-      ['Array',  [:exp11], [:exp12]],
+      ['Array',  [:exp1]],
       ['String', [:exp2]],
       [:else,    [:exp3]],
     ]).should.equal [:multi,
       [:code, 'case (var)'],
       [:code, 'when Array'],
-      [:exp11],
-      [:exp12],
+      [:exp1],
       [:code, 'when String'],
       [:exp2],
       [:code, 'else'],
