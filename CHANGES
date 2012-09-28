@@ -1,9 +1,11 @@
-master
+0.5.4
 
   * HTML::AttributeMerger fixed, it didn't remove first empty attribute values
   * Add HTML::AttributeRemover back, :remove_empty_attrs must be an Array of Strings now
     of the attributes to be removed if empty
   * Simplify [:case] expression grammar
+  * Ignore parameter :outvar by sinatra since sinatra assumes also that the buffer is a String,
+    they should set :buffer and :generator explicitly if they need the access
 
 0.5.3
 
