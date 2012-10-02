@@ -8,7 +8,7 @@ module Temple
                                         fieldset figure footer form head h1 h2 h3 h4 h5 h6
                                         header hgroup hr html li link meta nav ol p
                                         rp rt ruby section script style table tbody td tfoot
-                                        th thead title tr ul video).freeze,
+                                        th thead title tr ul video doctype).freeze,
                      :pre_tags => %w(code pre textarea).freeze
 
       def initialize(opts = {})
@@ -26,7 +26,7 @@ module Temple
       def on_static(content)
         if @pretty
           content = content.gsub("\n", indent) if @pre_tags !~ content
-          @last = content.sub!(/\r?\n\s*$/, ' ') ? nil : :noindent
+          @last = :noindent
         end
         [:static, content]
       end
@@ -50,8 +50,8 @@ module Temple
       end
 
       def on_html_doctype(type)
-        @last = nil
-        super
+        return super unless @pretty
+        [:multi, [:static, tag_indent('doctype')], super]
       end
 
       def on_html_comment(content)
@@ -90,7 +90,6 @@ module Temple
         [:code, "#{@pre_tags_name} = /#{@pre_tags.source}/"]
       end
 
-      # Return indentation if not in pre tag
       def indent
         "\n" + (options[:indent] || '') * @indent
       end
