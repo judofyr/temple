@@ -1,3 +1,7 @@
+0.5.5
+
+  * HTML pretty: Do not remove empty lines, add newline after doctype
+
 0.5.4
 
   * HTML::AttributeMerger fixed, it didn't remove first empty attribute values
