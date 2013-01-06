@@ -11,11 +11,11 @@ module Temple
                                             superclass.default_options : nil) do |hash, key, deprecated|
           unless @option_validator_disabled
             if deprecated
-              puts "Option #{key.inspect} is deprecated by #{self}"
+              warn "Option #{key.inspect} is deprecated by #{self}"
             else
               # TODO: This will raise an exception in the future!
               # raise ArgumentError, "Option #{key.inspect} is not supported by #{self}"
-              puts "Option #{key.inspect} is not supported by #{self}"
+              warn "Option #{key.inspect} is not supported by #{self}"
             end
           end
         end
