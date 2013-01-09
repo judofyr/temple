@@ -246,10 +246,10 @@ as following:
 Engines using Temple
 --------------------
 
-* Temple ERB example implementation (Temple::ERB::Template)
-* [Slim](http://github.com/stonean/slim)
+* [Slim](http://github.com/slim-template/slim)
 * [Sal](http://github.com/stonean/sal.rb)
 * [Temple-Mustache (Example implementation)](https://github.com/minad/temple-mustache)
+* Temple ERB example implementation (Temple::ERB::Template)
 
 Acknowledgements
 ----------------
