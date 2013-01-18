@@ -3,7 +3,7 @@ module Temple
     # This filter merges html attributes (e.g. used for id and class)
     # @api public
     class AttributeMerger < Filter
-      define_options :attr_delimiter => {'id' => '_', 'class' => ' '}
+      define_options :merge_attrs => {'id' => '_', 'class' => ' '}
 
       def on_html_attrs(*attrs)
         names = []
@@ -12,7 +12,7 @@ module Temple
         attrs.each do |attr|
           name, value = attr[2].to_s, attr[3]
           if values[name]
-            raise(FilterError, "Multiple #{name} attributes specified") unless options[:attr_delimiter][name]
+            raise(FilterError, "Multiple #{name} attributes specified") unless options[:merge_attrs][name]
             values[name] << value
           else
             values[name] = [value]
@@ -22,7 +22,7 @@ module Temple
 
         attrs = names.map do |name|
           value = values[name]
-          if (delimiter = options[:attr_delimiter][name]) && value.size > 1
+          if (delimiter = options[:merge_attrs][name]) && value.size > 1
             exp = [:multi]
             if value.all? {|v| contains_nonempty_static?(v) }
               exp << value.first
