@@ -13,7 +13,7 @@ describe Temple::HTML::Fast do
   end
 
   it 'should compile xml encoding' do
-    @html.call([:html, :doctype, 'xml latin1']).should.equal [:static, "<?xml version='1.0' encoding='latin1' ?>"]
+    @html.call([:html, :doctype, 'xml latin1']).should.equal [:static, "<?xml version=\"1.0\" encoding=\"latin1\" ?>"]
   end
 
   it 'should compile html comment' do
@@ -61,8 +61,8 @@ describe Temple::HTML::Fast do
     ]).should.equal [:multi,
                      [:static, "<div"],
                      [:multi,
-                      [:multi, [:static, " id='"], [:static, "test"], [:static, "'"]],
-                      [:multi, [:static, " class='"], [:dynamic, "block"], [:static, "'"]]],
+                      [:multi, [:static, " id=\""], [:static, "test"], [:static, '"']],
+                      [:multi, [:static, " class=\""], [:dynamic, "block"], [:static, '"']]],
                      [:static, ">"],
                      [:content],
                      [:static, "</div>"]]
