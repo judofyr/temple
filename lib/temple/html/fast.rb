@@ -22,7 +22,7 @@ module Temple
       }.freeze
 
       define_options :format => :xhtml,
-                     :attr_wrapper => "'",
+                     :attr_quote => '"',
                      :autoclose => %w[meta img link br hr input area param col base]
 
       HTML = [:html, :html4, :html5]
@@ -47,7 +47,7 @@ module Temple
 
         if type =~ /^xml(\s+(.+))?$/
           raise(FilterError, 'Invalid xml directive in html mode') if html?
-          w = options[:attr_wrapper]
+          w = options[:attr_quote]
           str = "<?xml version=#{w}1.0#{w} encoding=#{w}#{$2 || 'utf-8'}#{w} ?>"
         elsif html?
           str = HTML_DOCTYPES[type] || raise(FilterError, "Invalid html doctype #{type}")
@@ -88,9 +88,9 @@ module Temple
 
       def on_html_attr(name, value)
         [:multi,
-         [:static, " #{name}=#{options[:attr_wrapper]}"],
+         [:static, " #{name}=#{options[:attr_quote]}"],
          compile(value),
-         [:static, options[:attr_wrapper]]]
+         [:static, options[:attr_quote]]]
       end
     end
   end

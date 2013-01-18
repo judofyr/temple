@@ -1,6 +1,7 @@
 master
 
-  * HTML::AttributeMerger: rename option attr_delimiter to merge_attrs
+  * HTML::AttributeMerger: rename option :attr_delimiter to :merge_attrs
+  * HTML: rename option :attr_wrapper to :attr_quote
 
 0.5.5
 
