@@ -1,3 +1,7 @@
+0.6.1
+
+  * HTML::Pretty improved
+
 0.6.0
 
   * HTML::AttributeMerger: rename option :attr_delimiter to :merge_attrs
