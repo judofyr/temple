@@ -19,15 +19,14 @@ describe Temple::HTML::Pretty do
                        [:multi],
                        [:static, ">"],
                        [:multi,
-                        [:static, "text"],
+                        [:static, "\n    text"],
                         [:multi,
                          [:code, "_temple_html_pretty2 = (code).to_s"],
-                         [:code, 'if _temple_html_pretty1 !~ _temple_html_pretty2; _temple_html_pretty2 = _temple_html_pretty2.gsub("\n", "\n    "); end'],
+                         [:code, "if _temple_html_pretty1 !~ _temple_html_pretty2; _temple_html_pretty2 = _temple_html_pretty2.gsub(\"\n\", \"\\n    \"); end"],
                          [:dynamic, "_temple_html_pretty2"]]],
-                       [:static, "</p>"]],
+                       [:static, "\n  </p>"]],
                       [:static, "\n</div>"]]]
   end
-
 
   it 'should not indent preformatted tags' do
     @html.call([:html, :tag, 'pre', [:multi],

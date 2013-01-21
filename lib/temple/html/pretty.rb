@@ -13,7 +13,7 @@ module Temple
 
       def initialize(opts = {})
         super
-        @last = :noindent
+        @last = nil
         @indent = 0
         @pretty = options[:pretty]
         @pre_tags = Regexp.new(options[:pre_tags].map {|t| "<#{t}" }.join('|'))
@@ -25,24 +25,26 @@ module Temple
 
       def on_static(content)
         if @pretty
-          content = content.gsub("\n", indent) if @pre_tags !~ content
-          @last = :noindent
+          if @pre_tags !~ content
+            content = content.sub(/\A\s*\n?/, "\n") if options[:indent_tags].include?(@last)
+            content = content.gsub("\n", indent)
+          end
+          @last = :static
         end
         [:static, content]
       end
 
       def on_dynamic(code)
         if @pretty
-          @last = :noindent
           tmp = unique_name
-          gsub_code = if ''.respond_to?(:html_safe?)
-                        "#{tmp} = #{tmp}.html_safe? ? #{tmp}.gsub(\"\\n\", #{indent.inspect}).html_safe : #{tmp}.gsub(\"\\n\", #{indent.inspect})"
-                      else
-                        "#{tmp} = #{tmp}.gsub(\"\\n\", #{indent.inspect})"
-                      end
+          indent_code = ''
+          indent_code << "#{tmp} = #{tmp}.sub(/\\A\\s*\\n?/, \"\\n\"); " if options[:indent_tags].include?(@last)
+          indent_code << "#{tmp} = #{tmp}.gsub(\"\n\", #{indent.inspect}); "
+          indent_code = "if #{tmp}.html_safe?; #{indent_code}#{tmp} = #{tmp.html_safe} end; "  if ''.respond_to?(:html_safe?)
+          @last = :dynamic
           [:multi,
            [:code, "#{tmp} = (#{code}).to_s"],
-           [:code, "if #{@pre_tags_name} !~ #{tmp}; #{gsub_code}; end"],
+           [:code, "if #{@pre_tags_name} !~ #{tmp}; #{indent_code}end"],
            [:dynamic, tmp]]
         else
           [:dynamic, code]
@@ -56,8 +58,8 @@ module Temple
 
       def on_html_comment(content)
         return super unless @pretty
-        result = [:multi, [:static, tag_indent(nil)], super]
-        @last = nil
+        result = [:multi, [:static, tag_indent('comment')], super]
+        @last = :comment
         result
       end
 
@@ -96,7 +98,7 @@ module Temple
 
       # Return indentation before tag
       def tag_indent(name)
-        result = @last != :noindent && (options[:indent_tags].include?(@last) || options[:indent_tags].include?(name)) ? indent : ''
+        result = @last && (options[:indent_tags].include?(@last) || options[:indent_tags].include?(name)) ? indent : ''
         @last = name
         result
       end
