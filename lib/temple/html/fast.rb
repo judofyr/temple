@@ -101,7 +101,7 @@ module Temple
          [:static, options[:attr_quote]]]
       end
       
-      def on_html_js(comment,content)
+      def on_html_js(content, comment = nil)
         comment ||= options[:js_comment] || ( xhtml? ? :cdata : :html )
         comments = JS_COMMENTS[comment] or fail(FilterError, "Invalid Javascript comment #{comment}")
         [:multi,

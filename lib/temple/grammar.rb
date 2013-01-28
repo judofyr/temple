@@ -30,11 +30,11 @@ module Temple
       [:html, :doctype, String]                |
       [:html, :comment, Expression]            |
       [:html, :condcomment, String, Expression]|
-      [:html, :js, CommentStyle, Expression]         |
+      [:html, :js, Expression, 'CommentStyle?']|
       [:html, :tag, HTMLIdentifier, Expression, 'Expression?'] |
       [:html, :attrs, 'HTMLAttr*']             |
       HTMLAttr
-      
+
     CommentStyle <<
       Symbol | nil
 
