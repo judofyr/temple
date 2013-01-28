@@ -23,9 +23,17 @@ module Temple
 
       define_options :format => :xhtml,
                      :attr_quote => '"',
-                     :autoclose => %w[meta img link br hr input area param col base]
+                     :autoclose => %w[meta img link br hr input area param col base],
+                     :js_comment => nil
 
       HTML = [:html, :html4, :html5]
+
+      JS_COMMENTS = {
+        :none =>  [ "", "" ],
+        :html =>  [ "<!--\n", "\n//-->" ],
+        :cdata => [ "\n//<![CDATA[\n", "\n//]]>\n" ],
+        :both =>  [ "<!--\n//<![CDATA[\n", "\n//]]>\n//-->" ],
+      }.freeze
 
       def initialize(opts = {})
         super
@@ -91,6 +99,16 @@ module Temple
          [:static, " #{name}=#{options[:attr_quote]}"],
          compile(value),
          [:static, options[:attr_quote]]]
+      end
+      
+      def on_html_js(content, comment = nil)
+        comment ||= options[:js_comment] || ( xhtml? ? :cdata : :html )
+        comments = JS_COMMENTS[comment] or fail(FilterError, "Invalid Javascript comment #{comment}")
+        [:multi,
+         [:static, comments.first],
+         compile(content),
+         [:static, comments.last]
+        ]
       end
     end
   end
