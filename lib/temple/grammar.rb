@@ -30,6 +30,7 @@ module Temple
       [:html, :doctype, String]                |
       [:html, :comment, Expression]            |
       [:html, :condcomment, String, Expression]|
+      [:html, :js, Expression]                 |
       [:html, :tag, HTMLIdentifier, Expression, 'Expression?'] |
       [:html, :attrs, 'HTMLAttr*']             |
       HTMLAttr

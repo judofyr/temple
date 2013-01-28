@@ -20,6 +20,18 @@ describe Temple::HTML::Fast do
     @html.call([:html, :comment, [:static, 'test']]).should.equal [:multi, [:static, "<!--"], [:static, "test"], [:static, "-->"]]
   end
 
+  it 'should compile js wrapped in comments' do
+    Temple::HTML::Fast.new(:js_wrapper => :none).call([:html, :js, [:static, 'test']]).should.equal [:static, "test"]
+    Temple::HTML::Fast.new(:js_wrapper => :comment).call([:html, :js, [:static, 'test']]).should.equal [:multi, [:static, "<!--\n"], [:static, "test"], [:static, "\n//-->"]]
+    Temple::HTML::Fast.new(:js_wrapper => :cdata).call([:html, :js, [:static, 'test']]).should.equal [:multi, [:static, "\n//<![CDATA[\n"], [:static, "test"], [:static, "\n//]]>\n"]]
+    Temple::HTML::Fast.new(:js_wrapper => :both).call([:html, :js, [:static, 'test']]).should.equal [:multi, [:static, "<!--\n//<![CDATA[\n"], [:static, "test"], [:static, "\n//]]>\n//-->"]]
+  end
+
+  it 'should guess default js comment' do
+    Temple::HTML::Fast.new(:format => :xhtml).call([:html, :js, [:static, 'test']]).should.equal [:multi, [:static, "\n//<![CDATA[\n"], [:static, "test"], [:static, "\n//]]>\n"]]
+    Temple::HTML::Fast.new(:format => :html).call([:html, :js, [:static, 'test']]).should.equal [:multi, [:static, "<!--\n"], [:static, "test"], [:static, "\n//-->"]]
+  end
+
   it 'should compile autoclosed html tag' do
     @html.call([:html, :tag,
       'img', [:attrs],
