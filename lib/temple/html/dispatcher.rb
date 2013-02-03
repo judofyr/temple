@@ -18,8 +18,8 @@ module Temple
         [:html, :condcomment, condition, compile(content)]
       end
 
-      def on_html_js(content, comment = nil)
-        [:html, :js, compile(content), comment]
+      def on_html_js(content)
+        [:html, :js, compile(content)]
       end
 
       def on_html_tag(name, attrs, content = nil)
