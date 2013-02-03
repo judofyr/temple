@@ -1,3 +1,7 @@
+master
+
+  * [:html, :js, code] abstraction added
+
 0.6.1
 
   * HTML::Pretty improved
