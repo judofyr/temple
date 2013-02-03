@@ -238,6 +238,10 @@ List of html attributes [:html, :attr, identifier, sexp]
 
 HTML attribute abstraction. Identifier can be a String or a Symbol.
 
+### [:html, :js, code]
+
+HTML javascript abstraction which wraps the js code in a HTML comment or CDATA depending on document format.
+
 Formal grammar
 --------------
 
