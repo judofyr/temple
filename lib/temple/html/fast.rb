@@ -47,7 +47,7 @@ module Temple
           when Array
             wrapper
           else
-            raise ArgumentError, "Invalid JavaScript wrapper #{wrapper}"
+            raise ArgumentError, "Invalid JavaScript wrapper #{wrapper.inspect}"
           end
       end
 
