@@ -33,7 +33,8 @@ module Temple
         unless [:xhtml, *HTML].include?(options[:format])
           raise ArgumentError, "Invalid format #{options[:format].inspect}"
         end
-        wrapper = options[:js_wrapper] || (xhtml? ? :cdata : :comment)
+        wrapper = options[:js_wrapper]
+        wrapper = xhtml? ? :cdata : :comment if wrapper == :guess
         @js_wrapper =
           case wrapper
           when :comment
@@ -42,7 +43,7 @@ module Temple
             [ "\n//<![CDATA[\n", "\n//]]>\n" ]
           when :both
             [ "<!--\n//<![CDATA[\n", "\n//]]>\n//-->" ]
-          when :none
+          when nil
           when Array
             wrapper
           else
