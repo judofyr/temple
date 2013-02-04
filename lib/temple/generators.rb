@@ -128,7 +128,7 @@ module Temple
 
     # Implements a rails output buffer.
     #
-    #   @output_buffer = ActionView::SafeBuffer
+    #   @output_buffer = ActiveSupport::SafeBuffer
     #   @output_buffer.safe_concat "static"
     #   @output_buffer.safe_concat dynamic.to_s
     #   @output_buffer
