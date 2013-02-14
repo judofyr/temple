@@ -1,4 +1,4 @@
-unless Object.const_defined?(:Rails)
+unless defined?(ActionView)
   raise "Rails is not loaded - Temple::Templates::Rails cannot be used"
 end
 
