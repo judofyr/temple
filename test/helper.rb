@@ -4,9 +4,11 @@ require 'temple'
 module TestHelper
   def with_html_safe(flag)
     String.send(:define_method, :html_safe?) { flag }
+    String.send(:define_method, :html_safe) { self }
     yield
   ensure
     String.send(:undef_method, :html_safe?) if String.method_defined?(:html_safe?)
+    String.send(:undef_method, :html_safe) if String.method_defined?(:html_safe)
   end
 
   def grammar_validate(grammar, exp, message)
