@@ -26,14 +26,14 @@ describe Temple::Utils do
   end
 
   it 'should escape unsafe html strings' do
-    with_html_safe(false) do
+    with_html_safe do
       Temple::Utils.escape_html_safe('<').should.equal '&lt;'
     end
   end
 
   it 'should not escape safe html strings' do
-    with_html_safe(true) do
-      Temple::Utils.escape_html_safe('<').should.equal '<'
+    with_html_safe do
+      Temple::Utils.escape_html_safe('<'.html_safe).should.equal '<'
     end
   end
 end

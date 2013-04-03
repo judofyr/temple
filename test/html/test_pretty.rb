@@ -47,7 +47,7 @@ describe Temple::HTML::Pretty do
   end
 
   it 'should not escape html_safe strings' do
-    with_html_safe(true) do
+    with_html_safe do
       @html.call(
         [:dynamic, '"text<".html_safe']
       ).should.equal [:multi,
