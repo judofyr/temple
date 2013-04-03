@@ -1,11 +1,5 @@
 require 'helper'
 
-class HtmlSafeString < String
-  def html_safe?
-    true
-  end
-end
-
 describe Temple::Filters::Escapable do
   before do
     @filter = Temple::Filters::Escapable.new
