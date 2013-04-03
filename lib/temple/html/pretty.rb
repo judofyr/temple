@@ -41,10 +41,10 @@ module Temple
           indent_code << "#{tmp} = #{tmp}.sub(/\\A\\s*\\n?/, \"\\n\"); " if options[:indent_tags].include?(@last)
           indent_code << "#{tmp} = #{tmp}.gsub(\"\n\", #{indent.inspect}); "
           if ''.respond_to?(:html_safe)
-            tmp_safe = unique_name
+            safe = unique_name
             # we have to first save if the string was html_safe
             # otherwise the gsub operation will lose that knowledge
-            indent_code = "#{tmp_safe} = #{tmp}.html_safe?; #{indent_code}#{tmp} = #{tmp}.html_safe if #{tmp_safe}; "
+            indent_code = "#{safe} = #{tmp}.html_safe?; #{indent_code}#{tmp} = #{tmp}.html_safe if #{safe}; "
           end
           @last = :dynamic
           [:multi,

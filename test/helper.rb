@@ -5,6 +5,10 @@ class HtmlSafeString < String
   def html_safe?
     true
   end
+
+  def to_s
+    self
+  end
 end
 
 module TestHelper
