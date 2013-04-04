@@ -1,3 +1,7 @@
+0.6.3
+
+  * Fix HTML escaping for HTML::Pretty (Issue #69)
+
 0.6.2
 
   * [:html, :js, code] abstraction added
