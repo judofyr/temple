@@ -2,13 +2,13 @@ unless defined?(ActionView)
   raise "Rails is not loaded - Temple::Templates::Rails cannot be used"
 end
 
-if ::Rails::VERSION::MAJOR < 3
+if defined?(::Rails) && ::Rails::VERSION::MAJOR < 3
   raise "Temple supports only Rails 3.x and greater, your Rails version is #{::Rails::VERSION::STRING}"
 end
 
 module Temple
   module Templates
-    if ::Rails::VERSION::MAJOR == 3 && ::Rails::VERSION::MINOR < 1
+    if defined?(::Rails) && ::Rails::VERSION::MAJOR == 3 && ::Rails::VERSION::MINOR < 1
       class Rails < ActionView::TemplateHandler
         include ActionView::TemplateHandlers::Compilable
         extend Mixins::Template
