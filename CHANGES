@@ -1,3 +1,7 @@
+0.6.4
+
+  * Check for ActionView instead of Rails (#72)
+
 0.6.3
 
   * Fix HTML escaping for HTML::Pretty (Issue #69)
