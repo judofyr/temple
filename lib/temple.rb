@@ -40,6 +40,8 @@ module Temple
     autoload :Escapable,          'temple/filters/escapable'
     autoload :Eraser,             'temple/filters/eraser'
     autoload :Validator,          'temple/filters/validator'
+    autoload :Encoding,           'temple/filters/encoding'
+    autoload :RemoveBOM,          'temple/filters/remove_bom'
   end
 
   module HTML
