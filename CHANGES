@@ -1,4 +1,4 @@
-master
+0.6.5
 
   * Added Filters::CodeMerger
   * Added Filters::Encoding
