@@ -111,6 +111,18 @@ describe Temple::Generators::StringBuffer do
   end
 end
 
+describe Temple::Generators::ERB do
+  it 'should compile simple expressions' do
+    gen = Temple::Generators::ERB.new
+    gen.call([:static,  'test']).should.equal 'test'
+    gen.call([:dynamic, 'test']).should.equal '<%= test %>'
+    gen.call([:code,    'test']).should.equal '<% test %>'
+
+    gen.call([:multi, [:static, 'a'], [:static,  'b']]).should.equal 'ab'
+    gen.call([:multi, [:static, 'a'], [:dynamic, 'b']]).should.equal 'a<%= b %>'
+  end
+end
+
 describe Temple::Generators::RailsOutputBuffer do
   it 'should compile simple expressions' do
     gen = Temple::Generators::RailsOutputBuffer.new
