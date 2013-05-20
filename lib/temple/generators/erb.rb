@@ -1,5 +1,8 @@
 module Temple
   module Generators
+    # Implements an ERB generator.
+    #
+    # @api public
     class ERB < Generator
       def call(exp)
         compile(exp)
