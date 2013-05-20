@@ -33,6 +33,7 @@ module Temple
   end
 
   module Filters
+    autoload :CodeMerger,         'temple/filters/code_merger'
     autoload :ControlFlow,        'temple/filters/control_flow'
     autoload :MultiFlattener,     'temple/filters/multi_flattener'
     autoload :StaticMerger,       'temple/filters/static_merger'
