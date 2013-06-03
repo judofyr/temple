@@ -1,3 +1,9 @@
+begin
+  require 'escape_utils'
+rescue LoadError
+  # Loading EscapeUtils failed
+end
+
 module Temple
   # @api public
   module Utils
