@@ -1,3 +1,9 @@
+master
+
+  * Use default encoding utf-8
+  * Escape also '
+  * Try to load escape_utils by default
+
 0.6.5
 
   * Added Filters::CodeMerger

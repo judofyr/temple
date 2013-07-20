@@ -30,10 +30,11 @@ module Temple
       # Used by escape_html
       # @api private
       ESCAPE_HTML = {
-        '&' => '&amp;',
-        '"' => '&quot;',
-        '<' => '&lt;',
-        '>' => '&gt;',
+        '&'  => '&amp;',
+        '"'  => '&quot;',
+        '\'' => '&#39;',
+        '<'  => '&lt;',
+        '>'  => '&gt;'
       }.freeze
 
       # Returns an escaped copy of `html`.
@@ -41,7 +42,7 @@ module Temple
       # @param html [String] The string to escape
       # @return [String] The escaped string
       def escape_html(html)
-        html.to_s.gsub(/[&\"<>]/, ESCAPE_HTML)
+        html.to_s.gsub(/[&"'<>]/, ESCAPE_HTML)
       end
     else
       # Returns an escaped copy of `html`.
@@ -49,7 +50,7 @@ module Temple
       # @param html [String] The string to escape
       # @return [String] The escaped string
       def escape_html(html)
-        html.to_s.gsub(/&/n, '&amp;').gsub(/\"/n, '&quot;').gsub(/>/n, '&gt;').gsub(/</n, '&lt;')
+        html.to_s.gsub(/&/n, '&amp;').gsub(/"/n, '&quot;').gsub(/'/n, '&#39;').gsub(/>/n, '&gt;').gsub(/</n, '&lt;')
       end
     end
 
