@@ -26,7 +26,7 @@ module Temple
       def escape_html(html)
         EscapeUtils.escape_html(html.to_s, false)
       end
-    elsif RUBY_VERSION > '1.9'
+    else
       # Used by escape_html
       # @api private
       ESCAPE_HTML = {
@@ -37,20 +37,30 @@ module Temple
         '>'  => '&gt;'
       }.freeze
 
-      # Returns an escaped copy of `html`.
-      #
-      # @param html [String] The string to escape
-      # @return [String] The escaped string
-      def escape_html(html)
-        html.to_s.gsub(/[&"'<>]/, ESCAPE_HTML)
+      if //.respond_to?(:encoding)
+        ESCAPE_HTML_PATTERN = Regexp.union(*ESCAPE_HTML.keys)
+      else
+        # On 1.8, there is a kcode = 'u' bug that allows for XSS otherwise
+        # TODO doesn't apply to jruby, so a better condition above might be preferable?
+        ESCAPE_HTML_PATTERN = /#{Regexp.union(*ESCAPE_HTML.keys)}/n
       end
-    else
-      # Returns an escaped copy of `html`.
-      #
-      # @param html [String] The string to escape
-      # @return [String] The escaped string
-      def escape_html(html)
-        html.to_s.gsub(/&/n, '&amp;').gsub(/"/n, '&quot;').gsub(/'/n, '&#39;').gsub(/>/n, '&gt;').gsub(/</n, '&lt;')
+
+      if RUBY_VERSION > '1.9'
+        # Returns an escaped copy of `html`.
+        #
+        # @param html [String] The string to escape
+        # @return [String] The escaped string
+        def escape_html(html)
+          html.to_s.gsub(ESCAPE_HTML_PATTERN, ESCAPE_HTML)
+        end
+      else
+        # Returns an escaped copy of `html`.
+        #
+        # @param html [String] The string to escape
+        # @return [String] The escaped string
+        def escape_html(html)
+          html.to_s.gsub(ESCAPE_HTML_PATTERN) {|c| ESCAPE_HTML[c] }
+        end
       end
     end
 
