@@ -22,7 +22,7 @@ module Temple
     end
 
     def keys
-      @hash.inject([]) {|keys, h| keys += h.keys }.uniq
+      @hash.inject([]) {|keys, h| keys.concat(h.keys) }.uniq
     end
 
     def values
