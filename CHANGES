@@ -1,3 +1,8 @@
+0.6.7
+
+  * HTML::Pretty - change some block level tags
+  * Reduce memory allocations in immutable hash
+
 0.6.6
 
   * Use default encoding utf-8
