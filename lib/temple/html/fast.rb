@@ -23,7 +23,7 @@ module Temple
 
       define_options :format => :xhtml,
                      :attr_quote => '"',
-                     :autoclose => %w[meta img link br hr input area param col base],
+                     :autoclose => %w[base basefont bgsound link meta area br embed img keygen wbr input menuitem param source track hr col frame],
                      :js_wrapper => nil
 
       HTML = [:html, :html4, :html5]
