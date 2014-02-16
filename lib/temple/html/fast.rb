@@ -56,7 +56,7 @@ module Temple
       end
 
       def html?
-        HTML.include?(options[:format])
+        !xhtml?
       end
 
       def on_html_doctype(type)
@@ -104,10 +104,14 @@ module Temple
       end
 
       def on_html_attr(name, value)
-        [:multi,
-         [:static, " #{name}=#{options[:attr_quote]}"],
-         compile(value),
-         [:static, options[:attr_quote]]]
+        if html? && empty_exp?(value)
+          [:static, " #{name}"]
+        else
+          [:multi,
+           [:static, " #{name}=#{options[:attr_quote]}"],
+           compile(value),
+           [:static, options[:attr_quote]]]
+        end
       end
 
       def on_html_js(content)
