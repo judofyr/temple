@@ -1,3 +1,7 @@
+master
+
+  * HTML::Fast add svg doctype
+
 0.6.7
 
   * HTML::Pretty - change some block level tags
