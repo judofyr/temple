@@ -1,4 +1,4 @@
-master
+0.6.8
 
   * HTML::Fast add svg doctype
   * Render standalone html 5 attributes
