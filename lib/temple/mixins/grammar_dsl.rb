@@ -7,6 +7,12 @@ module Temple
           @grammar = grammar
         end
 
+        def match?(exp)
+          match(exp, [])
+        end
+        alias === match?
+        alias =~ match?
+
         def |(rule)
           Or.new(@grammar, self, rule)
         end
@@ -51,10 +57,6 @@ module Temple
           success = super
           unmatched << [@name, exp] unless success
           success
-        end
-
-        def match?(exp)
-          match(exp, [])
         end
 
         def validate!(exp)
@@ -120,13 +122,12 @@ module Temple
       def match?(exp)
         const_get(:Expression).match?(exp)
       end
+      alias === match?
+      alias =~ match?
 
       def validate!(exp)
         const_get(:Expression).validate!(exp)
       end
-
-      alias === match?
-      alias =~ match?
 
       def Value(value)
         Value.new(self, value)
