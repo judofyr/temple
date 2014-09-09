@@ -71,7 +71,8 @@ module Temple
     end
 
     def valid_keys
-      keys.concat(@valid.keys).uniq
+      (keys + @valid.keys +
+       @hash.map {|h| h.valid_keys if h.respond_to?(:valid_keys) }.compact.flatten).uniq
     end
 
     def add_valid_keys(*keys)
