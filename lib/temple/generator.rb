@@ -15,6 +15,7 @@ module Temple
     end
 
     def postamble
+      'nil'
     end
 
     def call(exp)
