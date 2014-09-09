@@ -11,6 +11,12 @@ module Temple
     define_options :capture_generator => 'StringBuffer',
                    :buffer => '_buf'
 
+    def preamble
+    end
+
+    def postamble
+    end
+
     def call(exp)
       [preamble, compile(exp), postamble].join('; ')
     end
