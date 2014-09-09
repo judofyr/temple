@@ -21,10 +21,9 @@ module Temple
       #
       # @return [void]
       def prepare
-        # Overwrite option: No streaming support in Tilt
-        opts = {}.update(self.class.default_options).update(options).update(:file => eval_file, :streaming => false)
+        opts = {}.update(self.class.default_options).update(options).update(:file => eval_file)
         opts.delete(:mime_type)
-        opts.delete(:outvar) # Sinatra gives us this invalid variable
+        opts[:buffer] ||= opts.delete(:outvar) # HACK Sinatra gives us outvar instead of buffer
         @src = self.class.compile(data, opts)
       end
 
