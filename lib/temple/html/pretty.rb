@@ -39,7 +39,7 @@ module Temple
           tmp = unique_name
           indent_code = ''
           indent_code << "#{tmp} = #{tmp}.sub(/\\A\\s*\\n?/, \"\\n\"); " if options[:indent_tags].include?(@last)
-          indent_code << "#{tmp} = #{tmp}.gsub(\"\n\", #{indent.inspect}); "
+          indent_code << "#{tmp} = #{tmp}.gsub(\"\\n\", #{indent.inspect}); "
           if ''.respond_to?(:html_safe)
             safe = unique_name
             # we have to first save if the string was html_safe
