@@ -1,4 +1,4 @@
-master
+0.6.9
 
   * HTML::Pretty: Fix wrong line numbers
   * Tilt template: Don't overwrite buffer always
@@ -188,7 +188,7 @@ master
 
 0.1.1
 
-  * Test added  
+  * Test added
 
 0.1.0
 
