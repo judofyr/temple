@@ -1,3 +1,13 @@
+master
+
+  * HTML::Pretty: Fix wrong line numbers
+  * Tilt template: Don't overwrite buffer always
+  * Generator: add preamble and postamble which do nothing
+  * Tilt template: don't overwrite streaming option
+  * OptionHash: inherit valid keys
+  * temple/html/safe: add poor man's html_safe? implementation (not required automatically)
+  * Temple::Mixins::GrammarDSL - Add some missing match? methods
+
 0.6.8
 
   * HTML::Fast add svg doctype

@@ -1,20 +1,11 @@
 require 'bacon'
 require 'temple'
 
-class HtmlSafeString < String
-  def html_safe?
-    true
-  end
-
-  def to_s
-    self
-  end
-end
-
 module TestHelper
   def with_html_safe
+    require 'temple/html/safe'
     String.send(:define_method, :html_safe?) { false }
-    String.send(:define_method, :html_safe) { HtmlSafeString.new(self) }
+    String.send(:define_method, :html_safe) { Temple::HTML::SafeString.new(self) }
     yield
   ensure
     String.send(:undef_method, :html_safe?) if String.method_defined?(:html_safe?)

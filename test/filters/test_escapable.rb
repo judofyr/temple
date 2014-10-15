@@ -34,7 +34,7 @@ describe Temple::Filters::Escapable do
   it 'should have use_html_safe option' do
     filter = Temple::Filters::Escapable.new(:use_html_safe => true)
     filter.call([:escape, true,
-      [:static, HtmlSafeString.new("a < b")]
+      [:static, Temple::HTML::SafeString.new("a < b")]
     ]).should.equal [:static, "a < b"]
   end
 
