@@ -7,6 +7,7 @@ master
   * OptionHash: inherit valid keys
   * temple/html/safe: add poor man's html_safe? implementation (not required automatically)
   * Temple::Mixins::GrammarDSL - Add some missing match? methods
+  * Temple::Utils.escape_html_safe - Add parameter safe
 
 0.6.8
 
