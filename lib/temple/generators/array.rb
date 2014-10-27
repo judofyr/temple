@@ -9,11 +9,11 @@ module Temple
     #
     # @api public
     class Array < Generator
-      def preamble
+      def create_buffer
         "#{buffer} = []"
       end
 
-      def postamble
+      def return_buffer
         buffer
       end
     end

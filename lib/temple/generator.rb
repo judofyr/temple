@@ -5,21 +5,39 @@ module Temple
   #
   # @api public
   class Generator
+    include Utils
     include Mixins::CompiledDispatcher
     include Mixins::Options
 
     define_options :capture_generator => 'StringBuffer',
-                   :buffer => '_buf'
+                   :buffer => '_buf',
+                   :save_buffer => false
+
+    def call(exp)
+      [preamble, compile(exp), postamble].flatten.compact.join('; ')
+    end
 
     def preamble
+      [save_buffer, create_buffer]
     end
 
     def postamble
-      'nil'
+      [return_buffer, restore_buffer]
     end
 
-    def call(exp)
-      [preamble, compile(exp), postamble].join('; ')
+    def save_buffer
+      "begin; #{@original_buffer = unique_name} = #{buffer} if defined?(#{buffer})" if options[:save_buffer]
+    end
+
+    def restore_buffer
+      "ensure; #{buffer} = #{@original_buffer}; end" if options[:save_buffer]
+    end
+
+    def create_buffer
+    end
+
+    def return_buffer
+      'nil'
     end
 
     def on(*exp)

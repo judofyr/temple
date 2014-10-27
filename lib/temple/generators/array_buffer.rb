@@ -12,15 +12,15 @@ module Temple
       def call(exp)
         case exp.first
         when :static
-          "#{buffer} = #{exp.last.inspect}"
+          [save_buffer, "#{buffer} = #{exp.last.inspect}", restore_buffer].compact.join('; ')
         when :dynamic
-          "#{buffer} = (#{exp.last}).to_s"
+          [save_buffer, "#{buffer} = (#{exp.last}).to_s", restore_buffer].compact.join('; ')
         else
           super
         end
       end
 
-      def postamble
+      def return_buffer
         "#{buffer} = #{buffer}.join"
       end
     end

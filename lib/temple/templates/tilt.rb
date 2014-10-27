@@ -23,6 +23,10 @@ module Temple
       def prepare
         opts = {}.update(self.class.default_options).update(options).update(:file => eval_file)
         opts.delete(:mime_type)
+        if opts.include?(:outvar)
+          opts[:buffer] = opts.delete(:outvar)
+          opts[:save_buffer] = true
+        end
         @src = self.class.compile(data, opts)
       end
 

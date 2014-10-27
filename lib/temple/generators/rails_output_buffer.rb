@@ -16,10 +16,10 @@ module Temple
                      :capture_generator => RailsOutputBuffer
 
       def call(exp)
-        [preamble, compile(exp), postamble].join('; ')
+        [preamble, compile(exp), postamble].flatten.compact.join('; ')
       end
 
-      def preamble
+      def create_buffer
         if options[:streaming] && options[:buffer] == '@output_buffer'
           "#{buffer} = output_buffer || #{options[:buffer_class]}.new"
         else
