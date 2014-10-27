@@ -23,7 +23,6 @@ module Temple
       def prepare
         opts = {}.update(self.class.default_options).update(options).update(:file => eval_file)
         opts.delete(:mime_type)
-        opts[:buffer] ||= opts.delete(:outvar) if opts.include?(:outvar) # HACK Sinatra gives us outvar instead of buffer
         @src = self.class.compile(data, opts)
       end
 
