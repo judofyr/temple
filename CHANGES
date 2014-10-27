@@ -1,7 +1,6 @@
 0.6.10
 
-  * Work around the Sinatra outvar problem again. We print a warning now. Sinatra
-    should fix recursive rendering (not overwriting an instance variable).
+  * Tilt template: Support :outvar and save/restore buffer to make the behaviour compatible with ERB
 
 0.6.9
 
