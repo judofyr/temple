@@ -9,16 +9,6 @@ module Temple
   module Utils
     extend self
 
-    # Returns an escaped copy of `html`.
-    # Strings which are declared as html_safe are not escaped.
-    #
-    # @param html [String] The string to escape
-    # @param safe [Boolean] If false use escape_html
-    # @return [String] The escaped string
-    def escape_html_safe(html, safe = true)
-      safe && html.html_safe? ? html : escape_html(html)
-    end
-
     if defined?(EscapeUtils)
       # Returns an escaped copy of `html`.
       #
@@ -63,6 +53,31 @@ module Temple
           html.to_s.gsub(ESCAPE_HTML_PATTERN) {|c| ESCAPE_HTML[c] }
         end
       end
+    end
+
+    # Returns an escaped copy of `html`.
+    # Strings which are declared as html_safe are not escaped.
+    #
+    # @note You should prefer {escape_html_safe}, which is a safe alias that can be
+    #   used both in systems that support and don't support SafeBuffer strings.
+    #
+    # @param html [String] The string to escape
+    # @return [String] The escaped string
+    def escape_html_unless_safe(html)
+      html.html_safe? ? html : escape_html(html)
+    end
+
+    # @!method escape_html_safe(html)
+    # @overload escape_html_safe(html)
+    #   When system supports SafeBuffer string, it's an alias to #escape_html_unless_safe.
+    #   @see escape_html_unless_safe
+    # @overload escape_html_safe(html)
+    #   When system doesn't support SafeBuffer string, it's an alias to #escape_html.
+    #   @see escape_html
+    if "".respond_to?(:html_safe?)
+      alias_method :escape_html_safe, :escape_html_unless_safe
+    else
+      alias_method :escape_html_safe, :escape_html
     end
 
     # Generate unique variable name
