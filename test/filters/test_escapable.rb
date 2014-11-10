@@ -12,7 +12,7 @@ describe Temple::Filters::Escapable do
                    [:dynamic, "ruby_method"]]
     ]).should.equal [:multi,
       [:static, "a &lt; b"],
-      [:dynamic, "::Temple::Utils.escape_html((ruby_method))"],
+      [:dynamic, "::Temple::Utils.escape_html_safe((ruby_method))"],
     ]
   end
 
@@ -31,11 +31,12 @@ describe Temple::Filters::Escapable do
     @filter.call(exp).should.equal exp
   end
 
-  it 'should have use_html_safe option' do
-    filter = Temple::Filters::Escapable.new(:use_html_safe => true)
-    filter.call([:escape, true,
-      [:static, Temple::HTML::SafeString.new("a < b")]
-    ]).should.equal [:static, "a < b"]
+  it 'should not escape html safe statics' do
+    with_html_safe do
+      @filter.call([:escape, true,
+        [:static, "a < b".html_safe]
+      ]).should.equal [:static, "a < b"]
+    end
   end
 
   it 'should support censoring' do

@@ -21,17 +21,27 @@ describe Temple::Utils do
     UniqueTest.new.unique_name.should.equal '_uniquetest1'
   end
 
-  it 'has escape_html' do
+  it '#escape_html escapes unsafe html strings' do
     Temple::Utils.escape_html('<').should.equal '&lt;'
   end
 
-  it 'should escape unsafe html strings' do
+  it '#escape_html escapes safe html strings' do
+    with_html_safe do
+      Temple::Utils.escape_html('<'.html_safe).should.equal '&lt;'
+    end
+  end
+
+  it "#escape_html_safe does not fail when used with strings without html safety patch" do
+    Temple::Utils.escape_html_safe('<').should.equal '&lt;'
+  end
+
+  it '#escape_html_safe escapes unsafe html strings' do
     with_html_safe do
       Temple::Utils.escape_html_safe('<').should.equal '&lt;'
     end
   end
 
-  it 'should not escape safe html strings' do
+  it '#escape_html_safe does not escape safe html strings' do
     with_html_safe do
       Temple::Utils.escape_html_safe('<'.html_safe).should.equal '<'
     end

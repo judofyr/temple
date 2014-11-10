@@ -4,12 +4,18 @@ require 'temple'
 module TestHelper
   def with_html_safe
     require 'temple/html/safe'
+    Object.send(:define_method, :html_safe?) { false }
+    Numeric.send(:define_method, :html_safe?) { true }
     String.send(:define_method, :html_safe?) { false }
     String.send(:define_method, :html_safe) { Temple::HTML::SafeString.new(self) }
+    Temple::Utils.send(:define_method, :escape_html_safe) { |str| escape_html_unless_safe(str) }
     yield
   ensure
+    Object.send(:undef_method, :html_safe?) if Object.method_defined?(:html_safe?)
+    Numeric.send(:undef_method, :html_safe?) if Numeric.method_defined?(:html_safe?)
     String.send(:undef_method, :html_safe?) if String.method_defined?(:html_safe?)
     String.send(:undef_method, :html_safe) if String.method_defined?(:html_safe)
+    Temple::Utils.send(:define_method, :escape_html_safe) { |str| escape_html(str) }
   end
 
   def grammar_validate(grammar, exp, message)
