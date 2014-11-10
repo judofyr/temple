@@ -22,9 +22,12 @@ module Temple
         'transitional' => '<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">',
       }.freeze
 
+      # See http://www.w3.org/html/wg/drafts/html/master/single-page.html#void-elements
+      HTML5_VOID_ELEMENTS = %w[area base br col embed hr img input keygen link menuitem meta param source track wbr]
+
       define_options :format => :xhtml,
                      :attr_quote => '"',
-                     :autoclose => %w[base basefont bgsound link meta area br embed img keygen wbr input menuitem param source track hr col frame],
+                     :autoclose => HTML5_VOID_ELEMENTS,
                      :js_wrapper => nil
 
       HTML = [:html, :html4, :html5]
