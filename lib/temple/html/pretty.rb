@@ -13,10 +13,10 @@ module Temple
 
       def initialize(opts = {})
         super
-        @last = nil
+        @indent_next = nil
         @indent = 0
         @pretty = options[:pretty]
-        @pre_tags = Regexp.new(options[:pre_tags].map {|t| "<#{t}" }.join('|'))
+        @pre_tags = @format != :xml && Regexp.new(options[:pre_tags].map {|t| "<#{t}" }.join('|'))
       end
 
       def call(exp)
@@ -25,11 +25,11 @@ module Temple
 
       def on_static(content)
         if @pretty
-          if @pre_tags !~ content
-            content = content.sub(/\A\s*\n?/, "\n") if options[:indent_tags].include?(@last)
+          if !@pre_tags || @pre_tags !~ content
+            content = content.sub(/\A\s*\n?/, "\n") if @indent_next
             content = content.gsub("\n", indent)
           end
-          @last = :static
+          @indent_next = false
         end
         [:static, content]
       end
@@ -38,7 +38,7 @@ module Temple
         if @pretty
           tmp = unique_name
           indent_code = ''
-          indent_code << "#{tmp} = #{tmp}.sub(/\\A\\s*\\n?/, \"\\n\"); " if options[:indent_tags].include?(@last)
+          indent_code << "#{tmp} = #{tmp}.sub(/\\A\\s*\\n?/, \"\\n\"); " if @indent_next
           indent_code << "#{tmp} = #{tmp}.gsub(\"\\n\", #{indent.inspect}); "
           if ''.respond_to?(:html_safe)
             safe = unique_name
@@ -46,10 +46,10 @@ module Temple
             # otherwise the gsub operation will lose that knowledge
             indent_code = "#{safe} = #{tmp}.html_safe?; #{indent_code}#{tmp} = #{tmp}.html_safe if #{safe}; "
           end
-          @last = :dynamic
+          @indent_next = false
           [:multi,
            [:code, "#{tmp} = (#{code}).to_s"],
-           [:code, "if #{@pre_tags_name} !~ #{tmp}; #{indent_code}end"],
+           [:code, @pre_tags ? "if #{@pre_tags_name} !~ #{tmp}; #{indent_code}end" : ''],
            [:dynamic, tmp]]
         else
           [:dynamic, code]
@@ -64,7 +64,7 @@ module Temple
       def on_html_comment(content)
         return super unless @pretty
         result = [:multi, [:static, tag_indent('comment')], super]
-        @last = :comment
+        @indent_next = false
         result
       end
 
@@ -76,9 +76,9 @@ module Temple
 
         @pretty = false
         result = [:multi, [:static, "#{tag_indent(name)}<#{name}"], compile(attrs)]
-        result << [:static, (closed && xhtml? ? ' /' : '') + '>']
+        result << [:static, (closed && @format != :html ? ' /' : '') + '>']
 
-        @pretty = !options[:pre_tags].include?(name)
+        @pretty = !@pre_tags || !options[:pre_tags].include?(name)
         if content
           @indent += 1
           result << compile(content)
@@ -93,6 +93,7 @@ module Temple
       protected
 
       def preamble
+        return [:multi] unless @pre_tags
         @pre_tags_name = unique_name
         [:code, "#{@pre_tags_name} = /#{@pre_tags.source}/"]
       end
@@ -103,9 +104,14 @@ module Temple
 
       # Return indentation before tag
       def tag_indent(name)
-        result = @last && (options[:indent_tags].include?(@last) || options[:indent_tags].include?(name)) ? indent : ''
-        @last = name
-        result
+        if @format == :xml
+          flag = @indent_next != nil
+          @indent_next = true
+        else
+          flag = @indent_next != nil && (@indent_next || options[:indent_tags].include?(name))
+          @indent_next = options[:indent_tags].include?(name)
+        end
+        flag ? indent : ''
       end
     end
   end

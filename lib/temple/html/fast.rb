@@ -2,43 +2,50 @@ module Temple
   module HTML
     # @api public
     class Fast < Filter
-      XHTML_DOCTYPES = {
-        '1.1'          => '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">',
-        '5'            => '<!DOCTYPE html>',
-        'html'         => '<!DOCTYPE html>',
-        'strict'       => '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">',
-        'frameset'     => '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Frameset//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd">',
-        'mobile'       => '<!DOCTYPE html PUBLIC "-//WAPFORUM//DTD XHTML Mobile 1.2//EN" "http://www.openmobilealliance.org/tech/DTD/xhtml-mobile12.dtd">',
-        'basic'        => '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML Basic 1.1//EN" "http://www.w3.org/TR/xhtml-basic/xhtml-basic11.dtd">',
-        'transitional' => '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">',
-        'svg'          => '<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">'
-      }.freeze
-
-      HTML_DOCTYPES = {
-        '5'            => '<!DOCTYPE html>',
-        'html'         => '<!DOCTYPE html>',
-        'strict'       => '<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">',
-        'frameset'     => '<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN" "http://www.w3.org/TR/html4/frameset.dtd">',
-        'transitional' => '<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">',
-      }.freeze
+      DOCTYPES = {
+        :xml => {
+          '1.1'          => '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">',
+          '5'            => '<!DOCTYPE html>',
+          'html'         => '<!DOCTYPE html>',
+          'strict'       => '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">',
+          'frameset'     => '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Frameset//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd">',
+          'mobile'       => '<!DOCTYPE html PUBLIC "-//WAPFORUM//DTD XHTML Mobile 1.2//EN" "http://www.openmobilealliance.org/tech/DTD/xhtml-mobile12.dtd">',
+          'basic'        => '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML Basic 1.1//EN" "http://www.w3.org/TR/xhtml-basic/xhtml-basic11.dtd">',
+          'transitional' => '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">',
+          'svg'          => '<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">'
+        },
+        :html => {
+          '5'            => '<!DOCTYPE html>',
+          'html'         => '<!DOCTYPE html>',
+          'strict'       => '<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">',
+          'frameset'     => '<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN" "http://www.w3.org/TR/html4/frameset.dtd">',
+          'transitional' => '<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">'
+        }
+      }
+      DOCTYPES[:xhtml] = DOCTYPES[:xml]
+      DOCTYPES.freeze
 
       # See http://www.w3.org/html/wg/drafts/html/master/single-page.html#void-elements
-      HTML5_VOID_ELEMENTS = %w[area base br col embed hr img input keygen link menuitem meta param source track wbr]
+      HTML_VOID_ELEMENTS = %w[area base br col embed hr img input keygen link menuitem meta param source track wbr]
 
       define_options :format => :xhtml,
                      :attr_quote => '"',
-                     :autoclose => HTML5_VOID_ELEMENTS,
+                     :autoclose => HTML_VOID_ELEMENTS,
                      :js_wrapper => nil
-
-      HTML = [:html, :html4, :html5]
 
       def initialize(opts = {})
         super
-        unless [:xhtml, *HTML].include?(options[:format])
-          raise ArgumentError, "Invalid format #{options[:format].inspect}"
+        @format = options[:format]
+        unless [:xhtml, :html, :xml].include?(@format)
+          if @format == :html4 || @format == :html5
+            @format = :html
+            warn "Format #{@format.inspect} is deprecated, use :html"
+          else
+            raise ArgumentError, "Invalid format #{@format.inspect}"
+          end
         end
         wrapper = options[:js_wrapper]
-        wrapper = xhtml? ? :cdata : :comment if wrapper == :guess
+        wrapper = @format == :xml || @format == :xhtml ? :cdata : :comment if wrapper == :guess
         @js_wrapper =
           case wrapper
           when :comment
@@ -55,25 +62,15 @@ module Temple
           end
       end
 
-      def xhtml?
-        options[:format] == :xhtml
-      end
-
-      def html?
-        !xhtml?
-      end
-
       def on_html_doctype(type)
         type = type.to_s.downcase
 
         if type =~ /^xml(\s+(.+))?$/
-          raise(FilterError, 'Invalid xml directive in html mode') if html?
+          raise(FilterError, 'Invalid xml directive in html mode') if @format == :html
           w = options[:attr_quote]
           str = "<?xml version=#{w}1.0#{w} encoding=#{w}#{$2 || 'utf-8'}#{w} ?>"
-        elsif html?
-          str = HTML_DOCTYPES[type] || raise(FilterError, "Invalid html doctype #{type}")
         else
-          str = XHTML_DOCTYPES[type] || raise(FilterError, "Invalid xhtml doctype #{type}")
+          str = DOCTYPES[@format][type] || raise(FilterError, "Invalid doctype #{type}")
         end
 
         [:static, str]
@@ -95,9 +92,9 @@ module Temple
 
       def on_html_tag(name, attrs, content = nil)
         name = name.to_s
-        closed = !content || (empty_exp?(content) && options[:autoclose].include?(name))
+        closed = !content || (empty_exp?(content) && (@format == :xml || options[:autoclose].include?(name)))
         result = [:multi, [:static, "<#{name}"], compile(attrs)]
-        result << [:static, (closed && xhtml? ? ' /' : '') + '>']
+        result << [:static, (closed && @format != :html ? ' /' : '') + '>']
         result << compile(content) if content
         result << [:static, "</#{name}>"] if !closed
         result
@@ -108,7 +105,7 @@ module Temple
       end
 
       def on_html_attr(name, value)
-        if html? && empty_exp?(value)
+        if @format == :html && empty_exp?(value)
           [:static, " #{name}"]
         else
           [:multi,
