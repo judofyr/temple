@@ -210,7 +210,7 @@ When you have a chain of a parsers, some filters and a generator you can finally
    generator :ArrayBuffer
  end
 
- engine = MyEngine.new(:strict => "For MyParser")
+ engine = MyEngine.new(strict: "For MyParser")
  engine.call(something)
 ```
 
@@ -227,7 +227,7 @@ Rails.
  require 'tilt'
 
  # Create template class MyTemplate and register your file extension
- MyTemplate = Temple::Templates::Tilt(MyEngine, :register_as => 'ext')
+ MyTemplate = Temple::Templates::Tilt(MyEngine, register_as: 'ext')
 
  Tilt.new('example.ext').render     # => Render a file
  MyTemplate.new { "String" }.render # => Render a string
