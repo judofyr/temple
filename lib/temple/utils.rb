@@ -89,5 +89,19 @@ module Temple
         false
       end
     end
+
+    def indent_dynamic(text, indent_next, indent, pre_tags = nil)
+      text = text.to_s
+      safe = text.respond_to?(:html_safe?) && text.html_safe?
+      return text if pre_tags && text =~ pre_tags
+
+      level = text.scan(/^\s*/).map(&:size).min
+      text = text.gsub(/^\s{#{level}}/, '') if level > 0
+
+      text = text.sub(/\A\s*\n?/, "\n") if indent_next
+      text = text.gsub("\n", indent)
+
+      safe ? text.html_safe : text
+    end
   end
 end

@@ -20,10 +20,7 @@ describe Temple::HTML::Pretty do
                        [:static, ">"],
                        [:multi,
                         [:static, "\n    text"],
-                        [:multi,
-                         [:code, "_temple_html_pretty2 = (code).to_s"],
-                         [:code, "if _temple_html_pretty1 !~ _temple_html_pretty2; _temple_html_pretty2 = _temple_html_pretty2.gsub(\"\\n\", \"\\n    \"); end"],
-                         [:dynamic, "_temple_html_pretty2"]]],
+                        [:dynamic, "::Temple::Utils.indent_dynamic((code), false, \"\\n    \", _temple_html_pretty1)"]],
                        [:static, "\n  </p>"]],
                       [:static, "\n</div>"]]]
   end
@@ -52,10 +49,7 @@ describe Temple::HTML::Pretty do
         [:dynamic, '"text<".html_safe']
       ).should.equal [:multi,
                       [:code, "_temple_html_pretty1 = /<code|<pre|<textarea/"],
-                      [:multi,
-                       [:code, "_temple_html_pretty2 = (\"text<\".html_safe).to_s"],
-                       [:code, "if _temple_html_pretty1 !~ _temple_html_pretty2; _temple_html_pretty3 = _temple_html_pretty2.html_safe?; _temple_html_pretty2 = _temple_html_pretty2.gsub(\"\\n\", \"\\n\"); _temple_html_pretty2 = _temple_html_pretty2.html_safe if _temple_html_pretty3; end"],
-                       [:dynamic, "_temple_html_pretty2"]]]
+                      [:dynamic, "::Temple::Utils.indent_dynamic((\"text<\".html_safe), nil, \"\\n\", _temple_html_pretty1)"]]
     end
   end
 end
