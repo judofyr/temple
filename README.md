@@ -195,8 +195,8 @@ When you have a chain of a parsers, some filters and a generator you can finally
 
 ```ruby
  class MyEngine < Temple::Engine
-   # First run MyParser, passing the :strict option
-   use MyParser, :strict
+   # First run MyParser
+   use MyParser
 
    # Then a custom filter
    use MyFilter
@@ -207,7 +207,7 @@ When you have a chain of a parsers, some filters and a generator you can finally
    filter :DynamicInliner
 
    # Finally the generator
-   generator :ArrayBuffer, :buffer
+   generator :ArrayBuffer
  end
 
  engine = MyEngine.new(:strict => "For MyParser")
