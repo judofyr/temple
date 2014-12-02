@@ -5,8 +5,8 @@ module Temple
     # @api public
     class Engine < Temple::Engine
       use Temple::ERB::Parser
-      use Temple::ERB::Trimming, :trim_mode
-      filter :Escapable, :use_html_safe, :disable_escape
+      use Temple::ERB::Trimming
+      filter :Escapable
       filter :MultiFlattener
       filter :DynamicInliner
       generator :ArrayBuffer

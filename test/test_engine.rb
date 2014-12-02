@@ -19,7 +19,7 @@ class TestEngine < Temple::Engine
   end
   use :MyFilter1, proc {|exp| exp }
   use :MyFilter2, proc {|exp| exp }
-  use Temple::HTML::Pretty, :format, :pretty => true
+  use Temple::HTML::Pretty, :pretty => true
   filter :MultiFlattener
   generator :ArrayBuffer
   use :BeforeLast, Callable1.new

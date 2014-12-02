@@ -95,12 +95,10 @@ module Temple
         name
       end
 
-      def chain_class_constructor(filter, option_filter)
-        local_options = option_filter.last.respond_to?(:to_hash) ? option_filter.pop.to_hash : {}
-        raise(ArgumentError, 'Only symbols allowed in option filter') unless option_filter.all? {|o| Symbol === o }
-        define_options(*option_filter) if respond_to?(:define_options)
+      def chain_class_constructor(filter, local_options)
+        define_options(filter.default_options.valid_keys) if respond_to?(:define_options) && filter.respond_to?(:default_options)
         proc do |engine|
-          filter.new({}.update(engine.options).delete_if {|k,v| !option_filter.include?(k) }.update(local_options))
+          filter.new({}.update(engine.options).delete_if {|k,v| !filter.default_options.valid_keys.include?(k) }.update(local_options))
         end
       end
 
@@ -157,7 +155,8 @@ module Temple
         when Class
           # Class argument (e.g Filter class)
           # The options are passed to the classes constructor.
-          [name, chain_class_constructor(filter, args)]
+          raise(ArgumentError, 'Too many arguments') if args.size > 1
+          [name, chain_class_constructor(filter, args.first || {})]
         else
           # Other callable argument (e.g. Object of class which implements #call or Method)
           # The callable has no access to the option hash of the engine.
