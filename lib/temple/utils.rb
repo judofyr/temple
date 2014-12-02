@@ -37,30 +37,14 @@ module Temple
         '>'  => '&gt;'
       }.freeze
 
-      if //.respond_to?(:encoding)
-        ESCAPE_HTML_PATTERN = Regexp.union(*ESCAPE_HTML.keys)
-      else
-        # On 1.8, there is a kcode = 'u' bug that allows for XSS otherwise
-        # TODO doesn't apply to jruby, so a better condition above might be preferable?
-        ESCAPE_HTML_PATTERN = /#{Regexp.union(*ESCAPE_HTML.keys)}/n
-      end
+      ESCAPE_HTML_PATTERN = Regexp.union(*ESCAPE_HTML.keys)
 
-      if RUBY_VERSION > '1.9'
-        # Returns an escaped copy of `html`.
-        #
-        # @param html [String] The string to escape
-        # @return [String] The escaped string
-        def escape_html(html)
-          html.to_s.gsub(ESCAPE_HTML_PATTERN, ESCAPE_HTML)
-        end
-      else
-        # Returns an escaped copy of `html`.
-        #
-        # @param html [String] The string to escape
-        # @return [String] The escaped string
-        def escape_html(html)
-          html.to_s.gsub(ESCAPE_HTML_PATTERN) {|c| ESCAPE_HTML[c] }
-        end
+      # Returns an escaped copy of `html`.
+      #
+      # @param html [String] The string to escape
+      # @return [String] The escaped string
+      def escape_html(html)
+        html.to_s.gsub(ESCAPE_HTML_PATTERN, ESCAPE_HTML)
       end
     end
 
