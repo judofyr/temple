@@ -13,10 +13,9 @@ module Temple
     # Strings which are declared as html_safe are not escaped.
     #
     # @param html [String] The string to escape
-    # @param safe [Boolean] If false use escape_html
     # @return [String] The escaped string
-    def escape_html_safe(html, safe = true)
-      safe && html.html_safe? ? html : escape_html(html)
+    def escape_html_safe(html)
+      html.html_safe? ? html : escape_html(html)
     end
 
     if defined?(EscapeUtils)
