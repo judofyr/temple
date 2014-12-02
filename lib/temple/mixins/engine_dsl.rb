@@ -79,9 +79,9 @@ module Temple
       end
 
       # Shortcuts to access namespaces
-      { :filter    => Temple::Filters,
-        :generator => Temple::Generators,
-        :html      => Temple::HTML }.each do |method, mod|
+      { filter: Temple::Filters,
+        generator: Temple::Generators,
+        html: Temple::HTML }.each do |method, mod|
         define_method(method) do |name, *options|
           use(name, mod.const_get(name), *options)
         end

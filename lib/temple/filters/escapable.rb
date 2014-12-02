@@ -9,8 +9,8 @@ module Temple
     class Escapable < Filter
       # Activate the usage of html_safe? if it is available (for Rails 3 for example)
       define_options :escape_code,
-                     :use_html_safe => ''.respond_to?(:html_safe?),
-                     :disable_escape => false
+                     use_html_safe: ''.respond_to?(:html_safe?),
+                     disable_escape: false
 
       def initialize(opts = {})
         super

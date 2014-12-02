@@ -9,9 +9,9 @@ module Temple
     include Mixins::CompiledDispatcher
     include Mixins::Options
 
-    define_options :capture_generator => 'StringBuffer',
-                   :buffer => '_buf',
-                   :save_buffer => false
+    define_options capture_generator: 'StringBuffer',
+                   buffer: '_buf',
+                   save_buffer: false
 
     def call(exp)
       [preamble, compile(exp), postamble].flatten.compact.join('; ')
@@ -53,7 +53,7 @@ module Temple
     end
 
     def on_capture(name, exp)
-      capture_generator.new(:buffer => name).call(exp)
+      capture_generator.new(buffer: name).call(exp)
     end
 
     def on_static(text)

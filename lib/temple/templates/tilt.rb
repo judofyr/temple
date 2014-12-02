@@ -5,7 +5,7 @@ module Temple
     class Tilt < ::Tilt::Template
       extend Mixins::Template
 
-      define_options :mime_type => 'text/html'
+      define_options mime_type: 'text/html'
 
       def self.default_mime_type
         options[:mime_type]
@@ -21,7 +21,7 @@ module Temple
       #
       # @return [void]
       def prepare
-        opts = {}.update(self.class.options).update(options).update(:file => eval_file)
+        opts = {}.update(self.class.options).update(options).update(file: eval_file)
         opts.delete(:mime_type)
         if opts.include?(:outvar)
           opts[:buffer] = opts.delete(:outvar)

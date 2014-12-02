@@ -2,14 +2,14 @@ module Temple
   module HTML
     # @api public
     class Pretty < Fast
-      define_options :indent => '  ',
-                     :pretty => true,
-                     :indent_tags => %w(article aside audio base body datalist dd div dl dt
+      define_options indent: '  ',
+                     pretty: true,
+                     indent_tags: %w(article aside audio base body datalist dd div dl dt
                                         fieldset figure footer form head h1 h2 h3 h4 h5 h6
                                         header hgroup hr html li link meta nav ol option p
                                         rp rt ruby section script style table tbody td tfoot
                                         th thead tr ul video doctype).freeze,
-                     :pre_tags => %w(code pre textarea).freeze
+                     pre_tags: %w(code pre textarea).freeze
 
       def initialize(opts = {})
         super

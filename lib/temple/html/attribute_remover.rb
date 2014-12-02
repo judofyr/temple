@@ -3,7 +3,7 @@ module Temple
     # This filter removes empty attributes
     # @api public
     class AttributeRemover < Filter
-      define_options :remove_empty_attrs => %w(id class)
+      define_options remove_empty_attrs: %w(id class)
 
       def initialize(opts = {})
         super

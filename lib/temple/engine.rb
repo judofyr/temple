@@ -24,7 +24,7 @@ module Temple
   #     replace :ArrayBuffer, Temple::Generators::RailsOutputBuffer
   #   end
   #
-  #   engine = MyEngine.new(:strict => "For MyParser")
+  #   engine = MyEngine.new(strict: "For MyParser")
   #   engine.call(something)
   #
   # @api public

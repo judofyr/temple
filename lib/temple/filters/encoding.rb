@@ -4,7 +4,7 @@ module Temple
     #
     # @api public
     class Encoding < Parser
-      define_options :encoding => 'utf-8'
+      define_options encoding: 'utf-8'
 
       def call(s)
         if options[:encoding] && s.respond_to?(:encoding)

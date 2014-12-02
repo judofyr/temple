@@ -4,7 +4,7 @@ module Temple
     #
     # @api public
     class Validator < Filter
-      define_options :grammar => Temple::Grammar
+      define_options grammar: Temple::Grammar
 
       def compile(exp)
         options[:grammar].validate!(exp)

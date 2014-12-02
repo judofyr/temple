@@ -14,7 +14,7 @@ describe Temple::Filter do
     Temple::Filter.should.respond_to :set_default_options
     Temple::Filter.should.respond_to :define_options
     Temple::Filter.new.options.should.be.instance_of Temple::ImmutableHash
-    SimpleFilter.new(:key => 3).options[:key].should.equal 3
+    SimpleFilter.new(key: 3).options[:key].should.equal 3
   end
 
   it 'should implement call' do

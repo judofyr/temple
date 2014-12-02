@@ -32,7 +32,7 @@ describe Temple::Generator do
   end
 
   it 'should compile multi expression' do
-    gen = SimpleGenerator.new(:buffer => "VAR")
+    gen = SimpleGenerator.new(buffer: "VAR")
     gen.call([:multi,
       [:static, "static"],
       [:dynamic, "dynamic"],
@@ -41,14 +41,14 @@ describe Temple::Generator do
   end
 
   it 'should compile capture' do
-    gen = SimpleGenerator.new(:buffer => "VAR", :capture_generator => SimpleGenerator)
+    gen = SimpleGenerator.new(buffer: "VAR", capture_generator: SimpleGenerator)
     gen.call([:capture, "foo",
       [:static, "test"]
     ]).should.equal 'VAR = BUFFER; foo = BUFFER; foo << (S:test); foo; VAR'
   end
 
   it 'should compile capture with multi' do
-    gen = SimpleGenerator.new(:buffer => "VAR", :capture_generator => SimpleGenerator)
+    gen = SimpleGenerator.new(buffer: "VAR", capture_generator: SimpleGenerator)
     gen.call([:multi,
       [:static, "before"],
 
@@ -63,7 +63,7 @@ describe Temple::Generator do
   end
 
   it 'should compile newlines' do
-    gen = SimpleGenerator.new(:buffer => "VAR")
+    gen = SimpleGenerator.new(buffer: "VAR")
     gen.call([:multi,
       [:static, "static"],
       [:newline],

@@ -3,7 +3,7 @@ module Temple
     # @api public
     class Fast < Filter
       DOCTYPES = {
-        :xml => {
+        xml: {
           '1.1'          => '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">',
           '5'            => '<!DOCTYPE html>',
           'html'         => '<!DOCTYPE html>',
@@ -14,7 +14,7 @@ module Temple
           'transitional' => '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">',
           'svg'          => '<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">'
         },
-        :html => {
+        html: {
           '5'            => '<!DOCTYPE html>',
           'html'         => '<!DOCTYPE html>',
           'strict'       => '<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">',
@@ -28,10 +28,10 @@ module Temple
       # See http://www.w3.org/html/wg/drafts/html/master/single-page.html#void-elements
       HTML_VOID_ELEMENTS = %w[area base br col embed hr img input keygen link menuitem meta param source track wbr]
 
-      define_options :format => :xhtml,
-                     :attr_quote => '"',
-                     :autoclose => HTML_VOID_ELEMENTS,
-                     :js_wrapper => nil
+      define_options format: :xhtml,
+                     attr_quote: '"',
+                     autoclose: HTML_VOID_ELEMENTS,
+                     js_wrapper: nil
 
       def initialize(opts = {})
         super

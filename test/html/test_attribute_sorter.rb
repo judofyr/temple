@@ -3,7 +3,7 @@ require 'helper'
 describe Temple::HTML::AttributeSorter do
   before do
     @ordered   = Temple::HTML::AttributeSorter.new
-    @unordered = Temple::HTML::AttributeSorter.new :sort_attrs => false
+    @unordered = Temple::HTML::AttributeSorter.new sort_attrs: false
   end
 
   it 'should sort html attributes by name by default, when :sort_attrs is true' do

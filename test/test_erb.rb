@@ -56,7 +56,7 @@ world}
 <% end %>
 }
 
-    erb(src, :trim_mode => '>').should.equal ERB.new(src, nil, '>').result
-    erb(src, :trim_mode => '<>').should.equal ERB.new(src, nil, '<>').result
+    erb(src, trim_mode: '>').should.equal ERB.new(src, nil, '>').result
+    erb(src, trim_mode: '<>').should.equal ERB.new(src, nil, '<>').result
   end
 end

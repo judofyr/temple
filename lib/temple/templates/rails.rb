@@ -12,7 +12,7 @@ module Temple
       extend Mixins::Template
 
       def call(template)
-        opts = {}.update(self.class.options).update(:file => template.identifier)
+        opts = {}.update(self.class.options).update(file: template.identifier)
         self.class.compile(template.source, opts)
       end
 

@@ -10,10 +10,10 @@ module Temple
     # @api public
     class RailsOutputBuffer < StringBuffer
       define_options :streaming,
-                     :buffer_class => 'ActiveSupport::SafeBuffer',
-                     :buffer => '@output_buffer',
+                     buffer_class: 'ActiveSupport::SafeBuffer',
+                     buffer: '@output_buffer',
                      # output_buffer is needed for Rails 3.1 Streaming support
-                     :capture_generator => RailsOutputBuffer
+                     capture_generator: RailsOutputBuffer
 
       def call(exp)
         [preamble, compile(exp), postamble].flatten.compact.join('; ')

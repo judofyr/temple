@@ -33,7 +33,7 @@ describe Temple::Filters::Escapable do
 
   it 'should have use_html_safe option' do
     with_html_safe do
-      filter = Temple::Filters::Escapable.new(:use_html_safe => true)
+      filter = Temple::Filters::Escapable.new(use_html_safe: true)
       filter.call([:escape, true,
         [:static, Temple::HTML::SafeString.new("a < b")]
       ]).should.equal [:static, "a < b"]
@@ -41,7 +41,7 @@ describe Temple::Filters::Escapable do
   end
 
   it 'should support censoring' do
-    filter = Temple::Filters::Escapable.new(:escape_code => '(%s).gsub("Temple sucks", "Temple rocks")')
+    filter = Temple::Filters::Escapable.new(escape_code: '(%s).gsub("Temple sucks", "Temple rocks")')
     filter.call([:escape, true,
       [:static, "~~ Temple sucks ~~"]
     ]).should.equal [:static, "~~ Temple rocks ~~"]
