@@ -1,14 +1,24 @@
 module Temple
   module Mixins
     # @api public
-    module DefaultOptions
+    module ClassOptions
       def set_default_options(opts)
-        default_options.update(opts)
+        warn 'set_default_options has been deprecated, use set_options'
+        set_options(opts)
       end
 
       def default_options
-        @default_options ||= OptionHash.new(superclass.respond_to?(:default_options) ?
-                                            superclass.default_options : nil) do |hash, key, deprecated|
+        warn 'default_options has been deprecated, use options'
+        options
+      end
+
+      def set_options(opts)
+        options.update(opts)
+      end
+
+      def options
+        @options ||= OptionHash.new(superclass.respond_to?(:options) ?
+                                            superclass.options : nil) do |hash, key, deprecated|
           unless @option_validator_disabled
             if deprecated
               warn "Option #{key.inspect} is deprecated by #{self}"
@@ -24,19 +34,19 @@ module Temple
       def define_options(*opts)
         if opts.last.respond_to?(:to_hash)
           hash = opts.pop.to_hash
-          default_options.add_valid_keys(hash.keys)
-          default_options.update(hash)
+          options.add_valid_keys(hash.keys)
+          options.update(hash)
         end
-        default_options.add_valid_keys(opts)
+        options.add_valid_keys(opts)
       end
 
       def define_deprecated_options(*opts)
         if opts.last.respond_to?(:to_hash)
           hash = opts.pop.to_hash
-          default_options.add_deprecated_keys(hash.keys)
-          default_options.update(hash)
+          options.add_deprecated_keys(hash.keys)
+          options.update(hash)
         end
-        default_options.add_deprecated_keys(opts)
+        options.add_deprecated_keys(opts)
       end
 
       def disable_option_validator!
@@ -68,7 +78,7 @@ module Temple
     module Options
       def self.included(base)
         base.class_eval do
-          extend DefaultOptions
+          extend ClassOptions
           extend ThreadOptions
         end
       end
@@ -76,9 +86,9 @@ module Temple
       attr_reader :options
 
       def initialize(opts = {})
-        self.class.default_options.validate_hash!(opts)
-        self.class.default_options.validate_hash!(self.class.thread_options) if self.class.thread_options
-        @options = ImmutableHash.new({}.update(self.class.default_options).update(self.class.thread_options || {}).update(opts))
+        self.class.options.validate_hash!(opts)
+        self.class.options.validate_hash!(self.class.thread_options) if self.class.thread_options
+        @options = ImmutableHash.new({}.update(self.class.options).update(self.class.thread_options || {}).update(opts))
       end
     end
   end

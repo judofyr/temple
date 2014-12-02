@@ -96,9 +96,9 @@ module Temple
       end
 
       def chain_class_constructor(filter, local_options)
-        define_options(filter.default_options.valid_keys) if respond_to?(:define_options) && filter.respond_to?(:default_options)
+        define_options(filter.options.valid_keys) if respond_to?(:define_options) && filter.respond_to?(:options)
         proc do |engine|
-          filter.new({}.update(engine.options).delete_if {|k,v| !filter.default_options.valid_keys.include?(k) }.update(local_options))
+          filter.new({}.update(engine.options).delete_if {|k,v| !filter.options.valid_keys.include?(k) }.update(local_options))
         end
       end
 

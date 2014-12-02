@@ -8,11 +8,11 @@ module Temple
       define_options :mime_type => 'text/html'
 
       def self.default_mime_type
-        default_options[:mime_type]
+        options[:mime_type]
       end
 
       def self.default_mime_type=(mime_type)
-        default_options[:mime_type] = mime_type
+        options[:mime_type] = mime_type
       end
 
       # Prepare Temple template
@@ -21,7 +21,7 @@ module Temple
       #
       # @return [void]
       def prepare
-        opts = {}.update(self.class.default_options).update(options).update(:file => eval_file)
+        opts = {}.update(self.class.options).update(options).update(:file => eval_file)
         opts.delete(:mime_type)
         if opts.include?(:outvar)
           opts[:buffer] = opts.delete(:outvar)

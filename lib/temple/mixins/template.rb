@@ -2,7 +2,7 @@ module Temple
   module Mixins
     # @api private
     module Template
-      include DefaultOptions
+      include ClassOptions
 
       def compile(code, options)
         engine = options.delete(:engine)
@@ -18,8 +18,8 @@ module Temple
         register_as = options.delete(:register_as)
         template = Class.new(self)
         template.disable_option_validator!
-        template.default_options[:engine] = engine
-        template.default_options.update(options)
+        template.options[:engine] = engine
+        template.options.update(options)
         template.register_as(*register_as) if register_as
         template
       end

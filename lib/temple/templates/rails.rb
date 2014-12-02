@@ -15,7 +15,7 @@ module Temple
 
         def compile(template)
           # Overwrite option: No streaming support in Rails < 3.1
-          opts = {}.update(self.class.default_options).update(:file => template.identifier, :streaming => false)
+          opts = {}.update(self.class.options).update(:file => template.identifier, :streaming => false)
           self.class.compile(template.source, opts)
         end
 
@@ -30,12 +30,12 @@ module Temple
         extend Mixins::Template
 
         def call(template)
-          opts = {}.update(self.class.default_options).update(:file => template.identifier)
+          opts = {}.update(self.class.options).update(:file => template.identifier)
           self.class.compile(template.source, opts)
         end
 
         def supports_streaming?
-          self.class.default_options[:streaming]
+          self.class.options[:streaming]
         end
 
         def self.register_as(*names)

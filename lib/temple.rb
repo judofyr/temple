@@ -20,7 +20,7 @@ module Temple
     autoload :EngineDSL,          'temple/mixins/engine_dsl'
     autoload :GrammarDSL,         'temple/mixins/grammar_dsl'
     autoload :Options,            'temple/mixins/options'
-    autoload :DefaultOptions,     'temple/mixins/options'
+    autoload :ClassOptions,       'temple/mixins/options'
     autoload :Template,           'temple/mixins/template'
   end
 
