@@ -236,7 +236,7 @@ Rails.
 Installation
 ------------
 
-You need Ruby 1.8.7 or Ruby 1.9.2 to work with Temple. Temple is published as a Ruby Gem which can be installed
+You need at least Ruby 1.9.3 to work with Temple. Temple is published as a Ruby Gem which can be installed
 as following:
 
 ```bash
