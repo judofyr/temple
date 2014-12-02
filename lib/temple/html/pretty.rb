@@ -17,7 +17,6 @@ module Temple
         @indent = 0
         @pretty = options[:pretty]
         @pre_tags = @format != :xml && Regexp.new(options[:pre_tags].map {|t| "<#{t}" }.join('|'))
-        puts "hi"
       end
 
       def call(exp)
