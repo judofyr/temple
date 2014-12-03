@@ -2,15 +2,13 @@ module Temple
   module Mixins
     # @api public
     module ClassOptions
-      # @deprecated
       def set_default_options(opts)
-        #warn 'set_default_options has been deprecated, use set_options'
+        warn 'set_default_options has been deprecated, use set_options'
         set_options(opts)
       end
 
-      # @deprecated
       def default_options
-        #warn 'default_options has been deprecated, use options'
+        warn 'default_options has been deprecated, use options'
         options
       end
 
