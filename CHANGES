@@ -1,3 +1,13 @@
+0.7.0
+
+  * Drop Ruby 1.8.7 support
+  * EngeinDSL: Remove option filter
+  * HTML: Deprecate :html4, :html5 formats
+  * HTML: Add format :xml
+  * Rename DefaultOptions to ClassOptions
+  * Deprecate default_options in favor of options
+  * Add Utils.indent_dynamic
+
 0.6.10
 
   * Tilt template: Support :outvar and save/restore buffer to make the behaviour compatible with ERB
