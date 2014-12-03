@@ -1,7 +1,7 @@
 0.7.0
 
   * Drop Ruby 1.8.7 support
-  * EngeinDSL: Remove option filter
+  * EngineDSL: Remove option filter
   * HTML: Deprecate :html4, :html5 formats
   * HTML: Add format :xml
   * Rename DefaultOptions to ClassOptions
