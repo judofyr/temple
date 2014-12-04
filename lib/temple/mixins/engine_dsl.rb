@@ -99,7 +99,7 @@ module Temple
         define_options(filter.options.valid_keys) if respond_to?(:define_options) && filter.respond_to?(:options)
         proc do |engine|
           opts = {}.update(engine.options)
-          opts.delete_if {|k,v| !filter.options.valid_keys.include?(k) } if filter.respond_to?(:options)
+          opts.delete_if {|k,v| !filter.options.valid_key?(k) } if filter.respond_to?(:options)
           opts.update(local_options) if local_options
           filter.new(opts)
         end

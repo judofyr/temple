@@ -88,8 +88,8 @@ module Temple
     end
 
     def validate_key!(key)
-      @handler.call(self, key, true) if deprecated_key?(key)
-      @handler.call(self, key, false) unless valid_key?(key)
+      @handler.call(self, key, :deprecated) if deprecated_key?(key)
+      @handler.call(self, key, :invalid) unless valid_key?(key)
     end
 
     def deprecated_key?(key)

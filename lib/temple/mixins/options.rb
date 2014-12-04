@@ -18,16 +18,8 @@ module Temple
 
       def options
         @options ||= OptionMap.new(superclass.respond_to?(:options) ?
-                                   superclass.options : nil) do |hash, key, deprecated|
-          unless @option_validator_disabled
-            if deprecated
-              warn "Option #{key.inspect} is deprecated by #{self}"
-            else
-              # TODO: This will raise an exception in the future!
-              # raise ArgumentError, "Option #{key.inspect} is not supported by #{self}"
-              warn "Option #{key.inspect} is not supported by #{self}"
-            end
-          end
+                                   superclass.options : nil) do |hash, key, what|
+          warn "#{self}: Option #{key.inspect} is #{what}" unless @option_validator_disabled
         end
       end
 
