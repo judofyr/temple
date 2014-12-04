@@ -1,19 +1,19 @@
 module Temple
-  # Immutable hash class which supports hash merging
+  # Immutable map class which supports map merging
   # @api public
-  class ImmutableHash
+  class ImmutableMap
     include Enumerable
 
-    def initialize(*hash)
-      @hash = hash.compact
+    def initialize(*map)
+      @map = map.compact
     end
 
     def include?(key)
-      @hash.any? {|h| h.include?(key) }
+      @map.any? {|h| h.include?(key) }
     end
 
     def [](key)
-      @hash.each {|h| return h[key] if h.include?(key) }
+      @map.each {|h| return h[key] if h.include?(key) }
       nil
     end
 
@@ -22,7 +22,7 @@ module Temple
     end
 
     def keys
-      @hash.inject([]) {|keys, h| keys.concat(h.keys) }.uniq
+      @map.inject([]) {|keys, h| keys.concat(h.keys) }.uniq
     end
 
     def values
@@ -36,25 +36,25 @@ module Temple
     end
   end
 
-  # Mutable hash class which supports hash merging
+  # Mutable map class which supports map merging
   # @api public
-  class MutableHash < ImmutableHash
-    def initialize(*hash)
-      super({}, *hash)
+  class MutableMap < ImmutableMap
+    def initialize(*map)
+      super({}, *map)
     end
 
     def []=(key, value)
-      @hash.first[key] = value
+      @map.first[key] = value
     end
 
-    def update(hash)
-      @hash.first.update(hash)
+    def update(map)
+      @map.first.update(map)
     end
   end
 
-  class OptionHash < MutableHash
-    def initialize(*hash, &block)
-      super(*hash)
+  class OptionMap < MutableMap
+    def initialize(*map, &block)
+      super(*map)
       @handler = block
       @valid = {}
       @deprecated = {}
@@ -65,14 +65,14 @@ module Temple
       super
     end
 
-    def update(hash)
-      validate_hash!(hash)
+    def update(map)
+      validate_map!(map)
       super
     end
 
     def valid_keys
       (keys + @valid.keys +
-       @hash.map {|h| h.valid_keys if h.respond_to?(:valid_keys) }.compact.flatten).uniq
+       @map.map {|h| h.valid_keys if h.respond_to?(:valid_keys) }.compact.flatten).uniq
     end
 
     def add_valid_keys(*keys)
@@ -83,8 +83,8 @@ module Temple
       keys.flatten.each { |key| @valid[key] = @deprecated[key] = true }
     end
 
-    def validate_hash!(hash)
-      hash.to_hash.keys.each {|key| validate_key!(key) }
+    def validate_map!(map)
+      map.to_hash.keys.each {|key| validate_key!(key) }
     end
 
     def validate_key!(key)
@@ -94,12 +94,12 @@ module Temple
 
     def deprecated_key?(key)
       @deprecated.include?(key) ||
-        @hash.any? {|h| h.deprecated_key?(key) if h.respond_to?(:deprecated_key?) }
+        @map.any? {|h| h.deprecated_key?(key) if h.respond_to?(:deprecated_key?) }
     end
 
     def valid_key?(key)
       include?(key) || @valid.include?(key) ||
-        @hash.any? {|h| h.valid_key?(key) if h.respond_to?(:valid_key?) }
+        @map.any? {|h| h.valid_key?(key) if h.respond_to?(:valid_key?) }
     end
   end
 end

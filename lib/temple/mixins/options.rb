@@ -17,8 +17,8 @@ module Temple
       end
 
       def options
-        @options ||= OptionHash.new(superclass.respond_to?(:options) ?
-                                            superclass.options : nil) do |hash, key, deprecated|
+        @options ||= OptionMap.new(superclass.respond_to?(:options) ?
+                                   superclass.options : nil) do |hash, key, deprecated|
           unless @option_validator_disabled
             if deprecated
               warn "Option #{key.inspect} is deprecated by #{self}"
@@ -57,7 +57,7 @@ module Temple
     module ThreadOptions
       def with_options(options)
         old_options = thread_options
-        Thread.current[thread_options_key] = ImmutableHash.new(options, thread_options)
+        Thread.current[thread_options_key] = ImmutableMap.new(options, thread_options)
         yield
       ensure
         Thread.current[thread_options_key] = old_options
@@ -86,9 +86,9 @@ module Temple
       attr_reader :options
 
       def initialize(opts = {})
-        self.class.options.validate_hash!(opts)
-        self.class.options.validate_hash!(self.class.thread_options) if self.class.thread_options
-        @options = ImmutableHash.new({}.update(self.class.options).update(self.class.thread_options || {}).update(opts))
+        self.class.options.validate_map!(opts)
+        self.class.options.validate_map!(self.class.thread_options) if self.class.thread_options
+        @options = ImmutableMap.new({}.update(self.class.options).update(self.class.thread_options || {}).update(opts))
       end
     end
   end

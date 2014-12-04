@@ -10,9 +10,9 @@ module Temple
   autoload :Filter,               'temple/filter'
   autoload :Templates,            'temple/templates'
   autoload :Grammar,              'temple/grammar'
-  autoload :ImmutableHash,        'temple/hash'
-  autoload :MutableHash,          'temple/hash'
-  autoload :OptionHash,           'temple/hash'
+  autoload :ImmutableMap,         'temple/map'
+  autoload :MutableMap,           'temple/map'
+  autoload :OptionMap,            'temple/map'
 
   module Mixins
     autoload :Dispatcher,         'temple/mixins/dispatcher'
