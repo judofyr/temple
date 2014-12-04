@@ -13,7 +13,7 @@ module Temple
       end
 
       def self.register_as(*names)
-        raise "Rails is not loaded - Temple::Templates::Rails cannot be used" unless defined?(::ActionView)
+        raise 'Rails is not loaded - Temple::Templates::Rails cannot be used' unless defined?(::ActionView)
         if ::ActiveSupport::VERSION::MAJOR < 3 || ::ActiveSupport::VERSION::MAJOR == 3 && ::ActiveSupport::VERSION::MINOR < 1
           raise "Temple supports only Rails 3.1 and greater, your Rails version is #{::ActiveSupport::VERSION::STRING}"
         end
