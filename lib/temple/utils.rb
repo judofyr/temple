@@ -15,7 +15,7 @@ module Temple
     # @param html [String] The string to escape
     # @return [String] The escaped string
     def escape_html_safe(html)
-      html.html_safe? ? html : escape_html(html)
+      html.html_safe? ? html.to_s : escape_html(html)
     end
 
     if defined?(EscapeUtils)
