@@ -1,3 +1,8 @@
+0.7.1
+
+  * Rename *Hash to *Map
+  * Add Filters::StaticFreezer
+
 0.7.0
 
   * Drop Ruby 1.8.7 support
