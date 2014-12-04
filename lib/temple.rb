@@ -44,6 +44,7 @@ module Temple
     autoload :ControlFlow,        'temple/filters/control_flow'
     autoload :MultiFlattener,     'temple/filters/multi_flattener'
     autoload :StaticMerger,       'temple/filters/static_merger'
+    autoload :StaticFreezer,      'temple/filters/static_freezer'
     autoload :DynamicInliner,     'temple/filters/dynamic_inliner'
     autoload :Escapable,          'temple/filters/escapable'
     autoload :Eraser,             'temple/filters/eraser'
