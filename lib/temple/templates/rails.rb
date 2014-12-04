@@ -1,11 +1,3 @@
-unless defined?(ActionView)
-  raise "Rails is not loaded - Temple::Templates::Rails cannot be used"
-end
-
-if ::ActionPack::VERSION::MAJOR < 3 || ::ActionPack::VERSION::MAJOR == 3 && ::ActionPack::VERSION::MINOR < 1
-  raise "Temple supports only Rails 3.1 and greater, your Rails version is #{::ActionPack::VERSION::STRING}"
-end
-
 module Temple
   module Templates
     class Rails
@@ -21,8 +13,12 @@ module Temple
       end
 
       def self.register_as(*names)
+        raise "Rails is not loaded - Temple::Templates::Rails cannot be used" unless defined?(::ActionView)
+        if ::ActiveSupport::VERSION::MAJOR < 3 || ::ActiveSupport::VERSION::MAJOR == 3 && ::ActiveSupport::VERSION::MINOR < 1
+          raise "Temple supports only Rails 3.1 and greater, your Rails version is #{::ActiveSupport::VERSION::STRING}"
+        end
         names.each do |name|
-          ActionView::Template.register_template_handler name.to_sym, new
+          ::ActionView::Template.register_template_handler name.to_sym, new
         end
       end
     end
