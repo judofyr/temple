@@ -77,7 +77,7 @@ end
 
 describe Temple::Generators::Array do
   it 'should compile simple expressions' do
-    gen = Temple::Generators::Array.new
+    gen = Temple::Generators::Array.new(freeze_static: false)
     gen.call([:static,  'test']).should.equal '_buf = []; _buf << ("test"); _buf'
     gen.call([:dynamic, 'test']).should.equal '_buf = []; _buf << (test); _buf'
     gen.call([:code,    'test']).should.equal '_buf = []; test; _buf'
@@ -85,11 +85,16 @@ describe Temple::Generators::Array do
     gen.call([:multi, [:static, 'a'], [:static,  'b']]).should.equal '_buf = []; _buf << ("a"); _buf << ("b"); _buf'
     gen.call([:multi, [:static, 'a'], [:dynamic, 'b']]).should.equal '_buf = []; _buf << ("a"); _buf << (b); _buf'
   end
+
+  it 'should freeze static' do
+    gen = Temple::Generators::Array.new(freeze_static: true)
+    gen.call([:static,  'test']).should.equal '_buf = []; _buf << ("test".freeze); _buf'
+  end
 end
 
 describe Temple::Generators::ArrayBuffer do
   it 'should compile simple expressions' do
-    gen = Temple::Generators::ArrayBuffer.new
+    gen = Temple::Generators::ArrayBuffer.new(freeze_static: false)
     gen.call([:static,  'test']).should.equal '_buf = "test"'
     gen.call([:dynamic, 'test']).should.equal '_buf = (test).to_s'
     gen.call([:code,    'test']).should.equal '_buf = []; test; _buf = _buf.join'
@@ -97,17 +102,29 @@ describe Temple::Generators::ArrayBuffer do
     gen.call([:multi, [:static, 'a'], [:static,  'b']]).should.equal '_buf = []; _buf << ("a"); _buf << ("b"); _buf = _buf.join'
     gen.call([:multi, [:static, 'a'], [:dynamic, 'b']]).should.equal '_buf = []; _buf << ("a"); _buf << (b); _buf = _buf.join'
   end
+
+  it 'should freeze static' do
+    gen = Temple::Generators::ArrayBuffer.new(freeze_static: true)
+    gen.call([:static,  'test']).should.equal '_buf = "test"'
+    gen.call([:multi, [:dynamic, '1'], [:static,  'test']]).should.equal '_buf = []; _buf << (1); _buf << ("test".freeze); _buf = _buf.join'
+  end
 end
 
 describe Temple::Generators::StringBuffer do
   it 'should compile simple expressions' do
-    gen = Temple::Generators::StringBuffer.new
+    gen = Temple::Generators::StringBuffer.new(freeze_static: false)
     gen.call([:static,  'test']).should.equal '_buf = "test"'
     gen.call([:dynamic, 'test']).should.equal '_buf = (test).to_s'
     gen.call([:code,    'test']).should.equal '_buf = \'\'; test; _buf'
 
     gen.call([:multi, [:static, 'a'], [:static,  'b']]).should.equal '_buf = \'\'; _buf << ("a"); _buf << ("b"); _buf'
     gen.call([:multi, [:static, 'a'], [:dynamic, 'b']]).should.equal '_buf = \'\'; _buf << ("a"); _buf << ((b).to_s); _buf'
+  end
+
+  it 'should freeze static' do
+    gen = Temple::Generators::StringBuffer.new(freeze_static: true)
+    gen.call([:static,  'test']).should.equal '_buf = "test"'
+    gen.call([:multi, [:dynamic, '1'], [:static,  'test']]).should.equal '_buf = \'\'; _buf << ((1).to_s); _buf << ("test".freeze); _buf'
   end
 end
 
@@ -125,12 +142,17 @@ end
 
 describe Temple::Generators::RailsOutputBuffer do
   it 'should compile simple expressions' do
-    gen = Temple::Generators::RailsOutputBuffer.new
+    gen = Temple::Generators::RailsOutputBuffer.new(freeze_static: false)
     gen.call([:static,  'test']).should.equal '@output_buffer = ActiveSupport::SafeBuffer.new; ' +
       '@output_buffer.safe_concat(("test")); @output_buffer'
     gen.call([:dynamic, 'test']).should.equal '@output_buffer = ActiveSupport::SafeBuffer.new; ' +
       '@output_buffer.safe_concat(((test).to_s)); @output_buffer'
     gen.call([:code,    'test']).should.equal '@output_buffer = ActiveSupport::SafeBuffer.new; ' +
       'test; @output_buffer'
+  end
+
+  it 'should freeze static' do
+    gen = Temple::Generators::RailsOutputBuffer.new(freeze_static: true)
+    gen.call([:static,  'test']).should.equal '@output_buffer = ActiveSupport::SafeBuffer.new; @output_buffer.safe_concat(("test".freeze)); @output_buffer'
   end
 end

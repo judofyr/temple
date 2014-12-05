@@ -11,7 +11,8 @@ module Temple
 
     define_options :save_buffer,
                    capture_generator: 'StringBuffer',
-                   buffer: '_buf'
+                   buffer: '_buf',
+                   freeze_static: RUBY_VERSION >= '2.1'
 
     def call(exp)
       [preamble, compile(exp), postamble].flatten.compact.join('; ')
@@ -57,7 +58,7 @@ module Temple
     end
 
     def on_static(text)
-      concat(text.inspect)
+      concat(options[:freeze_static] ? "#{text.inspect}.freeze" : text.inspect)
     end
 
     def on_dynamic(code)

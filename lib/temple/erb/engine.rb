@@ -8,7 +8,7 @@ module Temple
       use Temple::ERB::Trimming
       filter :Escapable
       filter :MultiFlattener
-      filter :DynamicInliner
+      filter :StaticMerger
       generator :ArrayBuffer
     end
   end
