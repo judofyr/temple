@@ -20,10 +20,6 @@ module Temple
         text
       end
 
-      def on_newline
-        "<%\n%>"
-      end
-
       def on_dynamic(code)
         "<%= #{code} %>"
       end
