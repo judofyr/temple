@@ -17,15 +17,7 @@ module Temple
 
       def remove(name)
         name = chain_name(name)
-        found = false
-        chain.reject! do |i|
-          if i.first == name
-            found = true
-          else
-            false
-          end
-        end
-        raise "#{name} not found" unless found
+        raise "#{name} not found" unless chain.reject! {|i| i.first == name }
         chain_modified!
       end
 
@@ -34,47 +26,24 @@ module Temple
       def before(name, *args, &block)
         name = chain_name(name)
         e = chain_element(args, block)
-        found, i = false, 0
-        while i < chain.size
-          if chain[i].first == name
-            found = true
-            chain.insert(i, e)
-            i += 2
-          else
-            i += 1
-          end
-        end
-        raise "#{name} not found" unless found
+        chain.map! {|f| f.first == name ? [e, f] : [f] }.flatten!(1)
+        raise "#{name} not found" unless chain.include?(e)
         chain_modified!
       end
 
       def after(name, *args, &block)
         name = chain_name(name)
         e = chain_element(args, block)
-        found, i = false, 0
-        while i < chain.size
-          if chain[i].first == name
-            found = true
-            i += 1
-            chain.insert(i, e)
-          end
-          i += 1
-        end
-        raise "#{name} not found" unless found
+        chain.map! {|f| f.first == name ? [f, e] : [f] }.flatten!(1)
+        raise "#{name} not found" unless chain.include?(e)
         chain_modified!
       end
 
       def replace(name, *args, &block)
         name = chain_name(name)
         e = chain_element(args, block)
-        found = false
-        chain.each_with_index do |c, i|
-          if c.first == name
-            found = true
-            chain[i] = e
-          end
-        end
-        raise "#{name} not found" unless found
+        chain.map! {|f| f.first == name ? e : f }
+        raise "#{name} not found" unless chain.include?(e)
         chain_modified!
       end
 
