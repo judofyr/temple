@@ -108,28 +108,9 @@ module Temple
       def chain_proc_constructor(name, filter)
         raise(ArgumentError, 'Proc or blocks must have arity 0 or 1') if filter.arity > 1
         method_name = "FILTER #{name}"
-        if Class === self
-          define_method(method_name, &filter)
-          filter = instance_method(method_name)
-          if filter.arity == 1
-            proc {|engine| filter.bind(engine) }
-          else
-            proc do |engine|
-              f = filter.bind(engine).call
-              raise 'Constructor must return callable object' unless f.respond_to?(:call)
-              f
-            end
-          end
-        else
-          (class << self; self; end).class_eval { define_method(method_name, &filter) }
-          filter = method(method_name)
-          proc {|engine| filter }
-        end
-      end
-
-      def chain_callable_constructor(filter)
-        raise(ArgumentError, 'Class or callable argument is required') unless filter.respond_to?(:call)
-        proc {|engine| filter }
+        c = Class === self ? self : singleton_class
+        filter = c.class_eval { define_method(method_name, &filter); instance_method(method_name) }
+        proc {|engine| filter.arity == 1 ? filter.bind(engine) : filter.bind(engine).call }
       end
 
       def chain_element(args, block)
@@ -164,7 +145,8 @@ module Temple
           # Other callable argument (e.g. Object of class which implements #call or Method)
           # The callable has no access to the option hash of the engine.
           raise(ArgumentError, 'Too many arguments') unless args.empty?
-          [name, chain_callable_constructor(filter)]
+          raise(ArgumentError, 'Class or callable argument is required') unless filter.respond_to?(:call)
+          [name, proc { filter }]
         end
       end
     end

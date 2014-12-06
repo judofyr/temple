@@ -57,7 +57,11 @@ module Temple
     end
 
     def call_chain
-      @call_chain ||= @chain.map {|name, constructor| constructor.call(self) }.compact
+      @call_chain ||= @chain.map do |name, constructor|
+        f = constructor.call(self)
+        raise "Constructor #{name} must return callable object" if f && !f.respond_to?(:call)
+        f
+      end.compact
     end
   end
 end
