@@ -1,6 +1,5 @@
 require 'helper'
-require 'erb'
-require 'tilt'
+require 'tilt/erubis'
 
 describe Temple::ERB::Engine do
   it 'should compile erb' do
@@ -12,7 +11,7 @@ describe Temple::ERB::Engine do
 <% end %>
 }
 
-    erb(src).should.equal ERB.new(src).result
+    erb(src).should.equal erubis(src)
   end
 
   it 'should recognize comments' do
@@ -21,7 +20,7 @@ hello
   <%# comment -- ignored -- useful in testing %>
 world}
 
-    erb(src).should.equal ERB.new(src).result
+    erb(src).should.equal erubis(src)
   end
 
   it 'should recognize <%% and %%>' do
@@ -32,7 +31,7 @@ world}
 <% end %>
 }
 
-    erb(src).should.equal "\n<%\n\n  %>\n\n" #ERB.new(src).result
+    erb(src).should.equal "\n<%\n  %>\n"
   end
 
   it 'should escape automatically' do
@@ -56,7 +55,7 @@ world}
 <% end %>
 }
 
-    erb(src, trim_mode: '>').should.equal ERB.new(src, nil, '>').result
-    erb(src, trim_mode: '<>').should.equal ERB.new(src, nil, '<>').result
+    erb(src, trim: true).should.equal erubis(src, trim: true)
+    erb(src, trim: false).should.equal erubis(src, trim: false)
   end
 end

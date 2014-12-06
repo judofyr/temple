@@ -19,6 +19,10 @@ module TestHelper
   def erb(src, options = {})
     Temple::ERB::Template.new(options) { src }.render
   end
+
+  def erubis(src, options = {})
+    Tilt::ErubisTemplate.new(options) { src }.render
+  end
 end
 
 class Bacon::Context
