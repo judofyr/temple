@@ -1,3 +1,7 @@
+0.7.3
+
+  * Temple::ERB::Trimming - replace option trim_mode with trim and switch to erubis-like trimming
+
 0.7.2
 
   * Remove Filters::StaticFreezer, the generator does the freezing
