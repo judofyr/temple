@@ -147,6 +147,10 @@ describe Temple::Engine do
     engine.chain.size.should.equal 7
     engine.chain[0].first.should.equal :Parser
     engine.chain[1].first.should.equal :MyFilter2
+
+    engine = TestEngine.new
+    engine.remove /Last/
+    engine.chain.size.should.equal 6
   end
 
   it 'should have #replace' do

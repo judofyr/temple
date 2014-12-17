@@ -17,7 +17,7 @@ module Temple
 
       def remove(name)
         name = chain_name(name)
-        raise "#{name} not found" unless chain.reject! {|i| i.first == name }
+        raise "#{name} not found" unless chain.reject! {|i| name === i.first }
         chain_modified!
       end
 
@@ -26,7 +26,7 @@ module Temple
       def before(name, *args, &block)
         name = chain_name(name)
         e = chain_element(args, block)
-        chain.map! {|f| f.first == name ? [e, f] : [f] }.flatten!(1)
+        chain.map! {|f| name === f.first ? [e, f] : [f] }.flatten!(1)
         raise "#{name} not found" unless chain.include?(e)
         chain_modified!
       end
@@ -34,7 +34,7 @@ module Temple
       def after(name, *args, &block)
         name = chain_name(name)
         e = chain_element(args, block)
-        chain.map! {|f| f.first == name ? [f, e] : [f] }.flatten!(1)
+        chain.map! {|f| name === f.first ? [f, e] : [f] }.flatten!(1)
         raise "#{name} not found" unless chain.include?(e)
         chain_modified!
       end
@@ -42,7 +42,7 @@ module Temple
       def replace(name, *args, &block)
         name = chain_name(name)
         e = chain_element(args, block)
-        chain.map! {|f| f.first == name ? e : f }
+        chain.map! {|f| name === f.first ? e : f }
         raise "#{name} not found" unless chain.include?(e)
         chain_modified!
       end
@@ -59,9 +59,16 @@ module Temple
       private
 
       def chain_name(name)
-        name = Class === name ? name.name.to_sym : name
-        raise(ArgumentError, 'Name argument must be Class or Symbol') unless Symbol === name
-        name
+        case name
+        when Class
+          name.name.to_sym
+        when Symbol, String
+          name.to_sym
+        when Regexp
+          name
+        else
+          raise(ArgumentError, 'Name argument must be Class, Symbol, String or Regexp')
+        end
       end
 
       def chain_class_constructor(filter, local_options)
