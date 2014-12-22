@@ -1,3 +1,8 @@
+0.7.4
+
+  * EngineDSL: allow to replace/remove with regexp
+  * Fix deprecation warning (#83)
+
 0.7.3
 
   * Temple::ERB::Trimming - replace option trim_mode with trim and switch to erubis-like trimming
