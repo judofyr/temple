@@ -38,8 +38,8 @@ module Temple
         @format = options[:format]
         unless [:xhtml, :html, :xml].include?(@format)
           if @format == :html4 || @format == :html5
-            @format = :html
             warn "Format #{@format.inspect} is deprecated, use :html"
+            @format = :html
           else
             raise ArgumentError, "Invalid format #{@format.inspect}"
           end
