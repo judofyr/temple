@@ -79,7 +79,7 @@ module Temple
       return text if pre_tags && text =~ pre_tags
 
       level = text.scan(/^\s*/).map(&:size).min
-      text = text.gsub(/^\s{#{level}}/, '') if level > 0
+      text = text.gsub(/(?!\A)^\s{#{level}}/, '') if level > 0
 
       text = text.sub(/\A\s*\n?/, "\n") if indent_next
       text = text.gsub("\n", indent)
