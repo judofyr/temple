@@ -1,3 +1,7 @@
+0.7.5
+
+  * HTML::Pretty Fix indentation issue (https://github.com/slim-template/slim-rails/issues/78)
+
 0.7.4
 
   * EngineDSL: allow to replace/remove with regexp
