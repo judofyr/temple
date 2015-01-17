@@ -188,7 +188,7 @@ The HTML abstraction is processed by the html filters (Temple::HTML::Fast and Te
 Example:
     [:html, :doctype, '5']
 generates
-    <!DOCTYPE html5>
+    <!DOCTYPE html>
 
 Supported doctypes:
 
