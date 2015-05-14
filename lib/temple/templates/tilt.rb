@@ -24,8 +24,9 @@ module Temple
         opts = {}.update(self.class.options).update(options).update(file: eval_file)
         opts.delete(:mime_type)
         if opts.include?(:outvar)
-          opts[:buffer] = opts.delete(:outvar)
-          opts[:save_buffer] = true
+          #opts[:buffer] = opts.delete(:outvar)
+          #opts[:save_buffer] = true
+          opts.delete(:outvar)
         end
         @src = self.class.compile(data, opts)
       end
