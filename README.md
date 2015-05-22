@@ -246,8 +246,10 @@ as following:
 Engines using Temple
 --------------------
 
-* [Slim](http://github.com/slim-template/slim)
-* [Sal](http://github.com/stonean/sal.rb)
+* [Slim](https://github.com/slim-template/slim)
+* [Hamlit](https://github.com/k0kubun/hamlit)
+* [Faml](https://github.com/eagletmt/faml)
+* [Sal](https://github.com/stonean/sal.rb)
 * [Temple-Mustache (Example implementation)](https://github.com/minad/temple-mustache)
 * Temple ERB example implementation (Temple::ERB::Template)
 
