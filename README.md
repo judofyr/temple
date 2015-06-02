@@ -253,6 +253,7 @@ Engines using Temple
 * [Sal](https://github.com/stonean/sal.rb)
 * [Temple-Mustache (Example implementation)](https://github.com/minad/temple-mustache)
 * Temple ERB example implementation (Temple::ERB::Template)
+* [WLang](https://github.com/blambeau/wlang)
 
 Acknowledgements
 ----------------
