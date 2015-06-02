@@ -44,6 +44,13 @@ module Temple
       def disable_option_validator!
         @option_validator_disabled = true
       end
+
+      def new_with_option_filter(opts = {})
+        valid_opts = opts.to_hash.select do |k, v|
+          options.valid_key?(k)
+        end
+        new(valid_opts)
+      end
     end
 
     module ThreadOptions
