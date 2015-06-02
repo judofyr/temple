@@ -23,6 +23,7 @@ Links
 * API documentation:
     * Latest Gem: <http://rubydoc.info/gems/temple/frames>
     * GitHub master: <http://rubydoc.info/github/judofyr/temple/master/frames>
+* Abstractions: <http://github.com/judofyr/temple/blob/master/EXPRESSIONS.md>
 
 Overview
 --------
@@ -123,7 +124,7 @@ continue to use the HTML abstraction. Maybe you even want to write your
 compiler in another language? Sexps are easily serialized and if you don't
 mind working across processes, it's not a problem at all.
 
-All abstractions used by Temple are documented in {file:EXPRESSIONS.md EXPRESSIONS}.
+All abstractions used by Temple are documented in [EXPRESSIONS.md](EXPRESSIONS.md).
 
 Compilers
 ---------
