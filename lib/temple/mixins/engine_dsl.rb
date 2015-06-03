@@ -86,7 +86,22 @@ module Temple
         method_name = "FILTER #{name}"
         c = Class === self ? self : singleton_class
         filter = c.class_eval { define_method(method_name, &filter); instance_method(method_name) }
-        proc {|engine| filter.arity == 1 ? filter.bind(engine) : filter.bind(engine).call }
+        proc do |engine|
+          if filter.arity == 1
+            # the proc takes one argument, e.g. use(:Filter) {|exp| exp }
+            filter.bind(engine)
+          else
+            f = filter.bind(engine).call
+            if f.respond_to? :call
+              # the proc returns a callable object, e.g. use(:Filter) { Filter.new }
+              f
+            else
+              raise(ArgumentError, 'Proc or blocks must return a Callable or a Class') unless f.respond_to? :new
+              # the proc returns a class, e.g. use(:Filter) { Filter }
+              f.new(f.respond_to?(:options) ? options.to_hash.select {|k,v| f.options.valid_key?(k) } : options)
+            end
+          end
+        end
       end
 
       def chain_element(args, block)
