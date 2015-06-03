@@ -98,7 +98,7 @@ module Temple
             else
               raise(ArgumentError, 'Proc or blocks must return a Callable or a Class') unless f.respond_to? :new
               # the proc returns a class, e.g. use(:Filter) { Filter }
-              f.new(f.respond_to?(:options) ? options.to_hash.select {|k,v| f.options.valid_key?(k) } : options)
+              f.new(f.respond_to?(:options) ? engine.options.to_hash.select {|k,v| f.options.valid_key?(k) } : engine.options)
             end
           end
         end
