@@ -58,7 +58,7 @@ module Temple
       def replace_dispatcher(exp)
         tree = DispatchNode.new
         dispatched_methods.each do |method|
-          method.split('_')[1..-1].inject(tree) {|node, type| node[type.to_sym] }.method = method
+          method.split('_'.freeze)[1..-1].inject(tree) {|node, type| node[type.to_sym] }.method = method
         end
         self.class.class_eval %{def dispatcher(exp)
   return replace_dispatcher(exp) if self.class != #{self.class}
@@ -91,7 +91,7 @@ end}
             code = "case(exp[#{level}])\n"
             each do |key, child|
               code << "when #{key.inspect}\n  " <<
-                child.compile(level + 1, call_method).gsub("\n", "\n  ") << "\n"
+                child.compile(level + 1, call_method).gsub("\n".freeze, "\n  ".freeze) << "\n".freeze
             end
             code << "else\n  " << (call_method || 'exp') << "\nend"
           end

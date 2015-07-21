@@ -26,8 +26,8 @@ module Temple
       def on_static(content)
         return [:static, content] unless @pretty
         unless @pre_tags && @pre_tags =~ content
-          content = content.sub(/\A\s*\n?/, "\n") if @indent_next
-          content = content.gsub("\n", indent)
+          content = content.sub(/\A\s*\n?/, "\n".freeze) if @indent_next
+          content = content.gsub("\n".freeze, indent)
         end
         @indent_next = false
         [:static, content]

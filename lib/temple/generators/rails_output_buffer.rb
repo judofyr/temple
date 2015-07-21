@@ -16,7 +16,7 @@ module Temple
                      capture_generator: RailsOutputBuffer
 
       def call(exp)
-        [preamble, compile(exp), postamble].flatten.compact.join('; ')
+        [preamble, compile(exp), postamble].flatten.compact.join('; '.freeze)
       end
 
       def create_buffer
