@@ -54,7 +54,7 @@ module Temple
     # @return [String] Variable name
     def unique_name(prefix = nil)
       @unique_name ||= 0
-      prefix ||= (@unique_prefix ||= self.class.name.gsub('::', '_').downcase)
+      prefix ||= (@unique_prefix ||= self.class.name.gsub('::'.freeze, '_'.freeze).downcase)
       "_#{prefix}#{@unique_name += 1}"
     end
 
@@ -81,8 +81,8 @@ module Temple
       level = text.scan(/^\s*/).map(&:size).min
       text = text.gsub(/(?!\A)^\s{#{level}}/, '') if level > 0
 
-      text = text.sub(/\A\s*\n?/, "\n") if indent_next
-      text = text.gsub("\n", indent)
+      text = text.sub(/\A\s*\n?/, "\n".freeze) if indent_next
+      text = text.gsub("\n".freeze, indent)
 
       safe ? text.html_safe : text
     end
