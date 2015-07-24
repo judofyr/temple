@@ -30,12 +30,11 @@ module Temple
               value.each_with_index {|v, i| exp << [:capture, "#{captures}[#{i}]", v] }
               exp << [:dynamic, "#{captures}.reject(&:empty?).join(#{delimiter.inspect})"]
             end
-            [:html, :attr, name, exp]
           else
-            [:html, :attr, name, value.first]
+            exp = value.first
           end
+          [:html, :attr, name, exp]
         end
-
         [:html, :attrs, *attrs]
       end
     end
