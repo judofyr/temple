@@ -27,7 +27,6 @@ module Temple
             if value.all? {|v| contains_nonempty_static?(v) }
               exp << value.first
               value[1..-1].each {|v| exp << [:static, delimiter] << v }
-              [:html, :attr, name, exp]
             else
               captures = unique_name
               exp << [:code, "#{captures} = []"]
