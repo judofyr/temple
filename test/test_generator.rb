@@ -97,16 +97,16 @@ describe Temple::Generators::ArrayBuffer do
     gen = Temple::Generators::ArrayBuffer.new(freeze_static: false)
     gen.call([:static,  'test']).should.equal '_buf = "test"'
     gen.call([:dynamic, 'test']).should.equal '_buf = (test).to_s'
-    gen.call([:code,    'test']).should.equal '_buf = []; test; _buf = _buf.join'
+    gen.call([:code,    'test']).should.equal '_buf = []; test; _buf = _buf.join("")'
 
-    gen.call([:multi, [:static, 'a'], [:static,  'b']]).should.equal '_buf = []; _buf << ("a"); _buf << ("b"); _buf = _buf.join'
-    gen.call([:multi, [:static, 'a'], [:dynamic, 'b']]).should.equal '_buf = []; _buf << ("a"); _buf << (b); _buf = _buf.join'
+    gen.call([:multi, [:static, 'a'], [:static,  'b']]).should.equal '_buf = []; _buf << ("a"); _buf << ("b"); _buf = _buf.join("")'
+    gen.call([:multi, [:static, 'a'], [:dynamic, 'b']]).should.equal '_buf = []; _buf << ("a"); _buf << (b); _buf = _buf.join("")'
   end
 
   it 'should freeze static' do
     gen = Temple::Generators::ArrayBuffer.new(freeze_static: true)
     gen.call([:static,  'test']).should.equal '_buf = "test"'
-    gen.call([:multi, [:dynamic, '1'], [:static,  'test']]).should.equal '_buf = []; _buf << (1); _buf << ("test".freeze); _buf = _buf.join'
+    gen.call([:multi, [:dynamic, '1'], [:static,  'test']]).should.equal '_buf = []; _buf << (1); _buf << ("test".freeze); _buf = _buf.join("".freeze)'
   end
 end
 
