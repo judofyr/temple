@@ -5,7 +5,7 @@ module Temple
     #   _buf = []
     #   _buf << "static"
     #   _buf << dynamic
-    #   _buf.join
+    #   _buf.join("")
     #
     # @api public
     class ArrayBuffer < Array
@@ -21,7 +21,8 @@ module Temple
       end
 
       def return_buffer
-        "#{buffer} = #{buffer}.join"
+        freeze = options[:freeze_static] ? '.freeze' : ''
+        "#{buffer} = #{buffer}.join(\"\"#{freeze})"
       end
     end
   end

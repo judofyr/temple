@@ -9,7 +9,7 @@ module Temple
       end
 
       def on_multi(*exp)
-        exp.map {|e| compile(e) }.join
+        exp.map {|e| compile(e) }.join('')
       end
 
       def on_capture(name, exp)
