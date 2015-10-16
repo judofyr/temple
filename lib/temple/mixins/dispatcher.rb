@@ -60,10 +60,12 @@ module Temple
         dispatched_methods.each do |method|
           method.split('_'.freeze)[1..-1].inject(tree) {|node, type| node[type.to_sym] }.method = method
         end
-        self.class.class_eval %{def dispatcher(exp)
-  return replace_dispatcher(exp) if self.class != #{self.class}
-  #{tree.compile.gsub("\n", "\n  ")}
-end}
+        self.class.class_eval <<-RUBY, __FILE__, __LINE__ + 1
+          def dispatcher(exp)
+            return replace_dispatcher(exp) if self.class != #{self.class}
+            #{tree.compile.gsub("\n", "\n  ")}
+          end
+        RUBY
         dispatcher(exp)
       end
 
