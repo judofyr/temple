@@ -4,7 +4,7 @@ begin
 rescue LoadError
 end
 
-if defined?(Ripper)
+if defined?(Ripper) && RUBY_VERSION >= "2.0.0"
   describe Temple::Filters::StringSplitter do
     before do
       @filter = Temple::Filters::StringSplitter.new

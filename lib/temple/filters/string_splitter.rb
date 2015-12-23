@@ -7,7 +7,7 @@ module Temple
       rescue LoadError
       end
 
-      if defined?(Ripper)
+      if defined?(Ripper) && RUBY_VERSION >= "2.0.0"
         class << self
           # `code` param must be valid string literal
           def compile(code)
