@@ -13,7 +13,7 @@ module Temple
           def compile(code)
             [].tap do |exps|
               tokens = Ripper.lex(code.strip)
-              tokens.pop while tokens.last && %i[on_comment on_sp].include?(tokens.last[1])
+              tokens.pop while tokens.last && [:on_comment, :on_sp].include?(tokens.last[1])
 
               if tokens.size < 2
                 raise "Expected token size >= 2 but got: #{tokens.size}"
