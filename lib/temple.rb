@@ -43,6 +43,7 @@ module Temple
     autoload :CodeMerger,         'temple/filters/code_merger'
     autoload :ControlFlow,        'temple/filters/control_flow'
     autoload :MultiFlattener,     'temple/filters/multi_flattener'
+    autoload :StaticAnalyzer,     'temple/filters/static_analyzer'
     autoload :StaticMerger,       'temple/filters/static_merger'
     autoload :DynamicInliner,     'temple/filters/dynamic_inliner'
     autoload :Escapable,          'temple/filters/escapable'
