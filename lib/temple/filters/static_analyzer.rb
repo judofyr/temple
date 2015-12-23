@@ -8,27 +8,27 @@ if defined?(Ripper)
     module Filters
       # Convert [:dynamic, code] to [:static, text] if code is static Ruby expression.
       class StaticAnalyzer < Filter
-        STATIC_TOKENS = %i[
-          on_tstring_beg on_tstring_end on_tstring_content
-          on_embexpr_beg on_embexpr_end
-          on_lbracket on_rbracket
-          on_qwords_beg on_words_sep on_qwords_sep
-          on_lparen on_rparen
-          on_lbrace on_rbrace on_label
-          on_int on_float on_imaginary
-          on_comma on_sp
+        STATIC_TOKENS = [
+          :on_tstring_beg, :on_tstring_end, :on_tstring_content,
+          :on_embexpr_beg, :on_embexpr_end,
+          :on_lbracket, :on_rbracket,
+          :on_qwords_beg, :on_words_sep, :on_qwords_sep,
+          :on_lparen, :on_rparen,
+          :on_lbrace, :on_rbrace, :on_label,
+          :on_int, :on_float, :on_imaginary,
+          :on_comma, :on_sp,
         ].freeze
 
-        DYNAMIC_TOKENS = %i[
-          on_ident on_period
+        DYNAMIC_TOKENS = [
+          :on_ident, :on_period,
         ].freeze
 
-        STATIC_KEYWORDS = %w[
-          true false nil
+        STATIC_KEYWORDS = [
+          'true', 'false', 'nil',
         ].freeze
 
-        STATIC_OPERATORS = %w[
-          =>
+        STATIC_OPERATORS = [
+          '=>',
         ].freeze
 
         def self.static?(code)
