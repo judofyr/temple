@@ -1,8 +1,15 @@
 begin
+  require 'cgi/escape'
+rescue LoadError
+  # Loading CGI Escape failed
+end
+
+begin
   require 'escape_utils'
 rescue LoadError
   # Loading EscapeUtils failed
 end
+
 
 module Temple
   # @api public
@@ -25,6 +32,14 @@ module Temple
       # @return [String] The escaped string
       def escape_html(html)
         EscapeUtils.escape_html(html.to_s, false)
+      end
+    elsif defined?(CGI.escapeHTML)
+      # Returns an escaped copy of `html`.
+      #
+      # @param html [String] The string to escape
+      # @return [String] The escaped string
+      def escape_html(html)
+        CGI.escapeHTML(html.to_s)
       end
     else
       # Used by escape_html
