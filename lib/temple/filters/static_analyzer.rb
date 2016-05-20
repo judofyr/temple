@@ -1,3 +1,8 @@
+begin
+  require 'ripper'
+rescue LoadError
+end
+
 module Temple
   module Filters
     # Convert [:dynamic, code] to [:static, text] if code is static Ruby expression.
@@ -24,11 +29,6 @@ module Temple
       STATIC_OPERATORS = [
         '=>',
       ].freeze
-
-      begin
-        require 'ripper'
-      rescue LoadError
-      end
 
       if defined?(Ripper)
         def self.static?(code)

@@ -1,12 +1,12 @@
+begin
+  require 'ripper'
+rescue LoadError
+end
+
 module Temple
   module Filters
     # Compile [:dynamic, "foo#{bar}"] to [:multi, [:static, 'foo'], [:dynamic, 'bar']]
     class StringSplitter < Filter
-      begin
-        require 'ripper'
-      rescue LoadError
-      end
-
       if defined?(Ripper) && RUBY_VERSION >= "2.0.0"
         class << self
           # `code` param must be valid string literal
