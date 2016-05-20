@@ -12,15 +12,12 @@ module Temple
         input.scan(ERB_PATTERN) do |token, indicator, code|
           text = input[pos...$~.begin(0)]
           pos  = $~.end(0)
-          if token
-            case token
-            when "\n"
-              result << [:static, "#{text}\n"] << [:newline]
-            when '<%%', '%%>'
-              result << [:static, text] unless text.empty?
-              token.slice!(1)
-              result << [:static, token]
-            end
+          if token == "\n"
+            result << [:static, "#{text}\n"] << [:newline]
+          elsif token # <%% | %%>
+            result << [:static, text] unless text.empty?
+            token.slice!(1)
+            result << [:static, token]
           else
             result << [:static, text] unless text.empty?
             case indicator
