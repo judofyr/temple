@@ -1,15 +1,11 @@
 begin
-  require 'cgi/escape'
-rescue LoadError
-  # Loading CGI Escape failed
-end
-
-begin
   require 'escape_utils'
 rescue LoadError
-  # Loading EscapeUtils failed
+  begin
+    require 'cgi/escape'
+  rescue LoadError
+  end
 end
-
 
 module Temple
   # @api public
