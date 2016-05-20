@@ -4,6 +4,7 @@ rvm:
   - 1.9.3
   - 2.0.0
   - 2.1.0
+  - 2.3.0
   - ruby-head
   - jruby-19mode
   - rbx-2
@@ -13,3 +14,8 @@ sudo: false
 matrix:
   allow_failures:
     - rvm: ruby-head
+  include:
+    - rvm: 2.1.0
+      gemfile: gemfiles/Gemfile.escape_utils
+    - rvm: 2.3.0
+      gemfile: gemfiles/Gemfile.escape_utils
