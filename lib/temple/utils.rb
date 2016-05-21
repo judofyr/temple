@@ -55,13 +55,7 @@ module Temple
       # @param html [String] The string to escape
       # @return [String] The escaped string
       def escape_html(html)
-        if html.nil?
-          ''.freeze
-        else
-          result = html.to_s
-          result.gsub!(ESCAPE_HTML_PATTERN, ESCAPE_HTML)
-          result
-        end
+        html.to_s.gsub(ESCAPE_HTML_PATTERN, ESCAPE_HTML)
       end
     end
 
