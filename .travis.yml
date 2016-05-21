@@ -11,11 +11,10 @@ rvm:
 
 sudo: false
 
+env:
+  - ESCAPE_UTILS=1
+  - ""
+
 matrix:
   allow_failures:
     - rvm: ruby-head
-  include:
-    - rvm: 2.1.0
-      gemfile: gemfiles/Gemfile.escape_utils
-    - rvm: 2.3.0
-      gemfile: gemfiles/Gemfile.escape_utils
