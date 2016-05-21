@@ -1,3 +1,8 @@
+0.7.7
+
+  * Add StaticAnalyzer, StringSplitter
+  * Freeze string literals
+
 0.7.6
 
   * EngineDSL - add support for use(:Filter) { FilterClassName }
