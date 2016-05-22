@@ -14,5 +14,12 @@ if defined?(Ripper) && RUBY_VERSION >= "2.0.0"
       @filter.call([:dynamic, '"static#{dynamic}"']
       ).should.equal [:multi, [:static, 'static'], [:dynamic, 'dynamic']]
     end
+
+    describe '.compile' do
+      it 'should raise CompileError for non-string literals' do
+        lambda { Temple::Filters::StringSplitter.compile('1') }.
+          should.raise(Temple::FilterError)
+      end
+    end
   end
 end

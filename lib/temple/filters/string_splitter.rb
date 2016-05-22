@@ -16,7 +16,7 @@ module Temple
               tokens.pop while tokens.last && [:on_comment, :on_sp].include?(tokens.last[1])
 
               if tokens.size < 2
-                raise "Expected token size >= 2 but got: #{tokens.size}"
+                raise(FilterError, "Expected token size >= 2 but got: #{tokens.size}")
               end
               compile_tokens!(exps, tokens)
             end
@@ -27,12 +27,12 @@ module Temple
           def strip_quotes!(tokens)
             _, type, beg_str = tokens.shift
             if type != :on_tstring_beg
-              raise "Expected :on_tstring_beg but got: #{type}"
+              raise(FilterError, "Expected :on_tstring_beg but got: #{type}")
             end
 
             _, type, end_str = tokens.pop
             if type != :on_tstring_end
-              raise "Expected :on_tstring_end but got: #{type}"
+              raise(FilterError, "Expected :on_tstring_end but got: #{type}")
             end
 
             [beg_str, end_str]
