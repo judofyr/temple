@@ -227,6 +227,7 @@ Example:
     [:html, :tag, 'img', [:html, :attrs, [:html, :attr, 'src', 'image.png']]]
     [:html, :tag, 'p', [:multi], [:static, 'Content']]
 generates:
+    
     <img src="image.png"/>
     <p>Content</p>
 
