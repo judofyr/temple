@@ -18,3 +18,7 @@ env:
 matrix:
   allow_failures:
     - rvm: ruby-head
+    - rvm: jruby-19mode
+      env: ESCAPE_UTILS=1
+    - rvm: rbx-2
+      env: ESCAPE_UTILS=1
