@@ -1,10 +1,14 @@
+0.8.0
+
+  * Add Temple::StaticAnalyzer to analyze Ruby expressions
+
 0.7.8
 
   * Fix an warning in StaticAnalyzer
 
 0.7.7
 
-  * Add StaticAnalyzer, StringSplitter
+  * Add StaticAnalyzer, StringSplitter filters
   * Freeze string literals
 
 0.7.6

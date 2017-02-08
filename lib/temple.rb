@@ -13,6 +13,7 @@ module Temple
   autoload :ImmutableMap,         'temple/map'
   autoload :MutableMap,           'temple/map'
   autoload :OptionMap,            'temple/map'
+  autoload :StaticAnalyzer,       'temple/static_analyzer'
 
   module Mixins
     autoload :Dispatcher,         'temple/mixins/dispatcher'
