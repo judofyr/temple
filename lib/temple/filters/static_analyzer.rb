@@ -35,7 +35,7 @@ module Temple
           return false if code.nil? || code.strip.empty?
           return false if SyntaxChecker.syntax_error?(code)
 
-          Ripper.lex(code).each do |(_, col), token, str|
+          Ripper.lex(code).each do |_, token, str|
             case token
             when *STATIC_TOKENS
               # noop
