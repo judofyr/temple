@@ -10,7 +10,7 @@ describe Temple::StaticAnalyzer do
   if Temple::StaticAnalyzer.available?
     describe '.static?' do
       it 'should return true if given Ruby expression is static' do
-        ['true', 'false', '"hello world"', "[1, { 2 => 3 }]"].each do |exp|
+        ['true', 'false', '"hello world"', "[1, { 2 => 3 }]", "[\n1,\n]"].each do |exp|
           Temple::StaticAnalyzer.static?(exp).should.equal(true)
         end
       end

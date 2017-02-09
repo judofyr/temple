@@ -13,7 +13,7 @@ module Temple
       :on_lparen, :on_rparen,
       :on_lbrace, :on_rbrace, :on_label,
       :on_int, :on_float, :on_imaginary,
-      :on_comma, :on_sp,
+      :on_comma, :on_sp, :on_ignored_nl,
     ].freeze
 
     DYNAMIC_TOKENS = [
