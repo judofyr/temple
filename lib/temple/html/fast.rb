@@ -110,7 +110,7 @@ module Temple
         else
           [:multi,
            [:static, " #{name}=#{options[:attr_quote]}"],
-           compile(value),
+           quote_html(compile(value)),
            [:static, options[:attr_quote]]]
         end
       end
@@ -123,6 +123,19 @@ module Temple
            [:static, @js_wrapper.last]]
         else
           compile(content)
+        end
+      end
+
+      private
+
+      def quote_html(expr)
+        case expr[0]
+        when :static
+          [:static, ::Temple::Utils.quote_html(expr[1])]
+        when :dynamic
+          [:dynamic, "::Temple::Utils.quote_html((#{expr[1]}))"]
+        else
+          expr.map { |val| val.is_a?(Array) ? quote_html(val) : val }
         end
       end
     end
