@@ -74,7 +74,22 @@ describe Temple::HTML::Fast do
                      [:static, "<div"],
                      [:multi,
                       [:multi, [:static, " id=\""], [:static, "test"], [:static, '"']],
-                      [:multi, [:static, " class=\""], [:dynamic, "block"], [:static, '"']]],
+                      [:multi, [:static, " class=\""], [:dynamic, "::Temple::Utils.quote_html((block))"], [:static, '"']]],
+                     [:static, ">"],
+                     [:content],
+                     [:static, "</div>"]]
+  end
+
+  it 'should correctly escape quotes in html with static attrs' do
+    @html.call([:html, :tag,
+      'div',
+      [:html, :attrs,
+       [:html, :attr, 'id', [:static, '"\'test"']]],
+       [:content]
+    ]).should.equal [:multi,
+                     [:static, "<div"],
+                     [:multi,
+                      [:multi, [:static, " id=\""], [:static, "&quot;&#39;test&quot;"], [:static, '"']]],
                      [:static, ">"],
                      [:content],
                      [:static, "</div>"]]

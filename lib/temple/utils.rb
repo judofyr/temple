@@ -59,6 +59,10 @@ module Temple
       end
     end
 
+    def quote_html(string)
+      string.to_s.gsub(/["']/, '"' => '&quot;'.freeze, "'" => '&#39;'.freeze)
+    end
+
     # Generate unique variable name
     #
     # @param prefix [String] Variable name prefix
