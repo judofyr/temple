@@ -220,7 +220,7 @@ generates:
 ### [:html, :tag, identifier, attributes, optional-sexp]
 
 HTML tag abstraction. Identifier can be a String or a Symbol. If the optional content Sexp is omitted
-the tag is closed (e.g. <br/> <img/>). The tag is also closed if the content Sexp is empty
+the tag is closed (e.g. `<br/>` `<img/>`). The tag is also closed if the content Sexp is empty
 (consists only of :multi and :newline expressions) and the tag is registered as auto-closing.
 
 Example:
