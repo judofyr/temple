@@ -73,6 +73,12 @@ describe Temple::Generator do
     ]).should.equal "VAR = BUFFER; VAR << (S:static); \n; " +
       "VAR << (D:dynamic); \n; C:code; VAR"
   end
+
+  it 'should have option filter' do
+    opts = { buffer: 'VAR', invalid: 'option' }
+    SimpleGenerator.new_with_option_filter(opts).options[:buffer].should.equal 'VAR'
+    SimpleGenerator.new_with_option_filter(opts).options.keys.include?(:invalid).should.equal false
+  end
 end
 
 describe Temple::Generators::Array do
