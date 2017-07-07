@@ -45,7 +45,13 @@ module Temple
         '"'  => '&quot;',
         '\'' => '&#39;',
         '<'  => '&lt;',
-        '>'  => '&gt;'
+        '>'  => '&gt;',
+        # In addition to HTML, also escape {{ and }} which are used in Angular
+        # templates as expression delimeters.
+        # See https://docs.angularjs.org/guide/expression
+        # and https://docs.angularjs.org/api/ng/service/$interpolate
+        '{{'  => '\{\{',
+        '}}'  => '\}\}'
       }.freeze
 
       ESCAPE_HTML_PATTERN = Regexp.union(*ESCAPE_HTML.keys)
