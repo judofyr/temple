@@ -25,6 +25,14 @@ describe Temple::Utils do
     Temple::Utils.escape_html('<').should.equal '&lt;'
   end
 
+  it 'can escape angular templating' do
+    with_html_safe do
+      Temple::Utils.escape_html('{{ 1 + 1 }}').should.equal '\{\{ 1 + 1 \}\}'
+      Temple::Utils.escape_html("{\x00{ 1 + 1 }\x00}").should.equal '\{\{ 1 + 1 \}\}'
+      Temple::Utils.escape_html("{\x00\x00{ 1 + 1 }\x00\x00}").should.equal '\{\{ 1 + 1 \}\}'
+    end
+  end
+
   it 'should escape unsafe html strings' do
     with_html_safe do
       Temple::Utils.escape_html_safe('<').should.equal '&lt;'
