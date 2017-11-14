@@ -41,7 +41,7 @@ module Temple
       # Used by escape_html
       # @api private
       STRING_HTML_MATCHES = {
-         '&'  => '&amp;',
+        '&'  => '&amp;',
         '"'  => '&quot;',
         '\'' => '&#39;',
         '<'  => '&lt;',
@@ -74,9 +74,14 @@ module Temple
       def escape_html(html)
         html.to_s.gsub(ESCAPE_HTML_PATTERN) do |c|
           string_match = STRING_HTML_MATCHES[c]
-          next string_match if string_match
 
-          REGEXP_HTML_MATCHES.find {|key, _value| c =~ key }&.dig(1)
+          if string_match
+            string_match
+          else
+            match_pair = REGEXP_HTML_MATCHES.find{ |key, _| c =~ key }
+
+            match_pair ? match_pair[1] : nil
+          end
         end
       end
     end
