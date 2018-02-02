@@ -90,7 +90,8 @@ module Temple
             raise 'Invalid dispatcher node' unless method
             call_method
           else
-            code = "case(exp[#{level}])\n"
+            code = String.new
+            code << "case(exp[#{level}])\n"
             each do |key, child|
               code << "when #{key.inspect}\n  " <<
                 child.compile(level + 1, call_method).gsub("\n".freeze, "\n  ".freeze) << "\n".freeze
