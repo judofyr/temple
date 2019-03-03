@@ -1,4 +1,4 @@
-master
+0.8.1
 
   * Stop relying on deprecated method in Rails (#121)
   * Fix issue with --enable-frozen-string-literal
