@@ -3,9 +3,9 @@ module Temple
     class Rails
       extend Mixins::Template
 
-      def call(template)
+      def call(template, source = nil)
         opts = {}.update(self.class.options).update(file: template.identifier)
-        self.class.compile(template.source, opts)
+        self.class.compile((source || template.source), opts)
       end
 
       def supports_streaming?
