@@ -4,6 +4,11 @@ class UniqueTest
   include Temple::Utils
 end
 
+HtmlStringObject = Struct.new(:to_s, :is_html_safe) do
+  # HACK Ruby 1.9.3 doesn't support `?` in Struct member names
+  alias html_safe? is_html_safe
+end
+
 describe Temple::Utils do
   it 'has empty_exp?' do
     Temple::Utils.empty_exp?([:multi]).should.be.true
@@ -31,9 +36,30 @@ describe Temple::Utils do
     end
   end
 
+  it 'should escape unsafe html objects' do
+    with_html_safe do
+      object = HtmlStringObject.new('<', false)
+      Temple::Utils.escape_html_safe(object).should.equal '&lt;'
+    end
+  end
+
   it 'should not escape safe html strings' do
     with_html_safe do
       Temple::Utils.escape_html_safe('<'.html_safe).should.equal '<'
+    end
+  end
+
+  it 'should not escape safe html objects' do
+    with_html_safe do
+      object = HtmlStringObject.new('<', true)
+      Temple::Utils.escape_html_safe(object).should.equal object
+    end
+  end
+
+  it 'should not escape safe html Object#to_s values' do
+    with_html_safe do
+      object = HtmlStringObject.new('<'.html_safe, false)
+      Temple::Utils.escape_html_safe(object).should.equal '<'
     end
   end
 end
