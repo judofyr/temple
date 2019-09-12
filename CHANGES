@@ -1,3 +1,8 @@
+0.8.2
+
+  * Support TruffleRuby in Temple::Filters::StaticAnalyzer (#127)
+  * Support TruffleRuby in Temple::Filters::StringSplitter (#127)
+
 0.8.1
 
   * Stop relying on deprecated method in Rails (#121)
