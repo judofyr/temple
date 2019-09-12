@@ -3,7 +3,7 @@ require 'helper'
 describe Temple::StaticAnalyzer do
   describe '.available?' do
     it 'should return true if its dependency is available' do
-      Temple::StaticAnalyzer.available?.should.equal(defined?(Ripper))
+      Temple::StaticAnalyzer.available?.should.equal(defined?(Ripper) && Ripper.respond_to?(:lex))
     end
   end
 
