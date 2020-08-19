@@ -20,8 +20,8 @@ module TestHelper
     Temple::ERB::Template.new(options) { src }.render
   end
 
-  def erubis(src, options = {})
-    Tilt::ErubisTemplate.new(options) { src }.render
+  def erubi(src, options = {})
+    Tilt::ErubiTemplate.new(options) { src }.render
   end
 end
 

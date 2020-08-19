@@ -1,5 +1,5 @@
 require 'helper'
-require 'tilt/erubis'
+require 'tilt/erubi'
 
 describe Temple::ERB::Engine do
   it 'should compile erb' do
@@ -11,7 +11,7 @@ describe Temple::ERB::Engine do
 <% end %>
 }
 
-    erb(src).should.equal erubis(src)
+    erb(src).should.equal erubi(src)
   end
 
   it 'should recognize comments' do
@@ -20,7 +20,7 @@ hello
   <%# comment -- ignored -- useful in testing %>
 world}
 
-    erb(src).should.equal erubis(src)
+    erb(src).should.equal erubi(src)
   end
 
   it 'should recognize <%% and %%>' do
@@ -55,7 +55,7 @@ world}
 <% end %>
 }
 
-    erb(src, trim: true).should.equal erubis(src, trim: true)
-    erb(src, trim: false).should.equal erubis(src, trim: false)
+    erb(src, trim: true).should.equal erubi(src, trim: true)
+    erb(src, trim: false).should.equal erubi(src, trim: false)
   end
 end
