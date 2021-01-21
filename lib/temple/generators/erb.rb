@@ -27,6 +27,10 @@ module Temple
       def on_code(code)
         "<% #{code} %>"
       end
+
+      def on_newline
+        '' # prevent duplicating newlines!
+      end
     end
   end
 end
