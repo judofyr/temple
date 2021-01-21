@@ -62,6 +62,15 @@ describe Temple::Generator do
       'foo << (D:dynamic); C:code; foo; VAR << (S:after); VAR'
   end
 
+  it 'should compile nested capture with the same capture_generator' do
+    gen = SimpleGenerator.new(buffer: "VAR", capture_generator: SimpleGenerator)
+    gen.call([:capture, "foo", [:multi,
+      [:capture, "bar", [:multi,
+        [:static, "a"],
+        [:static, "b"]]]]
+    ]).should.equal "VAR = BUFFER; foo = BUFFER; bar = BUFFER; bar << (S:a); bar << (S:b); bar; foo; VAR"
+  end
+
   it 'should compile newlines' do
     gen = SimpleGenerator.new(buffer: "VAR")
     gen.call([:multi,
