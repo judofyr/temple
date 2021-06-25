@@ -5,7 +5,15 @@ module Temple
 
       def call(template, source = nil)
         opts = {}.update(self.class.options).update(file: template.identifier)
-        self.class.compile((source || template.source), opts)
+        result = ''
+        if ActionView::Base.annotate_rendered_view_with_filenames && template.format == :html
+          result << "@output_buffer.safe_concat('<!-- BEGIN #{template.short_identifier} -->');"
+        end
+        result << self.class.compile((source || template.source), opts)
+        if ActionView::Base.annotate_rendered_view_with_filenames && template.format == :html
+          result << ";@output_buffer.safe_concat('<!-- END #{template.short_identifier} -->');@output_buffer"
+        end
+        result
       end
 
       def supports_streaming?
