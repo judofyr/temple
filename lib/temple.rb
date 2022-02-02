@@ -41,6 +41,7 @@ module Temple
   end
 
   module Filters
+    autoload :Ambles,             'temple/filters/ambles'
     autoload :CodeMerger,         'temple/filters/code_merger'
     autoload :ControlFlow,        'temple/filters/control_flow'
     autoload :MultiFlattener,     'temple/filters/multi_flattener'
