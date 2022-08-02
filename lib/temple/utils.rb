@@ -1,10 +1,6 @@
 begin
-  require 'escape_utils'
+  require 'cgi/escape'
 rescue LoadError
-  begin
-    require 'cgi/escape'
-  rescue LoadError
-  end
 end
 
 module Temple
@@ -21,15 +17,7 @@ module Temple
       html.html_safe? ? html : escape_html(html)
     end
 
-    if defined?(EscapeUtils)
-      # Returns an escaped copy of `html`.
-      #
-      # @param html [String] The string to escape
-      # @return [String] The escaped string
-      def escape_html(html)
-        EscapeUtils.escape_html(html.to_s, false)
-      end
-    elsif defined?(CGI.escapeHTML)
+    if defined?(CGI.escapeHTML)
       # Returns an escaped copy of `html`.
       #
       # @param html [String] The string to escape
