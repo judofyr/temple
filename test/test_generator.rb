@@ -143,16 +143,16 @@ end
 describe Temple::Generators::RailsOutputBuffer do
   it 'should compile simple expressions' do
     gen = Temple::Generators::RailsOutputBuffer.new(freeze_static: false)
-    gen.call([:static,  'test']).should.equal '@output_buffer = ActiveSupport::SafeBuffer.new; ' +
+    gen.call([:static,  'test']).should.equal '@output_buffer = output_buffer || ActionView::OutputBuffer.new; ' +
       '@output_buffer.safe_concat(("test")); @output_buffer'
-    gen.call([:dynamic, 'test']).should.equal '@output_buffer = ActiveSupport::SafeBuffer.new; ' +
+    gen.call([:dynamic, 'test']).should.equal '@output_buffer = output_buffer || ActionView::OutputBuffer.new; ' +
       '@output_buffer.safe_concat(((test).to_s)); @output_buffer'
-    gen.call([:code,    'test']).should.equal '@output_buffer = ActiveSupport::SafeBuffer.new; ' +
+    gen.call([:code,    'test']).should.equal '@output_buffer = output_buffer || ActionView::OutputBuffer.new; ' +
       'test; @output_buffer'
   end
 
   it 'should freeze static' do
     gen = Temple::Generators::RailsOutputBuffer.new(freeze_static: true)
-    gen.call([:static,  'test']).should.equal '@output_buffer = ActiveSupport::SafeBuffer.new; @output_buffer.safe_concat(("test".freeze)); @output_buffer'
+    gen.call([:static,  'test']).should.equal '@output_buffer = output_buffer || ActionView::OutputBuffer.new; @output_buffer.safe_concat(("test".freeze)); @output_buffer'
   end
 end
