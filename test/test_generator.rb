@@ -134,6 +134,7 @@ describe Temple::Generators::ERB do
     gen.call([:static,  'test']).should.equal 'test'
     gen.call([:dynamic, 'test']).should.equal '<%= test %>'
     gen.call([:code,    'test']).should.equal '<% test %>'
+    gen.call([:newline]).should.equal '' # erb is a template language (Avoid adding newlines)
 
     gen.call([:multi, [:static, 'a'], [:static,  'b']]).should.equal 'ab'
     gen.call([:multi, [:static, 'a'], [:dynamic, 'b']]).should.equal 'a<%= b %>'
