@@ -20,6 +20,11 @@ if defined?(Ripper) && RUBY_VERSION >= "2.0.0"
         lambda { Temple::Filters::StringSplitter.compile('1') }.
           should.raise(Temple::FilterError)
       end
+
+      it 'should compile strings quoted with parenthesis' do
+        tokens = Temple::Filters::StringSplitter.compile('%Q(href("#{1 + 1}");)')
+        tokens.should.equal [[:static, "href(\""], [:dynamic, "1 + 1"], [:static, "\");"]]
+      end
     end
   end
 end

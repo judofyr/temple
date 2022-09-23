@@ -25,28 +25,26 @@ module Temple
           private
 
           def strip_quotes!(tokens)
-            _, type, beg_str = tokens.shift
+            _, type, _beg_str = tokens.shift
             if type != :on_tstring_beg
               raise(FilterError, "Expected :on_tstring_beg but got: #{type}")
             end
 
-            _, type, end_str = tokens.pop
+            _, type, _end_str = tokens.pop
             if type != :on_tstring_end
               raise(FilterError, "Expected :on_tstring_end but got: #{type}")
             end
-
-            [beg_str, end_str]
           end
 
           def compile_tokens!(exps, tokens)
-            beg_str, end_str = strip_quotes!(tokens)
+            strip_quotes!(tokens)
 
             until tokens.empty?
               _, type, str = tokens.shift
 
               case type
               when :on_tstring_content
-                exps << [:static, eval("#{beg_str}#{str}#{end_str}").to_s]
+                exps << [:static, eval("%\0#{str}\0").to_s]
               when :on_embexpr_beg
                 embedded = shift_balanced_embexpr(tokens)
                 exps << [:dynamic, embedded] unless embedded.empty?
