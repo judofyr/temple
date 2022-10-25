@@ -10,7 +10,7 @@ module Temple
     # @api public
     class RailsOutputBuffer < StringBuffer
       define_options :streaming,
-                     buffer_class: 'ActiveSupport::SafeBuffer',
+                     buffer_class: 'ActionView::OutputBuffer',
                      buffer: '@output_buffer',
                      # output_buffer is needed for Rails 3.1 Streaming support
                      capture_generator: RailsOutputBuffer
@@ -20,11 +20,7 @@ module Temple
       end
 
       def create_buffer
-        if options[:streaming] && options[:buffer] == '@output_buffer'
-          "#{buffer} = output_buffer || #{options[:buffer_class]}.new"
-        else
-          "#{buffer} = #{options[:buffer_class]}.new"
-        end
+        "#{buffer} = output_buffer || #{options[:buffer_class]}.new"
       end
 
       def concat(str)

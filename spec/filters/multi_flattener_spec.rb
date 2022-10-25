@@ -1,4 +1,4 @@
-require 'helper'
+require 'spec_helper'
 
 describe Temple::Filters::MultiFlattener do
   before do
@@ -6,7 +6,7 @@ describe Temple::Filters::MultiFlattener do
   end
 
   it 'should flatten nested multi expressions' do
-    @filter.call([:multi,
+    expect(@filter.call([:multi,
       [:static, "a"],
       [:multi,
        [:dynamic, "aa"],
@@ -17,7 +17,7 @@ describe Temple::Filters::MultiFlattener do
        [:dynamic, "ab"],
       ],
       [:static, "b"],
-    ]).should.equal [:multi,
+    ])).to eq [:multi,
       [:static, "a"],
       [:dynamic, "aa"],
       [:static, "aaa"],
@@ -28,6 +28,6 @@ describe Temple::Filters::MultiFlattener do
   end
 
   it 'should return first element' do
-    @filter.call([:multi, [:code, 'foo']]).should.equal [:code, 'foo']
+    expect(@filter.call([:multi, [:code, 'foo']])).to eq([:code, 'foo'])
   end
 end

@@ -30,7 +30,7 @@ module Temple
 
     class << self
       def available?
-        defined?(Ripper)
+        defined?(Ripper) && Ripper.respond_to?(:lex)
       end
 
       def static?(code)

@@ -1,15 +1,8 @@
-require 'rake/testtask'
+require 'bundler/gem_tasks'
+require 'rspec/core/rake_task'
 
-task default: :test
-task :test do
-  sh "bacon -Ilib -Itest --automatic --quiet"
-end
-
-#Rake::TestTask.new(:test) do |t|
-#  t.libs << 'lib' << 'test'
-#  t.pattern = 'test/**/test_*.rb'
-#  t.verbose = false
-#end
+RSpec::Core::RakeTask.new(:spec)
+task default: :spec
 
 begin
   require 'rcov/rcovtask'

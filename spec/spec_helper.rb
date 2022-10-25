@@ -1,4 +1,3 @@
-require 'bacon'
 require 'temple'
 
 module TestHelper
@@ -13,18 +12,18 @@ module TestHelper
   end
 
   def grammar_validate(grammar, exp, message)
-    lambda { grammar.validate!(exp) }.should.raise(Temple::InvalidExpression).message.should.equal message
+    expect { grammar.validate!(exp) }.to raise_error(Temple::InvalidExpression, message)
   end
 
   def erb(src, options = {})
     Temple::ERB::Template.new(options) { src }.render
   end
 
-  def erubis(src, options = {})
-    Tilt::ErubisTemplate.new(options) { src }.render
+  def erubi(src, options = {})
+    Tilt::ErubiTemplate.new(options) { src }.render
   end
 end
 
-class Bacon::Context
-  include TestHelper
+RSpec.configure do |config|
+  config.include TestHelper
 end

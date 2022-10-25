@@ -1,4 +1,4 @@
-require 'helper'
+require 'spec_helper'
 
 describe Temple::HTML::Pretty do
   before do
@@ -6,9 +6,9 @@ describe Temple::HTML::Pretty do
   end
 
   it 'should indent nested tags' do
-    @html.call([:html, :tag, 'div', [:multi],
+    expect(@html.call([:html, :tag, 'div', [:multi],
       [:html, :tag, 'p', [:multi], [:multi, [:static, 'text'], [:dynamic, 'code']]]
-    ]).should.equal [:multi,
+    ])).to eq [:multi,
                      [:code, "_temple_html_pretty1 = /<code|<pre|<textarea/"],
                      [:multi,
                       [:static, "<div"],
@@ -26,9 +26,9 @@ describe Temple::HTML::Pretty do
   end
 
   it 'should not indent preformatted tags' do
-    @html.call([:html, :tag, 'pre', [:multi],
+    expect(@html.call([:html, :tag, 'pre', [:multi],
       [:html, :tag, 'p', [:multi], [:static, 'text']]
-    ]).should.equal [:multi,
+    ])).to eq [:multi,
                      [:code, "_temple_html_pretty1 = /<code|<pre|<textarea/"],
                      [:multi,
                       [:static, "<pre"],
@@ -45,9 +45,9 @@ describe Temple::HTML::Pretty do
 
   it 'should not escape html_safe strings' do
     with_html_safe do
-      @html.call(
+      expect(@html.call(
         [:dynamic, '"text<".html_safe']
-      ).should.equal [:multi,
+      )).to eq [:multi,
                       [:code, "_temple_html_pretty1 = /<code|<pre|<textarea/"],
                       [:dynamic, "::Temple::Utils.indent_dynamic((\"text<\".html_safe), nil, \"\\n\", _temple_html_pretty1)"]]
     end
