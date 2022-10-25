@@ -1,4 +1,4 @@
-require 'helper'
+require 'spec_helper'
 
 describe Temple::Filters::CodeMerger do
   before do
@@ -6,21 +6,21 @@ describe Temple::Filters::CodeMerger do
   end
 
   it 'should merge serveral codes' do
-    @filter.call([:multi,
+    expect(@filter.call([:multi,
       [:code, "a"],
       [:code, "b"],
       [:code, "c"]
-    ]).should.equal [:code, "a; b; c"]
+    ])).to eq [:code, "a; b; c"]
   end
 
   it 'should merge serveral codes around static' do
-    @filter.call([:multi,
+    expect(@filter.call([:multi,
       [:code, "a"],
       [:code, "b"],
       [:static, "123"],
       [:code, "a"],
       [:code, "b"]
-    ]).should.equal [:multi,
+    ])).to eq [:multi,
       [:code, "a; b"],
       [:static, "123"],
       [:code, "a; b"]
@@ -28,11 +28,11 @@ describe Temple::Filters::CodeMerger do
   end
 
   it 'should merge serveral codes with newlines' do
-    @filter.call([:multi,
+    expect(@filter.call([:multi,
       [:code, "a"],
       [:code, "b"],
       [:newline],
       [:code, "c"]
-    ]).should.equal [:code, "a; b\nc"]
+    ])).to eq [:code, "a; b\nc"]
   end
 end

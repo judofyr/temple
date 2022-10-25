@@ -37,4 +37,4 @@ jobs:
           restore-keys: ${{ runner.os }}-gems-
       - name: bundle install
         run: bundle config path vendor/bundle && bundle install -j$(nproc) --retry 3
-      - run: bundle exec rake test
+      - run: bundle exec rake spec

@@ -23,7 +23,7 @@ Gem::Specification.new do |s|
   # Tilt is only development dependency because most parts of Temple
   # can be used without it.
   s.add_development_dependency('tilt')
-  s.add_development_dependency('bacon')
+  s.add_development_dependency('rspec')
   s.add_development_dependency('rake')
   s.add_development_dependency('erubi')
 end

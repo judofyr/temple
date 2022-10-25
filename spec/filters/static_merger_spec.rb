@@ -1,4 +1,4 @@
-require 'helper'
+require 'spec_helper'
 
 describe Temple::Filters::StaticMerger do
   before do
@@ -6,21 +6,21 @@ describe Temple::Filters::StaticMerger do
   end
 
   it 'should merge serveral statics' do
-    @filter.call([:multi,
+    expect(@filter.call([:multi,
       [:static, "Hello "],
       [:static, "World, "],
       [:static, "Good night"]
-    ]).should.equal [:static, "Hello World, Good night"]
+    ])).to eq [:static, "Hello World, Good night"]
   end
 
   it 'should merge serveral statics around code' do
-    @filter.call([:multi,
+    expect(@filter.call([:multi,
       [:static, "Hello "],
       [:static, "World!"],
       [:code, "123"],
       [:static, "Good night, "],
       [:static, "everybody"]
-    ]).should.equal [:multi,
+    ])).to eq [:multi,
       [:static, "Hello World!"],
       [:code, "123"],
       [:static, "Good night, everybody"]
@@ -28,12 +28,12 @@ describe Temple::Filters::StaticMerger do
   end
 
   it 'should merge serveral statics across newlines' do
-    @filter.call([:multi,
+    expect(@filter.call([:multi,
       [:static, "Hello "],
       [:static, "World, "],
       [:newline],
       [:static, "Good night"]
-    ]).should.equal [:multi,
+    ])).to eq [:multi,
       [:static, "Hello World, Good night"],
       [:newline]
     ]

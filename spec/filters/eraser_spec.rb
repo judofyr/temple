@@ -1,13 +1,13 @@
-require 'helper'
+require 'spec_helper'
 
 describe Temple::Filters::Eraser do
   it 'should respect keep' do
     eraser = Temple::Filters::Eraser.new(keep: [:a])
-    eraser.call([:multi,
+    expect(eraser.call([:multi,
       [:a],
       [:b],
       [:c]
-    ]).should.equal [:multi,
+    ])).to eq [:multi,
       [:a],
       [:multi],
       [:multi]
@@ -16,11 +16,11 @@ describe Temple::Filters::Eraser do
 
   it 'should respect erase' do
     eraser = Temple::Filters::Eraser.new(erase: [:a])
-    eraser.call([:multi,
+    expect(eraser.call([:multi,
       [:a],
       [:b],
       [:c]
-    ]).should.equal [:multi,
+    ])).to eq [:multi,
       [:multi],
       [:b],
       [:c]
@@ -29,11 +29,11 @@ describe Temple::Filters::Eraser do
 
   it 'should choose erase over keep' do
     eraser = Temple::Filters::Eraser.new(keep: [:a, :b], erase: [:a])
-    eraser.call([:multi,
+    expect(eraser.call([:multi,
       [:a],
       [:b],
       [:c]
-    ]).should.equal [:multi,
+    ])).to eq [:multi,
       [:multi],
       [:b],
       [:multi]
@@ -42,11 +42,11 @@ describe Temple::Filters::Eraser do
 
   it 'should erase nested types' do
     eraser = Temple::Filters::Eraser.new(erase: [[:a, :b]])
-    eraser.call([:multi,
+    expect(eraser.call([:multi,
       [:a, :a],
       [:a, :b],
       [:b]
-    ]).should.equal [:multi,
+    ])).to eq [:multi,
       [:a, :a],
       [:multi],
       [:b]

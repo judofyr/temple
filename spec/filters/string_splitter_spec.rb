@@ -1,4 +1,4 @@
-require 'helper'
+require 'spec_helper'
 begin
   require 'ripper'
 rescue LoadError
@@ -32,19 +32,18 @@ if defined?(Ripper) && RUBY_VERSION >= "2.0.0"
     }.each do |code, expected|
       it "should split #{code}" do
         actual = @filter.call([:dynamic, code])
-        actual.should.equal expected
+        expect(actual).to eq(expected)
       end
     end
 
     describe '.compile' do
       it 'should raise CompileError for non-string literals' do
-        lambda { Temple::Filters::StringSplitter.compile('1') }.
-          should.raise(Temple::FilterError)
+        expect { Temple::Filters::StringSplitter.compile('1') }.to raise_error(Temple::FilterError)
       end
 
       it 'should compile strings quoted with parenthesis' do
         tokens = Temple::Filters::StringSplitter.compile('%Q(href("#{1 + 1}");)')
-        tokens.should.equal [[:static, "href(\""], [:dynamic, "1 + 1"], [:static, "\");"]]
+        expect(tokens).to eq([[:static, "href(\""], [:dynamic, "1 + 1"], [:static, "\");"]])
       end
     end
   end
