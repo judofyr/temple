@@ -18,7 +18,7 @@ Gem::Specification.new do |s|
   s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
   s.license       = 'MIT'
 
-  s.required_ruby_version = '>=1.9.2'
+  s.required_ruby_version = '>= 2.5.0'
 
   # Tilt is only development dependency because most parts of Temple
   # can be used without it.
