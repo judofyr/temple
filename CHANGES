@@ -1,3 +1,26 @@
+0.9.0
+
+  * Require Ruby 2.5+ (#131)
+  * Change default :capture_generator to self (#113)
+  * Improve compatibility with Rails 7.1 (#135)
+  * Support Rails 6.1's annotate_rendered_view_with_filenames
+    with Temple::Filters::Ambles (#134)
+  * Fix a crash in StringSplitter filter (#138)
+  * Fix a warning by Object#=~ since Ruby 2.6 (#129)
+  * Fix deprecated Tilt template mime type (#108)
+  * Stop using deprecated EscapeUtils from Temple::Utils (#136)
+
+0.8.2
+
+  * Support TruffleRuby in Temple::Filters::StaticAnalyzer (#127)
+  * Support TruffleRuby in Temple::Filters::StringSplitter (#127)
+
+0.8.1
+
+  * Stop relying on deprecated method in Rails (#121)
+  * Fix issue with --enable-frozen-string-literal
+  * Escape html in markdown
+
 0.8.0
 
   * Add Temple::StaticAnalyzer to analyze Ruby expressions
@@ -5,7 +28,7 @@
 
 0.7.8
 
-  * Fix an warning in StaticAnalyzer
+  * Fix a warning in StaticAnalyzer
 
 0.7.7
 

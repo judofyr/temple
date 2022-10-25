@@ -1,7 +1,7 @@
 Temple
 ======
 
-[![Build Status](https://secure.travis-ci.org/judofyr/temple.svg?branch=master)](http://travis-ci.org/judofyr/temple) [![Dependency Status](https://gemnasium.com/judofyr/temple.svg?travis)](https://gemnasium.com/judofyr/temple) [![Code Climate](https://codeclimate.com/github/judofyr/temple.svg)](https://codeclimate.com/github/judofyr/temple) [![Gem Version](https://badge.fury.io/rb/temple.svg)](https://rubygems.org/gems/temple) [![Yard Docs](https://img.shields.io/badge/yard-docs-blue.svg)](http://rubydoc.info/gems/temple/)
+[![test](https://github.com/judofyr/temple/actions/workflows/test.yml/badge.svg)](https://github.com/judofyr/temple/actions/workflows/test.yml) [![Code Climate](https://codeclimate.com/github/judofyr/temple.svg)](https://codeclimate.com/github/judofyr/temple) [![Gem Version](https://badge.fury.io/rb/temple.svg)](https://rubygems.org/gems/temple) [![Yard Docs](https://img.shields.io/badge/yard-docs-blue.svg)](http://rubydoc.info/gems/temple/frames)
 
 Temple is an abstraction and a framework for compiling templates to pure Ruby.
 It's all about making it easier to experiment, implement and optimize template

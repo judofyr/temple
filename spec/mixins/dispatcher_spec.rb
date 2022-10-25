@@ -1,4 +1,4 @@
-require 'helper'
+require 'spec_helper'
 
 class FilterWithDispatcherMixin
   include Temple::Mixins::Dispatcher
@@ -40,31 +40,31 @@ describe Temple::Mixins::Dispatcher do
   end
 
   it 'should return unhandled expressions' do
-    @filter.call([:unhandled]).should.equal [:unhandled]
+    expect(@filter.call([:unhandled])).to eq([:unhandled])
   end
 
   it 'should dispatch first level' do
-    @filter.call([:test, 42]).should.equal [:on_test, 42]
+    expect(@filter.call([:test, 42])).to eq([:on_test, 42])
   end
 
   it 'should dispatch second level' do
-    @filter.call([:second, :test, 42]).should.equal [:on_second_test, 42]
+    expect(@filter.call([:second, :test, 42])).to eq([:on_second_test, 42])
   end
 
   it 'should dispatch second level if prefixed' do
-    @filter.call([:test, :check, 42]).should.equal [:on_check, 42]
+    expect(@filter.call([:test, :check, 42])).to eq([:on_check, 42])
   end
 
   it 'should dispatch parent level' do
-    @filter.call([:a, 42]).should == [:a, 42]
-    @filter.call([:a, :b, 42]).should == [:on_ab, 42]
-    @filter.call([:a, :b, :test, 42]).should == [:on_ab_test, 42]
-    @filter.call([:a, :b, :c, 42]).should == [:on_ab, :c, 42]
-    @filter.call([:a, :b, :c, :d, 42]).should == [:on_ab, :c, :d, 42]
-    @filter.call([:a, :b, :c, :d, :test, 42]).should == [:on_abcd_test, 42]
+    expect(@filter.call([:a, 42])).to eq [:a, 42]
+    expect(@filter.call([:a, :b, 42])).to eq [:on_ab, 42]
+    expect(@filter.call([:a, :b, :test, 42])).to eq [:on_ab_test, 42]
+    expect(@filter.call([:a, :b, :c, 42])).to eq [:on_ab, :c, 42]
+    expect(@filter.call([:a, :b, :c, :d, 42])).to eq [:on_ab, :c, :d, 42]
+    expect(@filter.call([:a, :b, :c, :d, :test, 42])).to eq [:on_abcd_test, 42]
   end
 
   it 'should dispatch zero level' do
-    FilterWithDispatcherMixinAndOn.new.call([:foo,42]).should == [:on_zero, :foo, 42]
+    expect(FilterWithDispatcherMixinAndOn.new.call([:foo,42])).to eq [:on_zero, :foo, 42]
   end
 end

@@ -7,7 +7,7 @@ module Temple
   module Filters
     # Compile [:dynamic, "foo#{bar}"] to [:multi, [:static, 'foo'], [:dynamic, 'bar']]
     class StringSplitter < Filter
-      if defined?(Ripper) && RUBY_VERSION >= "2.0.0"
+      if defined?(Ripper) && RUBY_VERSION >= "2.0.0" && Ripper.respond_to?(:lex)
         class << self
           # `code` param must be valid string literal
           def compile(code)
@@ -46,11 +46,22 @@ module Temple
 
               case type
               when :on_tstring_content
+                beg_str, end_str = escape_quotes(beg_str, end_str)
                 exps << [:static, eval("#{beg_str}#{str}#{end_str}").to_s]
               when :on_embexpr_beg
                 embedded = shift_balanced_embexpr(tokens)
                 exps << [:dynamic, embedded] unless embedded.empty?
               end
+            end
+          end
+
+          # Some quotes are split-unsafe. Replace such quotes with null characters.
+          def escape_quotes(beg_str, end_str)
+            case [beg_str[-1], end_str]
+            when ['(', ')'], ['[', ']'], ['{', '}']
+              [beg_str.sub(/.\z/) { "\0" }, "\0"]
+            else
+              [beg_str, end_str]
             end
           end
 

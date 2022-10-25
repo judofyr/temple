@@ -3,9 +3,13 @@ module Temple
     class Rails
       extend Mixins::Template
 
-      def call(template)
+      def call(template, source = nil)
         opts = {}.update(self.class.options).update(file: template.identifier)
-        self.class.compile(template.source, opts)
+        if ActionView::Base.try(:annotate_rendered_view_with_filenames) && template.format == :html
+          opts[:preamble] = "<!-- BEGIN #{template.short_identifier} -->\n"
+          opts[:postamble] = "<!-- END #{template.short_identifier} -->\n"
+        end
+        self.class.compile((source || template.source), opts)
       end
 
       def supports_streaming?
