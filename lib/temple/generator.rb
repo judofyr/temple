@@ -54,7 +54,7 @@ module Temple
     end
 
     def on_capture(name, exp)
-      capture_generator.new(buffer: name).call(exp)
+      capture_generator.new(**options, buffer: name).call(exp)
     end
 
     def on_static(text)
