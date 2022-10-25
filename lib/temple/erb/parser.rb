@@ -27,7 +27,7 @@ module Temple
             when '#'
               result << [:code, "\n" * code.count("\n")]
             when /=/
-              result << [:escape, indicator.size <= 1, [:dynamic, code]]
+              result << [:escape, indicator.size == 2, [:dynamic, code]]
             else
               result << [:code, code]
             end

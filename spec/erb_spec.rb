@@ -35,13 +35,13 @@ world}
   end
 
   it 'should escape automatically' do
-    src = '<%= "<" %>'
+    src = '<%== "<" %>'
     ans = '&lt;'
     expect(erb(src)).to eq(ans)
   end
 
-  it 'should support == to disable automatic escape' do
-    src = '<%== "<" %>'
+  it 'should support = to disable automatic escape' do
+    src = '<%= "<" %>'
     ans = '<'
     expect(erb(src)).to eq(ans)
   end
