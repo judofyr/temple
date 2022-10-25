@@ -1,3 +1,8 @@
+0.9.1
+
+  * Fix Slim's error in AttributeMerger due to 0.9.0's :capture_generator (#137)
+  * Fix Temple::ERB::Engine's <%= to not escape and <%== to escape expressions
+
 0.9.0
 
   * Require Ruby 2.5+ (#131)
