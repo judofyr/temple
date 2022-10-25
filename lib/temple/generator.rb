@@ -10,7 +10,7 @@ module Temple
     include Mixins::Options
 
     define_options :save_buffer,
-                   capture_generator: self,
+                   capture_generator: :self,
                    buffer: '_buf',
                    freeze_static: RUBY_VERSION >= '2.1'
 
@@ -76,9 +76,15 @@ module Temple
     end
 
     def capture_generator
-      @capture_generator ||= Class === options[:capture_generator] ?
-      options[:capture_generator] :
-        Generators.const_get(options[:capture_generator])
+      @capture_generator ||=
+        case options[:capture_generator]
+        when :self
+          self.class
+        when Class
+          options[:capture_generator]
+        else
+          Generators.const_get(options[:capture_generator])
+        end
     end
 
     def concat(str)
