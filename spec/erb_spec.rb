@@ -1,4 +1,4 @@
-require 'helper'
+require 'spec_helper'
 require 'tilt/erubi'
 
 describe Temple::ERB::Engine do
@@ -11,7 +11,7 @@ describe Temple::ERB::Engine do
 <% end %>
 }
 
-    erb(src).should.equal erubi(src)
+    expect(erb(src)).to eq(erubi(src))
   end
 
   it 'should recognize comments' do
@@ -20,7 +20,7 @@ hello
   <%# comment -- ignored -- useful in testing %>
 world}
 
-    erb(src).should.equal erubi(src)
+    expect(erb(src)).to eq(erubi(src))
   end
 
   it 'should recognize <%% and %%>' do
@@ -31,19 +31,19 @@ world}
 <% end %>
 }
 
-    erb(src).should.equal "\n<%\n  %>\n"
+    expect(erb(src)).to eq("\n<%\n  %>\n")
   end
 
   it 'should escape automatically' do
     src = '<%= "<" %>'
     ans = '&lt;'
-    erb(src).should.equal ans
+    expect(erb(src)).to eq(ans)
   end
 
   it 'should support == to disable automatic escape' do
     src = '<%== "<" %>'
     ans = '<'
-    erb(src).should.equal ans
+    expect(erb(src)).to eq(ans)
   end
 
   it 'should support trim mode' do
@@ -55,7 +55,7 @@ world}
 <% end %>
 }
 
-    erb(src, trim: true).should.equal erubi(src, trim: true)
-    erb(src, trim: false).should.equal erubi(src, trim: false)
+    expect(erb(src, trim: true)).to eq(erubi(src, trim: true))
+    expect(erb(src, trim: false)).to eq(erubi(src, trim: false))
   end
 end
