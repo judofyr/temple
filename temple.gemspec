@@ -1,4 +1,3 @@
-# -*- encoding: utf-8 -*-
 require File.dirname(__FILE__) + '/lib/temple/version'
 require 'date'
 
