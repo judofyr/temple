@@ -7,6 +7,8 @@ module Temple
       use Temple::ERB::Parser
       use Temple::ERB::Trimming
       filter :Escapable
+      filter :StringSplitter
+      filter :StaticAnalyzer
       filter :MultiFlattener
       filter :StaticMerger
       generator :ArrayBuffer
