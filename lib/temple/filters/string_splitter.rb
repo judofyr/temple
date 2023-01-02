@@ -7,7 +7,7 @@ module Temple
   module Filters
     # Compile [:dynamic, "foo#{bar}"] to [:multi, [:static, 'foo'], [:dynamic, 'bar']]
     class StringSplitter < Filter
-      if defined?(Ripper) && RUBY_VERSION >= "2.0.0" && Ripper.respond_to?(:lex)
+      if defined?(Ripper) && Ripper.respond_to?(:lex)
         class << self
           # `code` param must be valid string literal
           def compile(code)

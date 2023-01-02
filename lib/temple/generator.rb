@@ -12,7 +12,7 @@ module Temple
     define_options :save_buffer,
                    capture_generator: 'StringBuffer',
                    buffer: '_buf',
-                   freeze_static: RUBY_VERSION >= '2.1'
+                   freeze_static: true
 
     def call(exp)
       [preamble, compile(exp), postamble].flatten.compact.join('; ')
