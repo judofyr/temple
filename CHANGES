@@ -2,6 +2,7 @@ Development
 
   * Regression: Revert changes to :capture_generator since 0.8.2 (#112, #113, #137)
   * Regression: Ensure that output buffer is not reused for capturing in Rails (#135)
+  * Drop support for Rails 4.x
 
 0.9.1
 
