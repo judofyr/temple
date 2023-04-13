@@ -22,6 +22,12 @@ class SimpleGenerator < Temple::Generator
   end
 end
 
+class SimpleCaptureGenerator < SimpleGenerator
+  def preamble
+    "#{buffer} = CAPTURE_BUFFER"
+  end
+end
+
 describe Temple::Generator do
   it 'should compile simple expressions' do
     gen = SimpleGenerator.new
@@ -62,13 +68,19 @@ describe Temple::Generator do
       'foo << (D:dynamic); C:code; foo; VAR << (S:after); VAR')
   end
 
-  it 'should compile nested capture with the same capture_generator' do
-    gen = SimpleGenerator.new(buffer: "VAR", capture_generator: SimpleGenerator)
-    expect(gen.call([:capture, "foo", [:multi,
-      [:capture, "bar", [:multi,
+  it 'should compile nested captures with the same capture_generator' do
+    gen = SimpleGenerator.new(buffer: "VAR", capture_generator: SimpleCaptureGenerator)
+    expect(gen.call(
+      [:capture, "foo", [:multi,
         [:static, "a"],
-        [:static, "b"]]]]
-    ])).to eq "VAR = BUFFER; foo = BUFFER; bar = BUFFER; bar << (S:a); bar << (S:b); bar; foo; VAR"
+        [:capture, "bar", [:multi,
+          [:static, "b"],
+          [:capture, "baz", [:multi,
+            [:static, "c"],
+          ]]
+        ]]
+      ]]
+    )).to eq "VAR = BUFFER; foo = CAPTURE_BUFFER; foo << (S:a); bar = CAPTURE_BUFFER; bar << (S:b); baz = CAPTURE_BUFFER; baz << (S:c); baz; bar; foo; VAR"
   end
 
   it 'should compile newlines' do
