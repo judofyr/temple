@@ -1,3 +1,7 @@
+Development
+
+  * Use specified :capture_generator for nested captures (#112, #144)
+
 0.10.0
 
   * Regression: Revert changes to :capture_generator since 0.8.2 (#112, #113, #137)
