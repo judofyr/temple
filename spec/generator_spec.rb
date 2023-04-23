@@ -136,16 +136,16 @@ describe Temple::Generators::StringBuffer do
     gen = Temple::Generators::StringBuffer.new(freeze_static: false)
     expect(gen.call([:static,  'test'])).to eq('_buf = "test"')
     expect(gen.call([:dynamic, 'test'])).to eq('_buf = (test).to_s')
-    expect(gen.call([:code,    'test'])).to eq('_buf = \'\'; test; _buf')
+    expect(gen.call([:code,    'test'])).to eq('_buf = \'\'.dup; test; _buf')
 
-    expect(gen.call([:multi, [:static, 'a'], [:static,  'b']])).to eq('_buf = \'\'; _buf << ("a"); _buf << ("b"); _buf')
-    expect(gen.call([:multi, [:static, 'a'], [:dynamic, 'b']])).to eq('_buf = \'\'; _buf << ("a"); _buf << ((b).to_s); _buf')
+    expect(gen.call([:multi, [:static, 'a'], [:static,  'b']])).to eq('_buf = \'\'.dup; _buf << ("a"); _buf << ("b"); _buf')
+    expect(gen.call([:multi, [:static, 'a'], [:dynamic, 'b']])).to eq('_buf = \'\'.dup; _buf << ("a"); _buf << ((b).to_s); _buf')
   end
 
   it 'should freeze static' do
     gen = Temple::Generators::StringBuffer.new(freeze_static: true)
     expect(gen.call([:static,  'test'])).to eq('_buf = "test"')
-    expect(gen.call([:multi, [:dynamic, '1'], [:static,  'test']])).to eq('_buf = \'\'; _buf << ((1).to_s); _buf << ("test".freeze); _buf')
+    expect(gen.call([:multi, [:dynamic, '1'], [:static,  'test']])).to eq('_buf = \'\'.dup; _buf << ((1).to_s); _buf << ("test".freeze); _buf')
   end
 end
 

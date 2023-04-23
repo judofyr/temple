@@ -11,7 +11,7 @@ module Temple
     # @api public
     class StringBuffer < ArrayBuffer
       def create_buffer
-        "#{buffer} = ''"
+        "#{buffer} = ''.dup"
       end
 
       def return_buffer
