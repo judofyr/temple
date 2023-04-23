@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Temple
   module Filters
     # Inlines several static/dynamic into a single dynamic.
@@ -36,7 +37,7 @@ module Temple
               # another one, we add both then.
               state = :single
               prev = [exp]
-              curr = [:dynamic, '"']
+              curr = [:dynamic, '"'.dup]
             when :single
               # Yes! We found another one. Add the current dynamic to the result.
               state = :several

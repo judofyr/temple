@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Temple
   module Filters
     # Control flow filter which processes [:if, condition, yes-exp, no-exp]

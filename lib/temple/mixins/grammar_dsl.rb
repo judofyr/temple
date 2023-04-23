@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Temple
   module Mixins
     # @api private
@@ -67,7 +68,7 @@ module Temple
             unmatched.reverse_each do |u|
               entry = u if u.flatten.size < entry.flatten.size
             end
-            raise(InvalidExpression, PP.pp(entry.last, "#{@grammar}::#{entry.first} did not match\n"))
+            raise(InvalidExpression, PP.pp(entry.last, "#{@grammar}::#{entry.first} did not match\n".dup))
           end
         end
 

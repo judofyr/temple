@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Temple
   # Abstract generator base class
   # Generators should inherit this class and

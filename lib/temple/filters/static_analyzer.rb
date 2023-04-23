@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Temple
   module Filters
     # Convert [:dynamic, code] to [:static, text] if code is static Ruby expression.

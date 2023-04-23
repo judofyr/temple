@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Temple
   module HTML
     # This filter merges html attributes (e.g. used for id and class)

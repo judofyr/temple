@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Temple
   module Filters
     # Remove BOM from input string

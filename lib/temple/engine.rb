@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Temple
   # An engine is simply a chain of compilers (that often includes a parser,
   # some filters and a generator).

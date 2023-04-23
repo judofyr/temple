@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Temple
   # Immutable map class which supports map merging
   # @api public

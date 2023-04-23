@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Temple
   # Temple expression grammar which can be used to validate Temple expressions.
   #

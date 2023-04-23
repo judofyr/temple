@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Temple
   # Temple base parser
   # @api public

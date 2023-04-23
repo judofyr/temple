@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Temple
   module HTML
     # This filter removes empty attributes

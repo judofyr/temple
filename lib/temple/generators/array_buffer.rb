@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Temple
   module Generators
     # Just like Array, but calls #join on the array.

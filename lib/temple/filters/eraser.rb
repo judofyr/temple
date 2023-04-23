@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Temple
   module Filters
     # Erase expressions with a certain type
