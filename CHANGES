@@ -1,6 +1,7 @@
 Development
 
   * Use specified :capture_generator for nested captures (#112, #144)
+  * Compatibility with frozen string literals
 
 0.10.0
 
