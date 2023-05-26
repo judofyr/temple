@@ -55,7 +55,9 @@ module Temple
     end
 
     def on_capture(name, exp)
-      capture_generator.new(**options, buffer: name).call(exp)
+      capture_generator.new(capture_generator: options[:capture_generator],
+                            freeze_static: options[:freeze_static],
+                            buffer: name).call(exp)
     end
 
     def on_static(text)
