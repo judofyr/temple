@@ -50,6 +50,7 @@ module Temple
     autoload :StaticMerger,       'temple/filters/static_merger'
     autoload :StringSplitter,     'temple/filters/string_splitter'
     autoload :DynamicInliner,     'temple/filters/dynamic_inliner'
+    autoload :DynamicMerger,      'temple/filters/dynamic_merger'
     autoload :Escapable,          'temple/filters/escapable'
     autoload :Eraser,             'temple/filters/eraser'
     autoload :Validator,          'temple/filters/validator'
