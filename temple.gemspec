@@ -12,8 +12,7 @@ Gem::Specification.new do |s|
   s.summary       = 'Template compilation framework in Ruby'
 
   s.require_paths = %w(lib)
-  s.files         = `git ls-files`.split("\n")
-  s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
+  s.files         = `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec)/}) }
   s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
   s.license       = 'MIT'
 
