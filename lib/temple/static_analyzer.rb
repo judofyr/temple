@@ -52,7 +52,8 @@ module Temple
             return false
           end
         end
-        true
+
+        !ShorthandSyntaxChecker.shorthand?(code)
       end
 
       def syntax_error?(code)
@@ -71,6 +72,29 @@ module Temple
 
         def on_parse_error(*)
           raise ParseError
+        end
+      end
+
+      class ShorthandSyntaxChecker < Ripper
+        class << self
+          def shorthand?(code)
+            instance = new(code)
+            instance.parse
+            instance.shorthand
+          end
+        end
+
+        attr_reader :shorthand
+
+        def initialize(*)
+          super
+          @shorthand = nil
+        end
+
+        private
+
+        def on_assoc_new(key, value)
+          @shorthand = true if value.nil?
         end
       end
     end
