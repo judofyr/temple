@@ -73,7 +73,7 @@ module Temple
         in [:multi, [:escape, true, [:dynamic, code]], [:multi, [:newline]]]
           return (result << [:multi, [:escape, true, [:dynamic, code]], [:static, "</#{name}>"]])
         else nil
-        end
+        end if options[:compact]
 
         @pretty = !@pre_tags || !options[:pre_tags].include?(name)
         if content
