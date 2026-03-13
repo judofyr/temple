@@ -86,6 +86,11 @@ module Temple
           end
         end
 
+        # Fast pattern: string literals must start with a quote character
+        # (after stripping whitespace). This avoids Ripper for the majority
+        # of dynamic expressions like "@foo.bar", "user.name", etc.
+        STRING_START_PATTERN = /\A\s*["'%]/
+
         def on_dynamic(code)
           return [:dynamic, code] unless string_literal?(code)
           return [:dynamic, code] if code.include?("\n")
@@ -105,6 +110,10 @@ module Temple
         private
 
         def string_literal?(code)
+          # Fast reject: if code doesn't start with a string delimiter,
+          # it can't be a string literal.
+          return false unless STRING_START_PATTERN.match?(code)
+
           return false if SyntaxChecker.syntax_error?(code)
 
           type, instructions = Ripper.sexp(code)

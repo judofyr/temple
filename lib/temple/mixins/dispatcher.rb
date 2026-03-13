@@ -70,9 +70,10 @@ module Temple
         dispatcher(exp)
       end
 
+      DISPATCHED_RE = /\Aon(_[a-zA-Z0-9]+)*\z/
+
       def dispatched_methods
-        re = /^on(_[a-zA-Z0-9]+)*$/
-        self.methods.map(&:to_s).select(&re.method(:=~))
+        self.methods.map(&:to_s).select { |m| DISPATCHED_RE.match?(m) }
       end
 
       # @api private

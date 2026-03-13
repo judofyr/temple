@@ -47,7 +47,11 @@ module Temple
     end
 
     def on_multi(*exp)
-      exp.map {|e| compile(e) }.join('; '.freeze)
+      case exp.size
+      when 0 then ''
+      when 1 then compile(exp[0])
+      else exp.map {|e| compile(e) }.join('; '.freeze)
+      end
     end
 
     def on_newline
@@ -75,7 +79,7 @@ module Temple
     protected
 
     def buffer
-      options[:buffer]
+      @buffer ||= options[:buffer]
     end
 
     def capture_generator

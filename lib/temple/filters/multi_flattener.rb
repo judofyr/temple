@@ -13,7 +13,12 @@ module Temple
         exps.each do |exp|
           exp = compile(exp)
           if exp.first == :multi
-            result.concat(exp[1..-1])
+            # Avoid allocating an intermediate array with exp[1..-1]
+            i = 1
+            while i < exp.size
+              result << exp[i]
+              i += 1
+            end
           else
             result << exp
           end

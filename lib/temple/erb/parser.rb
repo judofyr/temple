@@ -27,7 +27,7 @@ module Temple
             case indicator
             when '#'
               result << [:code, "\n" * code.count("\n")]
-            when /=/
+            when '=', '=='
               result << [:escape, indicator.size == 2, [:dynamic, code]]
             else
               result << [:code, code]
