@@ -4,7 +4,7 @@ module Temple
     # Convert [:dynamic, code] to [:static, text] if code is static Ruby expression.
     class StaticAnalyzer < Filter
       def call(exp)
-        # Optimize only when Ripper is available.
+        # Optimize only when a parser engine is available.
         if ::Temple::StaticAnalyzer.available?
           super
         else

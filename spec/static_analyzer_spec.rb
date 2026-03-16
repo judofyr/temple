@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Temple::StaticAnalyzer do
   describe '.available?' do
     it 'should return true if its dependency is available' do
-      expect(Temple::StaticAnalyzer.available?).to eq(defined?(Ripper) && Ripper.respond_to?(:lex))
+      expect(Temple::StaticAnalyzer.available?).to eq(!!(defined?(Prism) || (defined?(Ripper) && Ripper.respond_to?(:lex))))
     end
   end
 
