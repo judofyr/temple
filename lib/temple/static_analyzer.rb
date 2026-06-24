@@ -29,6 +29,11 @@ module Temple
       '=>',
     ].freeze
 
+    # Fast pattern to reject obviously-dynamic code without invoking Ripper.
+    # Matches instance/class/global variables, method calls (ident followed by
+    # optional parens), and common dynamic constructs.
+    DYNAMIC_PATTERN = /[@$]|[a-zA-Z_][a-zA-Z_0-9]*\s*[.(]/
+
     class << self
       def available?
         defined?(Ripper) && Ripper.respond_to?(:lex)
@@ -36,6 +41,12 @@ module Temple
 
       def static?(code)
         return false if code.nil? || code.strip.empty?
+
+        # Fast reject: if code contains variables or method calls, it's dynamic.
+        # This avoids expensive Ripper parsing for the vast majority of template
+        # expressions (e.g. "@foo.bar", "user.name", "$global").
+        return false if DYNAMIC_PATTERN.match?(code)
+
         return false if syntax_error?(code)
 
         Ripper.lex(code).each do |_, token, str|

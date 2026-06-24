@@ -48,7 +48,14 @@ module Temple
     end
 
     def call(input)
-      call_chain.inject(input) {|m, e| e.call(m) }
+      chain = call_chain
+      result = input
+      i = 0
+      while i < chain.size
+        result = chain[i].call(result)
+        i += 1
+      end
+      result
     end
 
     protected
