@@ -89,7 +89,7 @@ class. While you can use this class (since it's a subclass of Array), it's not
 what Temple mean by "Sexp".
 
 Abstractions
-------------
+
 
 The idea behind Temple is that abstractions are good, and it's better to have
 too many than too few. While you should always end up with the core
