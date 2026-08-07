@@ -1,10 +1,6 @@
 require 'spec_helper'
-begin
-  require 'ripper'
-rescue LoadError
-end
 
-if defined?(Ripper)
+if Temple::StaticAnalyzer.available?
   describe Temple::Filters::StringSplitter do
     before do
       @filter = Temple::Filters::StringSplitter.new

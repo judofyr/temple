@@ -1,3 +1,11 @@
+0.10.5
+
+  * Allow using prism as the parser engine (#156)
+
+0.10.4
+
+  * Fix Ruby 3.4 compatibility (#152)
+
 0.10.3
 
   * Remove test files from the gem package (#146)
