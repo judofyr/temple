@@ -1,14 +1,70 @@
 # frozen_string_literal: true
-begin
-  require 'ripper'
-rescue LoadError
-end
+require 'temple/parser_engine'
 
 module Temple
   module Filters
     # Compile [:dynamic, "foo#{bar}"] to [:multi, [:static, 'foo'], [:dynamic, 'bar']]
     class StringSplitter < Filter
-      if defined?(Ripper) && Ripper.respond_to?(:lex)
+      if PARSER_ENGINE == :prism
+        class << self
+          # `code` param must be valid string literal
+          def compile(code)
+            compiled = try_compile(code)
+            raise(FilterError, "Expected string literal") unless compiled
+            compiled
+          end
+
+          def try_compile(code)
+            result = Prism.parse(code)
+            return unless result.success?
+
+            stmts = result.value.statements.body
+            return if stmts.size != 1
+
+            stack = [stmts.first]
+            compiled = []
+
+            until stack.empty?
+              case (node = stack.pop).type
+              when :interpolated_string_node
+                stack.concat(node.parts.reverse)
+              when :string_node
+                if !(unescaped = node.unescaped).empty?
+                  compiled << [:static, unescaped]
+                end
+              when :embedded_statements_node
+                if (stmts = node.statements) && !(slice = stmts.slice).empty?
+                  compiled << [:dynamic, slice]
+                end
+              when :embedded_variable_node
+                compiled << [:dynamic, node.variable.slice]
+              else
+                return
+              end
+            end
+
+            compiled
+          end
+        end
+
+        def on_dynamic(code)
+          return [:dynamic, code] if code.include?("\n")
+
+          compiled = StringSplitter.try_compile(code)
+          return [:dynamic, code] unless compiled
+
+          temple = [:multi]
+          compiled.each do |type, content|
+            case type
+            when :static
+              temple << [:static, content]
+            when :dynamic
+              temple << on_dynamic(content)
+            end
+          end
+          temple
+        end
+      elsif PARSER_ENGINE == :ripper
         class << self
           # `code` param must be valid string literal
           def compile(code)
