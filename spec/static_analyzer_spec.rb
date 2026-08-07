@@ -10,13 +10,13 @@ describe Temple::StaticAnalyzer do
   if Temple::StaticAnalyzer.available?
     describe '.static?' do
       it 'should return true if given Ruby expression is static' do
-        ['true', 'false', '"hello world"', "[1, { 2 => 3 }]", "[\n1,\n]"].each do |exp|
+        ['true', 'false', '"hello world"', "[1, { 2 => 3 }]", "[\n1,\n]", '{a:1}'].each do |exp|
           expect(Temple::StaticAnalyzer.static?(exp)).to eq(true)
         end
       end
 
       it 'should return false if given Ruby expression is dynamic' do
-        ['1 + 2', 'variable', 'method_call(a)', 'CONSTANT'].each do |exp|
+        ['1 + 2', 'variable', 'method_call(a)', 'CONSTANT', '{a:}'].each do |exp|
           expect(Temple::StaticAnalyzer.static?(exp)).to eq(false)
         end
       end
