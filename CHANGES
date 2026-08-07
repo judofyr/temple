@@ -1,3 +1,7 @@
+0.10.6
+
+  * Make StaticAnalyzer recognize shorthand syntax as dynamic (#149)
+
 0.10.5
 
   * Allow using prism as the parser engine (#156)
