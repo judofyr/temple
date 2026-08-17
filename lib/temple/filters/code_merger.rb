@@ -10,7 +10,7 @@ module Temple
         exps.each do |exp|
           if exp.first == :code
             if code
-              code << '; ' unless code =~ /\n\Z/
+              code << '; ' unless /\n\Z/.match?(code)
               code << exp.last
             else
               code = exp.last.dup

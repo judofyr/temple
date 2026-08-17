@@ -77,7 +77,7 @@ module Temple
     def indent_dynamic(text, indent_next, indent, pre_tags = nil)
       text = text.to_s
       safe = text.respond_to?(:html_safe?) && text.html_safe?
-      return text if pre_tags && text =~ pre_tags
+      return text if pre_tags && pre_tags.match?(text)
 
       level = text.scan(/^\s*/).map(&:size).min
       text = text.gsub(/(?!\A)^\s{#{level}}/, '') if level > 0

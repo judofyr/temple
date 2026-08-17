@@ -6,7 +6,7 @@ module Temple
     # @api public
     class RemoveBOM < Parser
       def call(s)
-        return s if s.encoding.name !~ /^UTF-(8|16|32)(BE|LE)?/
+        return s unless /^UTF-(8|16|32)(BE|LE)?/.match?(s.encoding.name)
         s.gsub(Regexp.new("\\A\uFEFF".encode(s.encoding.name)), ''.freeze)
       end
     end
