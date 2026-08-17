@@ -1,3 +1,7 @@
+0.10.7
+
+  * Replace `=~` with `.match?` where possible (#160)
+
 0.10.6
 
   * Make StaticAnalyzer recognize shorthand syntax as dynamic (#149)
