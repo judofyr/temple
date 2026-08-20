@@ -10,7 +10,8 @@ module Temple
                                      header hgroup hr html li link meta nav ol option p
                                      rp rt ruby section script style table tbody td tfoot
                                      th thead tr ul video doctype).freeze,
-                     pre_tags: %w(code pre textarea).freeze
+                     pre_tags: %w(code pre textarea).freeze,
+                     compact: false
 
       def initialize(opts = {})
         super
@@ -61,6 +62,18 @@ module Temple
         @pretty = false
         result = [:multi, [:static, "#{tag_indent(name)}<#{name}"], compile(attrs)]
         result << [:static, (closed && @format != :html ? ' /' : '') + '>']
+
+        # strip newlines around terminal nodes
+        @pretty = true
+        case content
+        in [:multi, [:newline]]
+          return (result << [:static, "</#{name}>"])
+        in [:multi, [:multi, [:static, str]]]
+          return (result << [:static, "#{str}</#{name}>"])
+        in [:multi, [:escape, true, [:dynamic, code]], [:multi, [:newline]]]
+          return (result << [:multi, [:escape, true, [:dynamic, code]], [:static, "</#{name}>"]])
+        else nil
+        end if options[:compact]
 
         @pretty = !@pre_tags || !options[:pre_tags].include?(name)
         if content
