@@ -63,7 +63,7 @@ module Temple
       protected
 
       def thread_options_key
-        @thread_options_key ||= "#{self.name}-thread-options".to_sym
+        @thread_options_key ||= "#{self.name}-#{object_id}-thread-options".to_sym
       end
     end
 
