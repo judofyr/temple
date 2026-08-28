@@ -10,7 +10,7 @@ module Temple
       def call(s)
         if options[:encoding] && s.respond_to?(:encoding)
           old_enc = s.encoding
-          s = +s
+          s = s.dup
           s.force_encoding(options[:encoding])
           # Fall back to old encoding if new encoding is invalid
           unless s.valid_encoding?
