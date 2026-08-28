@@ -19,6 +19,7 @@ module Temple
     end
 
     def each
+      return enum_for(:each) unless block_given?
       keys.each {|k| yield(k, self[k]) }
     end
 
