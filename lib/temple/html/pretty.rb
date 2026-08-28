@@ -21,6 +21,9 @@ module Temple
       end
 
       def call(exp)
+        @indent_next = nil
+        @indent = 0
+        @pretty = options[:pretty]
         @pretty ? [:multi, preamble, compile(exp)] : super
       end
 
