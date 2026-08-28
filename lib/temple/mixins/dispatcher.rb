@@ -63,7 +63,7 @@ module Temple
         end
         self.class.class_eval <<-RUBY, __FILE__, __LINE__ + 1
           def dispatcher(exp)
-            return replace_dispatcher(exp) if self.class != #{self.class}
+            return replace_dispatcher(exp) if self.class.object_id != #{self.class.object_id}
             #{tree.compile.gsub("\n", "\n  ")}
           end
         RUBY

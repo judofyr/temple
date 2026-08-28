@@ -62,7 +62,7 @@ module Temple
       def chain_name(name)
         case name
         when Class
-          name.name.to_sym
+          name.to_s.to_sym
         when Symbol, String
           name.to_sym
         when Regexp
@@ -109,7 +109,7 @@ module Temple
         name = args.shift
         if Class === name
           filter = name
-          name = filter.name.to_sym
+          name = filter.to_s.to_sym
         else
           raise(ArgumentError, 'Name argument must be Class or Symbol') unless Symbol === name
         end

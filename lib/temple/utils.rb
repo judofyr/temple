@@ -55,7 +55,7 @@ module Temple
     # @return [String] Variable name
     def unique_name(prefix = nil)
       @unique_name ||= 0
-      prefix ||= (@unique_prefix ||= self.class.name.gsub('::'.freeze, '_'.freeze).downcase)
+      prefix ||= (@unique_prefix ||= (self.class.name || "anonymous_#{self.class.object_id}_").gsub('::'.freeze, '_'.freeze).downcase)
       "_#{prefix}#{@unique_name += 1}"
     end
 
