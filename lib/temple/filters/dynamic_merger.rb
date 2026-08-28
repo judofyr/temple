@@ -41,7 +41,7 @@ module Temple
         exps.each do |type, arg|
           case type
           when :static
-            strlit_body << arg.dump.sub!(/\A"/, '').sub!(/"\z/, '').gsub('\n', "\n")
+            strlit_body << arg.dump.sub!(/\A"/, '').sub!(/"\z/, '').gsub(/\\\\|\\n/) { |escape| escape == '\n' ? "\n" : escape }
           when :dynamic
             strlit_body << "\#{#{arg}}"
           when :newline
