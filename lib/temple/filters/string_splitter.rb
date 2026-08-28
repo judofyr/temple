@@ -105,6 +105,8 @@ module Temple
               when :on_tstring_content
                 beg_str, end_str = escape_quotes(beg_str, end_str)
                 exps << [:static, eval("#{beg_str}#{str}#{end_str}").to_s]
+              when :on_embvar
+                exps << [:dynamic, tokens.shift[2]]
               when :on_embexpr_beg
                 embedded = shift_balanced_embexpr(tokens)
                 exps << [:dynamic, embedded] unless embedded.empty?
