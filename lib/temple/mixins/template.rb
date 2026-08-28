@@ -6,6 +6,7 @@ module Temple
       include ClassOptions
 
       def compile(code, options)
+        options = options.dup
         engine = options.delete(:engine)
         raise 'No engine configured' unless engine
         engine.new(options).call(code)
@@ -16,6 +17,7 @@ module Temple
       end
 
       def create(engine, options)
+        options = options.dup
         register_as = options.delete(:register_as)
         template = Class.new(self)
         template.disable_option_validator!
