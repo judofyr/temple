@@ -61,7 +61,7 @@ module Temple
     end
 
     def on_static(text)
-      concat(options[:freeze_static] ? "#{text.inspect}.freeze" : text.inspect)
+      concat(static_expression(text, freeze: options[:freeze_static]))
     end
 
     def on_dynamic(code)
@@ -73,6 +73,15 @@ module Temple
     end
 
     protected
+
+    def static_expression(text, freeze: false)
+      if text.respond_to?(:encoding) && text.encoding != ::Encoding::UTF_8
+        expression = "#{text.b.inspect}.force_encoding(#{text.encoding.name.inspect})"
+      else
+        expression = text.inspect
+      end
+      freeze ? "#{expression}.freeze" : expression
+    end
 
     def buffer
       options[:buffer]
