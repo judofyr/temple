@@ -13,7 +13,7 @@ module Temple
       def call(exp)
         case exp.first
         when :static
-          [save_buffer, "#{buffer} = #{exp.last.inspect}", restore_buffer].compact.join('; ')
+          [save_buffer, "#{buffer} = #{static_expression(exp.last)}", restore_buffer].compact.join('; ')
         when :dynamic
           [save_buffer, "#{buffer} = (#{exp.last}).to_s", restore_buffer].compact.join('; ')
         else
