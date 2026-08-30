@@ -17,6 +17,22 @@ module Temple
         self.class.options[:streaming]
       end
 
+      def translate_location(spot, _backtrace_location, source)
+        source_lines = source.lines
+        first_lineno = spot[:first_lineno]
+        return unless first_lineno && first_lineno.between?(1, source_lines.size)
+
+        last_lineno = [spot[:last_lineno] || first_lineno, source_lines.size].min
+        first_line = source_lines[first_lineno - 1]
+        last_line = source_lines[last_lineno - 1]
+        spot.merge(
+          first_column: first_line[/\A[ \t]*/].bytesize,
+          last_lineno: last_lineno,
+          last_column: last_line.chomp.bytesize,
+          script_lines: source_lines
+        )
+      end
+
       def self.register_as(*names)
         raise 'Rails is not loaded - Temple::Templates::Rails cannot be used' unless defined?(::ActionView)
         if ::ActiveSupport::VERSION::MAJOR < 5
