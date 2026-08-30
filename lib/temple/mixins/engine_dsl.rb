@@ -26,25 +26,25 @@ module Temple
 
       def before(name, *args, &block)
         name = chain_name(name)
+        ensure_chain_name!(name)
         e = chain_element(args, block)
         chain.map! {|f| name === f.first ? [e, f] : [f] }.flatten!(1)
-        raise "#{name} not found" unless chain.include?(e)
         chain_modified!
       end
 
       def after(name, *args, &block)
         name = chain_name(name)
+        ensure_chain_name!(name)
         e = chain_element(args, block)
         chain.map! {|f| name === f.first ? [f, e] : [f] }.flatten!(1)
-        raise "#{name} not found" unless chain.include?(e)
         chain_modified!
       end
 
       def replace(name, *args, &block)
         name = chain_name(name)
+        ensure_chain_name!(name)
         e = chain_element(args, block)
         chain.map! {|f| name === f.first ? e : f }
-        raise "#{name} not found" unless chain.include?(e)
         chain_modified!
       end
 
@@ -58,6 +58,10 @@ module Temple
       end
 
       private
+
+      def ensure_chain_name!(name)
+        raise "#{name} not found" unless chain.any? {|element| name === element.first }
+      end
 
       def chain_name(name)
         case name
