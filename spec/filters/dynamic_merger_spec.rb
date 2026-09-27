@@ -15,6 +15,18 @@ describe Temple::Filters::DynamicMerger do
     end
 
     specify { assert_compile([:static, 'foo'], [:multi, [:static, 'foo']]) }
+    specify do
+      assert_compile([:dynamic, strlit("\\\\n\#{foo}")],
+                     [:multi, [:static, '\n'], [:dynamic, 'foo']])
+    end
+    specify do
+      assert_compile([:dynamic, strlit("\\\\\\\\n\#{foo}")],
+                     [:multi, [:static, '\\\\n'], [:dynamic, 'foo']])
+    end
+    specify do
+      assert_compile([:dynamic, strlit("foo\\\\n\n\#{foo}")],
+                     [:multi, [:static, "foo\\n\n"], [:newline], [:dynamic, 'foo']])
+    end
     specify { assert_compile([:dynamic, 'foo'], [:multi, [:dynamic, 'foo']]) }
     specify { assert_noop([:multi, [:static, 'foo'], [:newline]]) }
     specify { assert_noop([:multi, [:dynamic, 'foo'], [:newline]]) }
