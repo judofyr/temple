@@ -1,5 +1,10 @@
 # frozen_string_literal: true
 begin
+  require 'erb/escape'
+rescue LoadError
+end
+
+begin
   require 'cgi/escape'
 rescue LoadError
 end
@@ -19,7 +24,15 @@ module Temple
       s.html_safe? || html.html_safe? ? s : escape_html(s)
     end
 
-    if defined?(CGI.escapeHTML)
+    if defined?(::ERB::Escape.html_escape)
+      # Returns an escaped copy of `html`, or `html` itself when there is nothing to escape.
+      #
+      # @param html [String] The string to escape
+      # @return [String] The escaped string
+      def escape_html(html)
+        ::ERB::Escape.html_escape(html.to_s)
+      end
+    elsif defined?(CGI.escapeHTML)
       # Returns an escaped copy of `html`.
       #
       # @param html [String] The string to escape

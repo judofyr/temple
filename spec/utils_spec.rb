@@ -25,6 +25,20 @@ describe Temple::Utils do
     expect(Temple::Utils.escape_html('<')).to eq('&lt;')
   end
 
+  it 'escapes the five special characters of html' do
+    expect(Temple::Utils.escape_html(%q(<a href="x" title='y'>&</a>))).to eq('&lt;a href=&quot;x&quot; title=&#39;y&#39;&gt;&amp;&lt;/a&gt;')
+  end
+
+  it 'does not copy a string without anything to escape', if: defined?(::ERB::Escape) do
+    html = 'Nothing to escape'
+    expect(Temple::Utils.escape_html(html)).to equal(html)
+  end
+
+  it 'escapes objects that are not strings' do
+    expect(Temple::Utils.escape_html(:'<')).to eq('&lt;')
+    expect(Temple::Utils.escape_html(nil)).to eq('')
+  end
+
   it 'should escape unsafe html strings' do
     with_html_safe do
       expect(Temple::Utils.escape_html_safe('<')).to eq('&lt;')
