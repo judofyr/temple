@@ -37,3 +37,27 @@ describe Temple::MutableMap do
     expect(parent[:a]).to eq(1)
   end
 end
+
+describe Temple::OptionMap do
+  it 'sees keys made valid after a lookup' do
+    map = Temple::OptionMap.new
+    expect(map.valid_key?(:a)).to eq(false)
+    map.add_valid_keys(:a)
+    expect(map.valid_key?(:a)).to eq(true)
+  end
+
+  it 'sees keys made valid in its parent after a lookup' do
+    parent = Temple::OptionMap.new
+    map = Temple::OptionMap.new(parent)
+    expect(map.valid_key?(:a)).to eq(false)
+    parent.add_valid_keys(:a)
+    expect(map.valid_key?(:a)).to eq(true)
+  end
+
+  it 'treats set keys as valid' do
+    map = Temple::OptionMap.new {}
+    expect(map.valid_key?(:a)).to eq(false)
+    map[:a] = 1
+    expect(map.valid_key?(:a)).to eq(true)
+  end
+end
