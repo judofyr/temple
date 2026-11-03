@@ -32,7 +32,11 @@ module Temple
 
     def to_hash
       result = {}
-      each {|k, v| result[k] = v }
+      if @map.all? {|h| h.instance_of?(Hash) }
+        @map.each {|h| result.merge!(h) {|_, first, _| first } }
+      else
+        each {|k, v| result[k] = v }
+      end
       result
     end
   end
