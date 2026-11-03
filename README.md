@@ -255,36 +255,6 @@ Engines using Temple
 * Temple ERB example implementation (Temple::ERB::Template)
 * [WLang](https://github.com/blambeau/wlang)
 
-Benchmarking
-------------
-
-Run the same [map and compilation benchmark](benchmark/maps.rb) against two
-revisions with one Ruby installation:
-
-```bash
-ruby benchmark/maps.rb BASE HEAD > results.json
-```
-
-Omit `HEAD` to measure the working tree. The script exports each revision's `lib`
-to a temporary directory, starts seven pairs of separate Ruby processes, and
-alternates base/head order. It needs Ruby, Git, and tar, but no additional gems.
-Settings live at the top of the script.
-
-Each timing ratio is the elapsed time for one scenario batch divided by the time
-for a fixed reference batch: 5,000 passes over a 32-entry Ruby hash. Reference and
-scenario samples alternate order, with GC run before each measurement and
-enabled during it. Seven samples per process are pooled across processes before
-taking the median, not averaged from per-process medians. The reported change is
-`(head_ratio / base_ratio - 1) * 100`; negative is faster. JSON output also includes
-raw samples, reference times, and unnormalized time and allocations per iteration.
-
-The scenarios cover flat and inherited maps, fresh ERB engine compilation, and
-loading Temple plus its first compilation. The last scenario has only one sample
-per process and excludes Ruby interpreter startup and benchmark setup. These are
-Temple workloads, not Rails boot or application rendering measurements. Ratios
-reduce some machine-speed noise but do not eliminate GC, filesystem-cache, or
-scheduling effects; repeat comparisons before drawing conclusions.
-
 Acknowledgements
 ----------------
 
